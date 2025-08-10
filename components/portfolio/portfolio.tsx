@@ -3,6 +3,8 @@
 import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import Image from "next/image"
+import { useTheme } from "../../contexts/ThemeContext"
+import { getCardBackgroundColor, getThemeColor, getAccentColor } from "../../lib/theme-utils"
 
 const portfolioData = [
   {
@@ -246,6 +248,9 @@ const portfolioData = [
 const categories = ["Management", "System", "Website", "Mobile App"]
 
 export default function Component() {
+  // Theme context for dark/light mode
+  const { isDarkMode } = useTheme()
+
   const [activeCategory, setActiveCategory] = useState("Management")
   const [isModalOpen, setIsModalOpen] = useState(false)
 
@@ -257,7 +262,12 @@ export default function Component() {
       <div className="max-w-7xl mx-auto w-full flex flex-col">
         {/* Header */}
         <div className="text-center mb-8 sm:mb-10 w-full">
-          <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-6 sm:mb-8">Some of our Partnership Works</h2>
+          <h2
+            className="text-xl sm:text-2xl font-bold mb-6 sm:mb-8"
+            style={{ color: getThemeColor(isDarkMode, 'secondaryText') }}
+          >
+            Some of our Partnership Works
+          </h2>
         </div>
         
         {/* Filter Tabs - Responsive Design */}
@@ -267,11 +277,16 @@ export default function Component() {
               <motion.button
                 key={category}
                 onClick={() => setActiveCategory(category)}
-                className={`text-xs sm:text-sm font-medium transition-all duration-200 h-10 sm:h-12 rounded px-2 sm:px-4 whitespace-nowrap flex items-center justify-center ${
-                  activeCategory === category
-                    ? "bg-[#003C42] text-white border-[1.5px] border-[#003C42]"
-                    : "bg-white text-[#003C42] border-[1.5px] border-[#003C42]"
-                }`}
+                className="text-xs sm:text-sm font-medium transition-all duration-200 h-10 sm:h-12 rounded px-2 sm:px-4 whitespace-nowrap flex items-center justify-center cursor-pointer"
+                style={{
+                  backgroundColor: activeCategory === category
+                    ? getAccentColor(isDarkMode)
+                    : getCardBackgroundColor(isDarkMode),
+                  color: activeCategory === category
+                    ? '#ffffff'
+                    : getAccentColor(isDarkMode),
+                  border: `1.5px solid ${getAccentColor(isDarkMode)}`
+                }}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
@@ -297,10 +312,13 @@ export default function Component() {
                 }}
                 className="group cursor-pointer"
               >
-                {/* Complete Card with white background and box shadow */}
+                {/* Complete Card with theme-aware background and box shadow */}
                 <div
                   className="rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 p-4 sm:p-6 transform hover:-translate-y-1 w-full"
-                  style={{ minHeight: "350px", backgroundColor: "#F9F9F9" }}
+                  style={{
+                    minHeight: "350px",
+                    backgroundColor: getCardBackgroundColor(isDarkMode)
+                  }}
                 >
                   {/* Image Container */}
                   <div className="relative mb-3 sm:mb-4 overflow-hidden rounded-lg">
@@ -324,7 +342,12 @@ export default function Component() {
                   </div>
 
                   {/* Title */}
-                  <h3 className="text-base sm:text-lg font-bold text-gray-900 group-hover:text-teal-600 transition-colors duration-200">
+                  <h3
+                    className="text-base sm:text-lg font-bold transition-colors duration-200"
+                    style={{
+                      color: getThemeColor(isDarkMode, 'secondaryText')
+                    }}
+                  >
                     {project.title}
                   </h3>
                 </div>
@@ -338,7 +361,16 @@ export default function Component() {
           <div className="text-center mt-8 sm:mt-12">
             <motion.button
               onClick={() => setIsModalOpen(true)}
-              className="bg-[#003C42] text-white px-6 sm:px-8 py-2 sm:py-3 rounded-lg font-medium hover:bg-[#002A30] transition-all duration-200"
+              className="text-white px-6 sm:px-8 py-2 sm:py-3 rounded-lg font-medium transition-all duration-200"
+              style={{
+                backgroundColor: getAccentColor(isDarkMode)
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = isDarkMode ? '#046B6F' : '#002A30'
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = getAccentColor(isDarkMode)
+              }}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
@@ -377,12 +409,24 @@ export default function Component() {
                 <div className="modal-liquid-glass-content">
                   {/* Modal Header */}
                   <div className="flex justify-between items-center p-4 sm:p-6 border-b border-gray-200/50">
-                    <h3 className="text-lg sm:text-2xl font-bold text-gray-900">
+                    <h3
+                      className="text-lg sm:text-2xl font-bold"
+                      style={{ color: getThemeColor(isDarkMode, 'secondaryText') }}
+                    >
                       All {activeCategory} Projects
                     </h3>
                     <button
                       onClick={() => setIsModalOpen(false)}
-                      className="text-gray-500 hover:text-gray-700 transition-colors"
+                      className="transition-colors"
+                      style={{
+                        color: getThemeColor(isDarkMode, 'mutedText')
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.color = getThemeColor(isDarkMode, 'secondaryText')
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.color = getThemeColor(isDarkMode, 'mutedText')
+                      }}
                     >
                       <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -406,7 +450,10 @@ export default function Component() {
                           className="group cursor-pointer"
                         >
                           {/* Card */}
-                          <div className="rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 p-3 sm:p-4 transform hover:-translate-y-1 w-full bg-white/80 backdrop-blur-sm">
+                          <div
+                            className="rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 p-3 sm:p-4 transform hover:-translate-y-1 w-full backdrop-blur-sm"
+                            style={{ backgroundColor: getCardBackgroundColor(isDarkMode) }}
+                          >
                             {/* Image Container */}
                             <div className="relative mb-2 sm:mb-3 overflow-hidden rounded-lg">
                               <Image
@@ -429,7 +476,10 @@ export default function Component() {
                             </div>
 
                             {/* Title */}
-                            <h4 className="text-sm sm:text-base font-bold text-gray-900 group-hover:text-teal-600 transition-colors duration-200">
+                            <h4
+                              className="text-sm sm:text-base font-bold transition-colors duration-200"
+                              style={{ color: getThemeColor(isDarkMode, 'secondaryText') }}
+                            >
                               {project.title}
                             </h4>
                           </div>

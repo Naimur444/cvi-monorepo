@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { useTheme } from "@/contexts/ThemeContext"
+import { getCardBackgroundColor, getThemeColor, getAccentColor } from "@/lib/theme-utils"
 
 /**
  * Contact section component with project inquiry form
@@ -14,6 +16,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
  * Includes project manager profile and comprehensive form validation
  */
 export default function ContactSection() {
+  // Theme context for dark/light mode
+  const { isDarkMode } = useTheme()
+
   // Form state management for all input fields
   const [formData, setFormData] = useState({
     fullName: "",
@@ -41,7 +46,7 @@ export default function ContactSection() {
   }
 
   return (
-  <section ref={ref} className="w-full px-6 py-20" style={{ marginBottom: 80 }}>
+  <section id="contact-section" ref={ref} className="w-full px-6 py-20" style={{ marginBottom: 80 }}>
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center min-h-[624px]">
           
@@ -58,10 +63,16 @@ export default function ContactSection() {
               animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
               transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
             >
-              <h2 className="text-4xl md:text-5xl font-bold     mb-6 leading-tight">
+              <h2
+                className="text-4xl md:text-5xl font-bold mb-6 leading-tight"
+                style={{ color: getThemeColor(isDarkMode, 'secondaryText') }}
+              >
                 Have a Project in your Mind? Let&#39;s Make Together
               </h2>
-              <p className="text-lg   leading-relaxed">
+              <p
+                className="text-lg leading-relaxed"
+                style={{ color: getThemeColor(isDarkMode, 'mutedText') }}
+              >
                 We&#39;ll schedule a call to discuss your idea. After discovery session, we&#39;ll send a proposal, and upon
                 approval, we&#39;ll get started.
               </p>
@@ -74,11 +85,16 @@ export default function ContactSection() {
               animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
               transition={{ duration: 0.6, delay: 0.4, ease: "easeOut" }}
             >
-              <p className=" ">Simply fill out the form or email us at</p>
+              <p
+                className=""
+                style={{ color: getThemeColor(isDarkMode, 'mutedText') }}
+              >
+                Simply fill out the form or email us at
+              </p>
               <motion.a
                 href="mailto:cloudvertexinnovation@gmail.com"
                 className="transition-colors duration-200 font-medium"
-                style={{ color: '#003C42' }}
+                style={{ color: getAccentColor(isDarkMode) }}
                 whileHover={{ scale: 1.05 }}
                 transition={{ duration: 0.2 }}
               >
@@ -106,15 +122,29 @@ export default function ContactSection() {
                 />
               </motion.div>
               <div>
-                <h3 className="font-semibold    ">Nobir Hossain Samuel</h3>
-                <p className=" ">Project Manager</p>
+                <h3
+                  className="font-semibold"
+                  style={{ color: getThemeColor(isDarkMode, 'secondaryText') }}
+                >
+                  Nobir Hossain Samuel
+                </h3>
+                <p
+                  className=""
+                  style={{ color: getThemeColor(isDarkMode, 'mutedText') }}
+                >
+                  Project Manager
+                </p>
               </div>
             </motion.div>
           </motion.div>
           
           {/* Right column: Contact form with comprehensive project details */}
-          <motion.div 
-            className="bg-white rounded-2xl shadow-md p-10 md:p-12 border-l-6 border-[#003C42] w-full max-w-[632px] mx-auto lg:mx-0"
+          <motion.div
+            className="rounded-2xl shadow-md p-10 md:p-12 border-l-6 w-full max-w-[632px] mx-auto lg:mx-0"
+            style={{
+              backgroundColor: getCardBackgroundColor(isDarkMode),
+              borderLeftColor: getAccentColor(isDarkMode)
+            }}
             initial={{ opacity: 0, x: 50, scale: 0.95 }}
             animate={isInView ? { opacity: 1, x: 0, scale: 1 } : { opacity: 0, x: 50, scale: 0.95 }}
             transition={{ duration: 0.6, delay: 0.3, ease: "easeOut" }}
@@ -127,7 +157,11 @@ export default function ContactSection() {
                 animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
                 transition={{ duration: 0.4, delay: 0.5, ease: "easeOut" }}
               >
-                <label htmlFor="fullName" className="block text-sm font-medium   mb-3">
+                <label
+                  htmlFor="fullName"
+                  className="block text-sm font-medium mb-3"
+                  style={{ color: getThemeColor(isDarkMode, 'secondaryText') }}
+                >
                   Full Name <span className="text-red-500">*</span>
                 </label>
                 <Input
@@ -135,7 +169,8 @@ export default function ContactSection() {
                   placeholder="e.g. Johan"
                   value={formData.fullName}
                   onChange={(e) => handleInputChange("fullName", e.target.value)}
-                  className="w-full bg-gray-50 h-12"
+                  className="w-full h-12"
+                  style={{ backgroundColor: getCardBackgroundColor(isDarkMode) }}
                 />
               </motion.div>
               
@@ -147,7 +182,11 @@ export default function ContactSection() {
                 transition={{ duration: 0.4, delay: 0.6, ease: "easeOut" }}
               >
                 <div>
-                  <label htmlFor="companyName" className="block text-sm font-medium   mb-3">
+                  <label
+                    htmlFor="companyName"
+                    className="block text-sm font-medium mb-3"
+                    style={{ color: getThemeColor(isDarkMode, 'secondaryText') }}
+                  >
                     Company Name
                   </label>
                 <Input
@@ -155,11 +194,16 @@ export default function ContactSection() {
                   placeholder="ABC"
                   value={formData.companyName}
                   onChange={(e) => handleInputChange("companyName", e.target.value)}
-                  className="w-full bg-gray-50 h-12"
+                  className="w-full h-12"
+                  style={{ backgroundColor: getCardBackgroundColor(isDarkMode) }}
                 />
                 </div>
                 <div>
-                  <label htmlFor="email" className="block text-sm font-medium   mb-3">
+                  <label
+                    htmlFor="email"
+                    className="block text-sm font-medium mb-3"
+                    style={{ color: getThemeColor(isDarkMode, 'secondaryText') }}
+                  >
                     Email <span className="text-red-500">*</span>
                   </label>
                 <Input
@@ -168,7 +212,8 @@ export default function ContactSection() {
                   placeholder="info@gmail.com"
                   value={formData.email}
                   onChange={(e) => handleInputChange("email", e.target.value)}
-                  className="w-full bg-gray-50 h-12"
+                  className="w-full h-12"
+                  style={{ backgroundColor: getCardBackgroundColor(isDarkMode) }}
                 />
                 </div>
               </motion.div>
@@ -181,24 +226,119 @@ export default function ContactSection() {
                 transition={{ duration: 0.4, delay: 0.7, ease: "easeOut" }}
               >
                 <div>
-                  <label htmlFor="servicesRequired" className="block text-sm font-medium   mb-3">
+                  <label
+                    htmlFor="servicesRequired"
+                    className="block text-sm font-medium mb-3"
+                    style={{ color: getThemeColor(isDarkMode, 'secondaryText') }}
+                  >
                     Services Required <span className="text-red-500">*</span>
                   </label>
                   <Select onValueChange={(value) => handleInputChange("servicesRequired", value)} value={formData.servicesRequired}>
-                    <SelectTrigger className="w-full h-12 bg-gray-50 px-3 py-2 text-sm rounded-md border border-input focus-visible:border-ring focus-visible:ring-ring/50 transition-colors duration-200">
+                    <SelectTrigger
+                      className="w-full h-12 px-3 py-2 text-sm rounded-md border border-input focus-visible:border-ring focus-visible:ring-ring/50 transition-colors duration-200"
+                      style={{
+                        backgroundColor: getCardBackgroundColor(isDarkMode),
+                        color: getThemeColor(isDarkMode, 'secondaryText')
+                      }}
+                    >
                       <SelectValue placeholder="Select" />
                     </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="web-development">Web Development</SelectItem>
-                      <SelectItem value="mobile-app">Mobile App Development</SelectItem>
-                      <SelectItem value="ui-ux-design">UI/UX Design</SelectItem>
-                      <SelectItem value="consulting">Consulting</SelectItem>
-                      <SelectItem value="maintenance">Maintenance & Support</SelectItem>
+                    <SelectContent
+                      className="z-50"
+                      style={{
+                        backgroundColor: getCardBackgroundColor(isDarkMode),
+                        borderColor: isDarkMode ? '#404040' : '#E5E7EB'
+                      }}
+                    >
+                      <SelectItem
+                        value="web-development"
+                        className="focus:bg-opacity-20"
+                        style={{
+                          color: getThemeColor(isDarkMode, 'secondaryText'),
+                          backgroundColor: 'transparent'
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.backgroundColor = isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.05)'
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.backgroundColor = 'transparent'
+                        }}
+                      >
+                        Web Development
+                      </SelectItem>
+                      <SelectItem
+                        value="mobile-app"
+                        className="focus:bg-opacity-20"
+                        style={{
+                          color: getThemeColor(isDarkMode, 'secondaryText'),
+                          backgroundColor: 'transparent'
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.backgroundColor = isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.05)'
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.backgroundColor = 'transparent'
+                        }}
+                      >
+                        Mobile App Development
+                      </SelectItem>
+                      <SelectItem
+                        value="ui-ux-design"
+                        className="focus:bg-opacity-20"
+                        style={{
+                          color: getThemeColor(isDarkMode, 'secondaryText'),
+                          backgroundColor: 'transparent'
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.backgroundColor = isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.05)'
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.backgroundColor = 'transparent'
+                        }}
+                      >
+                        UI/UX Design
+                      </SelectItem>
+                      <SelectItem
+                        value="consulting"
+                        className="focus:bg-opacity-20"
+                        style={{
+                          color: getThemeColor(isDarkMode, 'secondaryText'),
+                          backgroundColor: 'transparent'
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.backgroundColor = isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.05)'
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.backgroundColor = 'transparent'
+                        }}
+                      >
+                        Consulting
+                      </SelectItem>
+                      <SelectItem
+                        value="maintenance"
+                        className="focus:bg-opacity-20"
+                        style={{
+                          color: getThemeColor(isDarkMode, 'secondaryText'),
+                          backgroundColor: 'transparent'
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.backgroundColor = isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.05)'
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.backgroundColor = 'transparent'
+                        }}
+                      >
+                        Maintenance & Support
+                      </SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
                 <div>
-                  <label htmlFor="contactNumber" className="block text-sm font-medium   mb-3">
+                  <label
+                    htmlFor="contactNumber"
+                    className="block text-sm font-medium mb-3"
+                    style={{ color: getThemeColor(isDarkMode, 'secondaryText') }}
+                  >
                     Contact Number <span className="text-red-500">*</span>
                   </label>
                 <Input
@@ -207,7 +347,8 @@ export default function ContactSection() {
                   placeholder="+880"
                   value={formData.contactNumber}
                   onChange={(e) => handleInputChange("contactNumber", e.target.value)}
-                  className="w-full bg-gray-50 h-12"
+                  className="w-full h-12"
+                  style={{ backgroundColor: getCardBackgroundColor(isDarkMode) }}
                   required
                 />
                 </div>
@@ -219,7 +360,11 @@ export default function ContactSection() {
                 animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
                 transition={{ duration: 0.4, delay: 0.8, ease: "easeOut" }}
               >
-                <label htmlFor="projectDetails" className="block text-sm font-medium   mb-3">
+                <label
+                  htmlFor="projectDetails"
+                  className="block text-sm font-medium mb-3"
+                  style={{ color: getThemeColor(isDarkMode, 'secondaryText') }}
+                >
                   Project Details
                 </label>
                 <Textarea
@@ -227,7 +372,8 @@ export default function ContactSection() {
                   placeholder="Tell about your project idea"
                   value={formData.projectDetails}
                   onChange={(e) => handleInputChange("projectDetails", e.target.value)}
-                  className="w-full min-h-[140px] resize-none bg-gray-50"
+                  className="w-full min-h-[140px] resize-none"
+                  style={{ backgroundColor: getCardBackgroundColor(isDarkMode) }}
                 />
               </motion.div>
               
@@ -244,7 +390,17 @@ export default function ContactSection() {
                 >
                   <Button
                     type="submit"
-                    className="w-full bg-[#003C42] hover:bg-[#002A2F] text-white h-12 rounded-lg transition-colors duration-200 font-medium text-lg"
+                    className="w-full text-white h-12 rounded-lg transition-colors duration-200 font-medium text-lg"
+                    style={{
+                      backgroundColor: getAccentColor(isDarkMode),
+                      borderColor: getAccentColor(isDarkMode)
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = isDarkMode ? '#046B6F' : '#002A2F'
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = getAccentColor(isDarkMode)
+                    }}
                   >
                     Send
                   </Button>

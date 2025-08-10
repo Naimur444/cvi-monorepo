@@ -9,6 +9,8 @@ import "swiper/css/pagination";
 import Image from "next/image";
 import { X } from "lucide-react";
 import { motion, useInView } from "framer-motion";
+import { useTheme } from "../../contexts/ThemeContext";
+import { getCardBackgroundColor, getThemeColor, getAccentColor } from "../../lib/theme-utils";
 
 const feedbacks = [
   {
@@ -41,6 +43,9 @@ const feedbacks = [
 ];
 
 const Feedback = () => {
+  // Theme context for dark/light mode
+  const { isDarkMode } = useTheme();
+
   const prevRef = useRef(null);
   const nextRef = useRef(null);
   const paginationRef = useRef(null);
@@ -69,7 +74,8 @@ const Feedback = () => {
         transition={{ duration: 0.7, ease: "easeOut" }}
       >
         <motion.h2
-          className="text-2xl md:text-4xl text-[#0E4F53] text-center font-bold mb-8"
+          className="text-2xl md:text-4xl text-center font-bold mb-8"
+          style={{ color: getThemeColor(isDarkMode, 'primaryText') }}
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
           transition={{ duration: 0.7, delay: 0.2, ease: "easeOut" }}
@@ -85,7 +91,21 @@ const Feedback = () => {
         >
           <motion.button
             ref={prevRef}
-            className="group absolute z-10 top-1/2 -left-5 transform -translate-y-1/2 bg-white border border-[#0E4F53] text-[#0E4F53] p-2 rounded-md shadow hover:bg-[#0E4F53] hover:text-white transition cursor-pointer"
+            className="group absolute z-10 top-1/2 -left-5 transform -translate-y-1/2 p-2 rounded-md shadow transition cursor-pointer"
+            style={{
+              backgroundColor: getCardBackgroundColor(isDarkMode),
+              borderColor: getAccentColor(isDarkMode),
+              color: getAccentColor(isDarkMode),
+              border: `1px solid ${getAccentColor(isDarkMode)}`
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = getAccentColor(isDarkMode);
+              e.currentTarget.style.color = 'white';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = getCardBackgroundColor(isDarkMode);
+              e.currentTarget.style.color = getAccentColor(isDarkMode);
+            }}
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
           >
@@ -95,7 +115,8 @@ const Feedback = () => {
               height="24"
               viewBox="0 0 24 24"
               fill="none"
-              className="stroke-[#0E4F53] group-hover:stroke-white transition"
+              className="transition"
+              style={{ stroke: 'currentColor' }}
             >
               <path
                 d="M3.99982 11.9998H19.9998"
@@ -114,7 +135,21 @@ const Feedback = () => {
 
           <motion.button
             ref={nextRef}
-            className="group absolute z-10 top-1/2 -right-5 transform -translate-y-1/2 bg-white border border-[#0E4F53] text-[#0E4F53] p-2 rounded-md shadow hover:bg-[#0E4F53] hover:text-white transition cursor-pointer"
+            className="group absolute z-10 top-1/2 -right-5 transform -translate-y-1/2 p-2 rounded-md shadow transition cursor-pointer"
+            style={{
+              backgroundColor: getCardBackgroundColor(isDarkMode),
+              borderColor: getAccentColor(isDarkMode),
+              color: getAccentColor(isDarkMode),
+              border: `1px solid ${getAccentColor(isDarkMode)}`
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = getAccentColor(isDarkMode);
+              e.currentTarget.style.color = 'white';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = getCardBackgroundColor(isDarkMode);
+              e.currentTarget.style.color = getAccentColor(isDarkMode);
+            }}
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
           >
@@ -124,7 +159,8 @@ const Feedback = () => {
               height="24"
               viewBox="0 0 24 24"
               fill="none"
-              className="stroke-[#0E4F53] group-hover:stroke-white transition"
+              className="transition"
+              style={{ stroke: 'currentColor' }}
             >
               <path
                 d="M20.0001 12.0002H4.00014"
@@ -162,7 +198,14 @@ const Feedback = () => {
           >
             {feedbacks.map((fb, idx) => (
               <SwiperSlide key={idx}>
-                <div className="bg-white p-6 border-l-4 border-r-4 border-[#0E4F53] rounded-2xl">
+                <div
+                  className="p-6 border-l-4 border-r-4 rounded-2xl"
+                  style={{
+                    backgroundColor: getCardBackgroundColor(isDarkMode),
+                    borderLeftColor: getAccentColor(isDarkMode),
+                    borderRightColor: getAccentColor(isDarkMode)
+                  }}
+                >
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-10 place-items-center">
                     {/* Image with play button overlay */}
                     <div className="relative w-full h-[300px] md:h-[500px] group cursor-pointer">
@@ -198,13 +241,24 @@ const Feedback = () => {
                         height={40}
                         className="object-contain mb-6"
                       />
-                      <p className="  mb-6 w-11/12">
+                      <p
+                        className="mb-6 w-11/12"
+                        style={{ color: getThemeColor(isDarkMode, 'mutedText') }}
+                      >
                         {fb.message}
                       </p>
-                      <h3 className="text-xl font-bold text-[#181818]">
+                      <h3
+                        className="text-xl font-bold"
+                        style={{ color: getThemeColor(isDarkMode, 'secondaryText') }}
+                      >
                         {fb.name}
                       </h3>
-                      <p className=" ">{fb.role}</p>
+                      <p
+                        className=""
+                        style={{ color: getThemeColor(isDarkMode, 'mutedText') }}
+                      >
+                        {fb.role}
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -231,7 +285,8 @@ const Feedback = () => {
           >
             <button
               onClick={closeModal}
-              className="absolute top-2 right-2 text-white bg-[#0E4F53] py-1 px-2 rounded-md z-10 cursor-pointer"
+              className="absolute top-2 right-2 text-white py-1 px-2 rounded-md z-10 cursor-pointer"
+              style={{ backgroundColor: getAccentColor(isDarkMode) }}
             >
               <X />
             </button>
@@ -240,7 +295,7 @@ const Feedback = () => {
               height="100%"
               src={currentVideo}
               title="YouTube video player"
-              frameBorder="0"
+              style={{ border: 'none' }}
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
               className="rounded-lg"

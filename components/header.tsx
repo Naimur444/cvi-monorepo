@@ -78,7 +78,7 @@ export default function Header() {
   return (
     <header
       ref={headerRef}
-      className="fixed top-0 left-0 right-0 w-full px-6 z-50 backdrop-blur-md border-b border-white/20 transition-colors duration-300"
+      className="fixed top-0 left-0 right-0 w-full px-6 z-50 backdrop-blur-md transition-colors duration-300"
       style={{
         background: isDarkMode ? 'rgba(19, 19, 19, 0.8)' : 'rgba(244, 243, 247, 0.8)',
         height: '72px'
@@ -324,8 +324,7 @@ export default function Header() {
                           </svg>
                         </div>
                         <div>
-                          <h3 className="font-medium text-gray-800">About Us</h3>
-                          <p className="text-xs text-gray-600 mt-0.5">Our mission and values</p>
+                          <h3 className="font-medium ">About Us</h3>
                         </div>
                       </motion.a>
                       
@@ -344,8 +343,7 @@ export default function Header() {
                           </svg>
                         </div>
                         <div>
-                          <h3 className="font-medium text-gray-800">Contact Us</h3>
-                          <p className="text-xs text-gray-600 mt-0.5">Get in touch with our team</p>
+                          <h3 className="font-medium ">Contact Us</h3>
                         </div>
                       </motion.a>
                     </div>
@@ -400,7 +398,7 @@ export default function Header() {
                 {/* Mobile Products link */}
                 <motion.a
                   href="/products"
-                  className="relative text-gray-800 font-medium transition-colors duration-200 hover:text-gray-900 group"
+                  className="relative  font-medium transition-colors duration-200 hover:text-gray-900 group"
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.1, duration: 0.2 }}
@@ -418,7 +416,7 @@ export default function Header() {
                 >
                   <button
                     onClick={() => setMobileServicesOpen(!mobileServicesOpen)}
-                    className="relative flex items-center justify-center space-x-2 text-gray-800 font-medium transition-colors duration-200 hover:text-gray-900 group w-full"
+                    className="relative flex items-center justify-center space-x-2  font-medium transition-colors duration-200 hover:text-gray-900 group w-full"
                   >
                     <span>Services</span>
                     <ChevronDown
@@ -441,7 +439,7 @@ export default function Header() {
                           <motion.a
                             key={service.name}
                             href={service.href}
-                            className="block text-sm text-gray-600 hover:text-gray-800 transition-colors duration-200"
+                            className="block text-sm  hover:text-gray-800 transition-colors duration-200"
                             initial={{ opacity: 0, x: -10 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ delay: index * 0.05, duration: 0.2 }}
@@ -457,7 +455,7 @@ export default function Header() {
                 {/* Mobile Portfolio link */}
                 <motion.a
                   href="/portfolio"
-                  className="relative text-gray-800 font-medium transition-colors duration-200 hover:text-gray-900 group"
+                  className="relative  font-medium transition-colors duration-200 hover:text-gray-900 group"
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.2, duration: 0.2 }}
@@ -475,7 +473,7 @@ export default function Header() {
                 >
                   <button
                     onClick={() => setMobileCompanyOpen(!mobileCompanyOpen)}
-                    className="relative flex items-center justify-center space-x-2 text-gray-800 font-medium transition-colors duration-200 hover:text-gray-900 group w-full"
+                    className="relative flex items-center justify-center space-x-2  font-medium transition-colors duration-200 hover:text-gray-900 group w-full"
                   >
                     <span>Company</span>
                     <ChevronDown
@@ -496,7 +494,7 @@ export default function Header() {
                       >
                         <motion.a
                           href="/contact"
-                          className="block text-sm text-gray-600 hover:text-gray-800 transition-colors duration-200"
+                          className="block text-sm  hover:text-gray-800 transition-colors duration-200"
                           initial={{ opacity: 0, x: -10 }}
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ duration: 0.2 }}
@@ -505,7 +503,7 @@ export default function Header() {
                         </motion.a>
                         <motion.a
                           href="/about"
-                          className="block text-sm text-gray-600 hover:text-gray-800 transition-colors duration-200"
+                          className="block text-sm  hover:text-gray-800 transition-colors duration-200"
                           initial={{ opacity: 0, x: -10 }}
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ delay: 0.05, duration: 0.2 }}

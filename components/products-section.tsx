@@ -64,7 +64,7 @@ export default function ProductsSection() {
         >
           {/* Main section title */}
           <motion.h1 
-            className="text-4xl md:text-5xl font-bold text-gray-900 mb-6"
+            className="text-4xl md:text-5xl font-bold  mb-6"
             initial={{ opacity: 0, y: 30 }}
             animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
             transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
@@ -74,7 +74,7 @@ export default function ProductsSection() {
           
           {/* Company value proposition description */}
           <motion.p 
-            className="text-lg text-gray-600 max-w-4xl mx-auto leading-relaxed"
+            className="text-lg  max-w-4xl mx-auto leading-relaxed"
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             transition={{ duration: 0.6, delay: 0.4, ease: "easeOut" }}

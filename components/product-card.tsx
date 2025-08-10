@@ -3,6 +3,8 @@
 import { motion } from "framer-motion"
 import Image from "next/image"
 import Link from "next/link"
+import { useTheme } from "../contexts/ThemeContext"
+import { getCardBackgroundColor, getThemeColor, getAccentColor } from "../lib/theme-utils"
 
 // TypeScript interfaces for type safety
 interface Product {
@@ -23,9 +25,12 @@ interface ProductCardProps {
  * Includes sophisticated hover effects and smooth transitions
  */
 export default function ProductCard({ product }: ProductCardProps) {
+  const { isDarkMode } = useTheme()
+
   return (
-    <motion.div 
-      className="bg-[#FAF9FC] rounded-2xl shadow-sm overflow-hidden group cursor-pointer"
+    <motion.div
+      className="rounded-2xl shadow-sm overflow-hidden group cursor-pointer"
+      style={{ backgroundColor: getCardBackgroundColor(isDarkMode) }}
       // Card lift animation on hover for engaging interaction
       whileHover={{ 
         y: -8,
@@ -64,8 +69,9 @@ export default function ProductCard({ product }: ProductCardProps) {
         transition={{ duration: 0.2 }}
       >
         {/* Product title with color change on hover */}
-        <motion.h3 
-          className="text-xl font-semibold text-gray-900 mb-4"
+        <motion.h3
+          className="text-xl font-semibold mb-4"
+          style={{ color: getThemeColor(isDarkMode, 'secondaryText') }}
           whileHover={{ color: "#0E4F53" }}
           transition={{ duration: 0.2 }}
         >
@@ -73,26 +79,41 @@ export default function ProductCard({ product }: ProductCardProps) {
         </motion.h3>
 
         {/* Product description */}
-        <p className="text-gray-600 leading-relaxed mb-6">{product.description}</p>
+        <p
+          className="leading-relaxed mb-6"
+          style={{ color: getThemeColor(isDarkMode, 'mutedText') }}
+        >
+          {product.description}
+        </p>
 
         {/* Navigation button to product detail page */}
         <Link href={`/products/${product.id}`} passHref legacyBehavior>
           <motion.a
-            className="group/btn flex items-center justify-between w-fit border-2 border-gray-300 rounded-lg px-4 py-2 bg-white cursor-pointer"
+            className="group/btn flex items-center justify-between w-fit border-2 rounded-lg px-4 py-2 cursor-pointer"
+            style={{
+              backgroundColor: getCardBackgroundColor(isDarkMode), // Uses #FAF9FC in light mode, #191919 in dark mode
+              borderColor: isDarkMode ? '#404040' : '#E5E7EB'
+            }}
             // Button hover effects with border color change and scale
-            whileHover={{ 
+            whileHover={{
               borderColor: "#0E4F53",
               scale: 1.05
             }}
             whileTap={{ scale: 0.98 }}
             transition={{ duration: 0.2 }}
           >
-            <span className="text-gray-700 font-medium mr-3">Explore Now</span>
+            <span
+              className="font-medium mr-3"
+              style={{ color: getThemeColor(isDarkMode, 'secondaryText') }}
+            >
+              Explore Now
+            </span>
             
             {/* Animated icon with rotation and color change */}
-            <motion.div 
-              className="w-8 h-8 bg-[#003C42] rounded flex items-center justify-center"
-              whileHover={{ 
+            <motion.div
+              className="w-8 h-8 rounded flex items-center justify-center"
+              style={{ backgroundColor: getAccentColor(isDarkMode) }}
+              whileHover={{
                 backgroundColor: "#0E4F53",
                 rotate: 5
               }}

@@ -6,10 +6,14 @@ import HeroSection from '../../components/software/hero-section';
 import ProcessSection from '../../components/software/process-section';
 import AgileProcessSection from '../../components/software/agile-process';
 import CollaborationSection from '../../components/software/collaboration';
-import ProcessLifeCycle from '../../components/software/process-life-cycle';
 import LiveProgressTracking from '../../components/software/live-progress-tracking';
 import LiveReporting from '../../components/software/live-reporting';
 import FAQAboutProcess from '../../components/software/faq-about-process';
+import Lifecycle from "../../components/web/Lifecycle";
+import Wireframe from "@/components/web/Wireframe";
+import UiDesign from "@/components/web/UiDesign";
+import Srs from "@/components/web/Srs";
+import Testing from "@/components/web/Testing";
 
 const Page = () => {
   return (
@@ -23,7 +27,11 @@ const Page = () => {
         <ProcessSection />
         <AgileProcessSection />
         <CollaborationSection />
-        <ProcessLifeCycle />
+        <Lifecycle />
+        <Wireframe />
+        <UiDesign />
+        <Srs />
+        <Testing />
         <LiveProgressTracking />
         <LiveReporting />
         <FAQAboutProcess />

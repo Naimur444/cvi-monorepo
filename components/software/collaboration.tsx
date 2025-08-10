@@ -3,10 +3,13 @@ import Image from "next/image"
 
 import { motion, useInView } from "framer-motion"
 import { useRef } from "react"
+import { useTheme } from "../../contexts/ThemeContext"
+import { getCardBackgroundColor, getThemeColor } from "../../lib/theme-utils"
 
 export default function CollaborationProcessSection() {
   const sectionRef = useRef(null)
   const isInView = useInView(sectionRef, { once: true, margin: "-100px" })
+  const { isDarkMode } = useTheme()
   const processItems = [
     {
       title: "Daily Scrum",
@@ -75,7 +78,7 @@ export default function CollaborationProcessSection() {
           Collaboration-Driven Process
         </motion.h2>
         <motion.p
-          className="mt-4 max-w-3xl mx-auto text-lg text-gray-300"
+          className="mt-4 max-w-3xl mx-auto text-lg "
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: 0.7, delay: 0.3, ease: "easeOut" }}
@@ -93,23 +96,26 @@ export default function CollaborationProcessSection() {
           {processItems.map((item, index) => (
             <motion.div
               key={index}
-              className={`p-8 rounded-xl shadow-lg flex flex-col items-start text-left min-h-[320px] ${
-                item.type === "highlight"
-                  ? "" // Remove all Tailwind border/bg for highlight
-                  : "bg-[#FAF9FC] text-gray-800 border border-gray-100"
-              }`}
+              className="p-8 rounded-xl shadow-lg flex flex-col items-start text-left min-h-[320px]"
+              style={{
+                ...(item.type === "highlight"
+                  ? {
+                      background: "#142626",
+                      border: "2px solid transparent",
+                      backgroundImage:
+                        "linear-gradient(#142626, #142626), linear-gradient(135deg, #009EA1 0%, transparent 30%, transparent 70%, #009EA1 100%)",
+                      backgroundOrigin: "border-box",
+                      backgroundClip: "padding-box, border-box",
+                    }
+                  : {
+                      backgroundColor: getCardBackgroundColor(isDarkMode),
+                      border: isDarkMode ? 'none' : '1px solid #E5E7EB'
+                    }),
+                color: item.type === "highlight" ? "#ffffff" : getThemeColor(isDarkMode, 'secondaryText')
+              }}
               initial={{ opacity: 0, y: 40 }}
               animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
               transition={{ duration: 0.6, delay: 0.5 + index * 0.15, ease: "easeOut" }}
-            style={item.type === "highlight"
-              ? {
-                  background: "#142626",
-                  border: "2px solid transparent",
-                  backgroundImage: "linear-gradient(#142626, #142626), linear-gradient(135deg, #009EA1 0%, transparent 30%, transparent 70%, #009EA1 100%)",
-                  backgroundOrigin: "border-box",
-                  backgroundClip: "padding-box, border-box"
-                }
-              : {}}
             >
               {/* Pin image section */}
               <div className="mb-4 w-full flex items-center">
@@ -123,7 +129,10 @@ export default function CollaborationProcessSection() {
               </div>
               {/* Title section */}
               <motion.h3
-                className={`text-[20px] font-bold mb-4 w-full ${item.type === "highlight" ? "text-white" : "text-gray-900"}`}
+                className="text-[20px] font-bold mb-4 w-full"
+                style={{
+                  color: item.type === "highlight" ? "#ffffff" : getThemeColor(isDarkMode, 'secondaryText')
+                }}
                 initial={{ opacity: 0, x: -20 }}
                 animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }}
                 transition={{ duration: 0.5, delay: 0.6 + index * 0.15, ease: "easeOut" }}
@@ -142,13 +151,24 @@ export default function CollaborationProcessSection() {
                   >
                     <div className="h-16 w-1 bg-[#0E4F53] mr-2" />
                     <div className="flex flex-col gap-2">
-                      <span className="text-[16px] font-normal text-black">{item.time}</span>
-                      <span className="text-[16px] font-normal text-black">{item.duration}</span>
+                      <span
+                        className="text-[16px] font-normal"
+                        style={{ color: getThemeColor(isDarkMode, 'secondaryText') }}
+                      >
+                        {item.time}
+                      </span>
+                      <span
+                        className="text-[16px] font-normal"
+                        style={{ color: getThemeColor(isDarkMode, 'secondaryText') }}
+                      >
+                        {item.duration}
+                      </span>
                     </div>
                   </motion.div>
                   {/* Description section */}
                   <motion.p
-                    className="text-black text-[16px] font-normal leading-relaxed mb-4 w-full"
+                    className="text-[16px] font-normal leading-relaxed mb-4 w-full"
+                    style={{ color: getThemeColor(isDarkMode, 'secondaryText') }}
                     initial={{ opacity: 0, y: 10 }}
                     animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
                     transition={{ duration: 0.4, delay: 0.75 + index * 0.15, ease: "easeOut" }}

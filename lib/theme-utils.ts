@@ -13,6 +13,7 @@ export const themeColors = {
     headerBg: 'rgba(244, 243, 247, 0.8)',
     border: '#E5E7EB',
     hover: 'rgba(0, 0, 0, 0.05)',
+    cardBg: '#FAF9FC',
   },
   dark: {
     background: '#131313',
@@ -23,6 +24,7 @@ export const themeColors = {
     headerBg: 'rgba(19, 19, 19, 0.8)',
     border: '#404040',
     hover: 'rgba(255, 255, 255, 0.1)',
+    cardBg: '#191919',
   }
 } as const
 
@@ -57,6 +59,14 @@ export function getAccentColor(isDarkMode: boolean): string {
  */
 export function getMutedTextColor(isDarkMode: boolean): string {
   return isDarkMode ? '#989898' : '#6B7280'
+}
+
+/**
+ * Get card background color for current theme
+ * Light card background (#FAF9FC) -> Dark card background (#191919) in dark mode
+ */
+export function getCardBackgroundColor(isDarkMode: boolean): string {
+  return isDarkMode ? '#191919' : '#FAF9FC'
 }
 
 /**

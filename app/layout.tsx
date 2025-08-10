@@ -3,6 +3,7 @@ import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import "./globals.css"
 import { ThemeProvider } from "../contexts/ThemeContext"
+import AppWrapper from "../components/app-wrapper"
 
 // Configure Inter font with Latin character subset for optimal loading
 const inter = Inter({ subsets: ["latin"] })
@@ -26,7 +27,9 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <ThemeProvider>
-          {children}
+          <AppWrapper>
+            {children}
+          </AppWrapper>
         </ThemeProvider>
       </body>
     </html>

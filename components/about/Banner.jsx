@@ -145,70 +145,59 @@ const Banner = () => {
           </motion.p>
 
           <motion.div
-            className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4 md:gap-6"
+            className="max-w-7xl mx-auto flex flex-wrap justify-between items-center gap-y-6 pt-[42px]"
             initial={{ opacity: 0, y: 30 }}
             animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
             transition={{ duration: 0.7, delay: 1.2, ease: "easeOut" }}
           >
-            <div className="flex items-center justify-center p-2">
-              <Image
-                src="/wrongs.png"
-                alt="wrongs"
-                width={100}
-                height={100}
-                className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 object-contain"
-              />
-            </div>
-
-            <div className="flex items-center justify-center p-2">
-              <Image
-                src="/zen.png"
-                alt="zen "
-                width={100}
-                height={100}
-                className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 object-contain"
-              />
-            </div>
-
-            <div className="flex items-center justify-center p-2">
-              <Image
-                src="/tree.png"
-                alt="tree"
-                width={100}
-                height={100}
-                className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 object-contain"
-              />
-            </div>
-
-            <div className="flex items-center justify-center p-2">
-              <Image
-                src="/t.png"
-                alt="t"
-                width={100}
-                height={100}
-                className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 object-contain"
-              />
-            </div>
-
-            <div className="flex items-center justify-center p-2">
-              <Image
-                src="/security.png"
-                alt="security"
-                width={100}
-                height={100}
-                className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 object-contain"
-              />
-            </div>
-
-            <div className="flex items-center justify-center p-2">
-              <Image
-                src="/insight.png"
-                alt="insight"
-                width={100}
-                height={100}
-                className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 object-contain"
-              />
-            </div>
+            {[
+              { src: "/wrongs.png", alt: "wrongs" },
+              { src: "/zen.png", alt: "zen" },
+              { src: "/tree.png", alt: "tree" },
+              { src: "/t.png", alt: "t" },
+              { src: "/security.png", alt: "security" },
+              { src: "/insight.png", alt: "insight" }
+            ].map((logo, index) => (
+              <motion.div
+                key={logo.alt}
+                className="cursor-pointer"
+                initial={{ opacity: 0, y: 20 }}
+                animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+                transition={{
+                  duration: 0.4,
+                  delay: 1.3 + index * 0.1,
+                  ease: "easeOut",
+                  // Optimized transitions for each property
+                  scale: { type: "spring", stiffness: 400, damping: 25 },
+                  y: { type: "spring", stiffness: 300, damping: 30 }
+                }}
+                whileHover={{
+                  scale: 1.08,
+                  y: -4
+                }}
+                whileTap={{
+                  scale: 0.95,
+                  transition: { duration: 0.1, ease: "easeOut" }
+                }}
+              >
+                <motion.div
+                  transition={{
+                    filter: { duration: 0.15, ease: "easeOut" }
+                  }}
+                  whileHover={{
+                    filter: "brightness(1.1) saturate(1.2)"
+                  }}
+                >
+                  <Image
+                    src={logo.src}
+                    alt={logo.alt}
+                    width={170}
+                    height={70}
+                    className="object-contain"
+                  />
+                </motion.div>
+              </motion.div>
+            ))}
           </motion.div>
         </motion.div>
       </motion.div>

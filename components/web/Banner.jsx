@@ -2,6 +2,17 @@ import Image from "next/image";
 import React from "react";
 
 const Banner = () => {
+  // Smooth scroll to contact section
+  const scrollToContact = () => {
+    const contactSection = document.getElementById('contact-section')
+    if (contactSection) {
+      contactSection.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      })
+    }
+  }
+
   return (
     <section className="  py-10 md:py-20">
       <div className="w-11/12 md:w-9/12 mx-auto">
@@ -14,7 +25,10 @@ const Banner = () => {
             <h2 className="text-2xl   md:text-4xl font-bold mb-6">
               Utilizing Leading Tech
             </h2>
-            <button className="py-2 px-6 bg-[#003C42] font-semibold text-white rounded-lg w-1/2 mb-6">
+            <button
+              className="py-2 px-6 bg-[#003C42] font-semibold text-white rounded-lg w-1/2 mb-6"
+              onClick={scrollToContact}
+            >
               Get in Touch
             </button>
 

@@ -11,6 +11,7 @@
   --theme-muted-text: #6B7280;
   --theme-accent: #003C42;
   --theme-header-bg: rgba(244, 243, 247, 0.8);
+  --theme-card-bg: #FAF9FC;
 
   /* Shadcn UI variables */
   --background: oklch(1 0 0);
@@ -56,6 +57,7 @@
   --theme-muted-text: #989898;
   --theme-accent: #057C80;
   --theme-header-bg: rgba(19, 19, 19, 0.8);
+  --theme-card-bg: #191919;
 
   /* Shadcn UI variables for dark mode */
   --background: oklch(0.145 0 0);
@@ -100,6 +102,7 @@
   --color-theme-muted-text: var(--theme-muted-text);
   --color-theme-accent: var(--theme-accent);
   --color-theme-header-bg: var(--theme-header-bg);
+  --color-theme-card-bg: var(--theme-card-bg);
 
   /* Shadcn UI colors */
   --color-background: var(--background);

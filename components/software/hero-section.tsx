@@ -19,6 +19,17 @@ export default function HeroSection({ title = "Custom Software Development", ima
   const sectionRef = useRef(null)
   const isInView = useInView(sectionRef, { once: true, margin: "-100px" })
 
+  // Smooth scroll to contact section
+  const scrollToContact = () => {
+    const contactSection = document.getElementById('contact-section')
+    if (contactSection) {
+      contactSection.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      })
+    }
+  }
+
   // Close calendar when clicking outside
   React.useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -74,6 +85,7 @@ export default function HeroSection({ title = "Custom Software Development", ima
           <div className="flex flex-col gap-4">
             <Button
               className="w-[340px] h-[46px] text-lg font-medium bg-[#003C42] text-primary-foreground hover:bg-[#003C42]/90"
+              onClick={scrollToContact}
             >
               Get In Touch
             </Button>

@@ -3,10 +3,13 @@
 import React, { useRef } from "react";
 import Image from "next/image";
 import { motion, useInView } from "framer-motion";
+import { useTheme } from "../../contexts/ThemeContext";
+import { getCardBackgroundColor, getThemeColor } from "../../lib/theme-utils";
 
 const Mission = () => {
   const sectionRef = useRef(null);
   const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
+  const { isDarkMode } = useTheme();
   const missionItems = [
     {
       id: 1,
@@ -48,7 +51,8 @@ const Mission = () => {
         transition={{ duration: 0.7, ease: "easeOut" }}
       >
         <motion.h2
-          className="text-2xl md:text-4xl leading-[60px] tracking-[12.48px] uppercase text-center font-semibold  mb-10"
+          className="text-2xl md:text-4xl leading-[60px] tracking-[12.48px] uppercase text-center font-semibold mb-10"
+          style={{ color: getThemeColor(isDarkMode, 'secondaryText') }}
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
           transition={{ duration: 0.7, delay: 0.2, ease: "easeOut" }}
@@ -65,8 +69,8 @@ const Mission = () => {
           {missionItems.map((item, index) => (
             <motion.div
               key={item.id}
-              className="bg-[#FAF9FC] p-4 rounded-2xl space-y-4 max-w-xs mx-auto cursor-pointer group"
-              style={{height: '280px'}}
+              className="p-4 rounded-2xl space-y-4 max-w-xs mx-auto cursor-pointer group"
+              style={{height: '280px', backgroundColor: getCardBackgroundColor(isDarkMode)}}
               initial={{ opacity: 0, y: 40 }}
               animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
               transition={{
@@ -82,8 +86,8 @@ const Mission = () => {
               whileHover={{
                 y: -12,
                 scale: 1.02,
-                boxShadow: "0 32px 64px -12px rgba(14, 79, 83, 0.25)",
-                backgroundColor: "#FFFFFF"
+                boxShadow: "0 32px 64px -12px rgba(14, 79, 83, 0.25)"
+                // Removed backgroundColor to prevent white background in dark mode
               }}
               whileTap={{
                 scale: 0.98,
@@ -120,7 +124,8 @@ const Mission = () => {
                 </motion.div>
               </motion.div>
               <motion.h3
-                className="text-2xl font-semibold  "
+                className="text-2xl font-semibold"
+                style={{ color: getThemeColor(isDarkMode, 'secondaryText') }}
                 transition={{
                   color: { duration: 0.15, ease: "easeOut" },
                   scale: { type: "spring", stiffness: 400, damping: 25 }
@@ -133,12 +138,15 @@ const Mission = () => {
                 {item.title}
               </motion.h3>
               <motion.p
-                className=" "
+                className=""
+                style={{
+                  color: isDarkMode ? getThemeColor(isDarkMode, 'mutedText') : '#000000'
+                }}
                 transition={{
                   color: { duration: 0.15, ease: "easeOut" }
                 }}
                 whileHover={{
-                  color: "#2D2D2D"
+                  color: isDarkMode ? getThemeColor(isDarkMode, 'secondaryText') : "#2D2D2D"
                 }}
               >
                 {item.description}
@@ -154,6 +162,7 @@ const Mission = () => {
         >
           <motion.h2
             className="text-2xl md:text-4xl text-center font-bold mb-6"
+            style={{ color: getThemeColor(isDarkMode, 'secondaryText') }}
             initial={{ opacity: 0, y: 30 }}
             animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
             transition={{ duration: 0.6, delay: 0.9, ease: "easeOut" }}
@@ -161,7 +170,8 @@ const Mission = () => {
             Trusted by 12+ Companies Worldwide
           </motion.h2>
           <motion.p
-            className=" text-center md:w-9/12 md:mx-auto mb-10"
+            className="text-center md:w-9/12 md:mx-auto mb-10"
+            style={{ color: getThemeColor(isDarkMode, 'mutedText') }}
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             transition={{ duration: 0.6, delay: 1.0, ease: "easeOut" }}

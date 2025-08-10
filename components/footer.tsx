@@ -41,7 +41,7 @@ export default function Footer() {
             </div>
 
             {/* Company tagline */}
-            <p className="text-gray-600 text-sm max-w-md">
+            <p className="  text-sm max-w-md">
               This is a cloud. A vertex of innovation is just the beginning.
             </p>
           </div>
@@ -122,14 +122,14 @@ export default function Footer() {
         {/* Bottom footer section with copyright and legal links */}
         <div className="flex flex-col md:flex-row justify-between items-center pt-6 border-t border-gray-200">
           {/* Copyright notice */}
-          <p className="text-sm text-gray-600 mb-4 md:mb-0">
+          <p className="text-sm   mb-4 md:mb-0">
             Copyright © 2025 Cloud Vertex Innovation All rights reserved
           </p>
 
           {/* Legal links and company badge */}
           <div className="flex items-center space-x-4">
             {/* Legal navigation links */}
-            <div className="flex items-center space-x-4 text-sm text-gray-600">
+            <div className="flex items-center space-x-4 text-sm  ">
               <a href="/privacy" className="hover:text-teal-600 transition-colors duration-200">
                 Privacy Policy
               </a>

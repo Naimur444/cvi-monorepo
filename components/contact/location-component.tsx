@@ -1,55 +1,101 @@
 "use client"
 import Image from "next/image"
+import { Phone, MapPin, Mail } from "lucide-react"
+import { useTheme } from "../../contexts/ThemeContext"
+import { getCardBackgroundColor, getThemeColor, getAccentColor } from "../../lib/theme-utils"
 
 export default function Component() {
+  // Theme context for dark/light mode
+  const { isDarkMode } = useTheme()
   return (
-    <div className="w-full max-w-7xl mx-auto rounded-lg overflow-hidden px-4 md:px-0" style={{ background: '#F9F9F9', marginBottom: 54 }}>
+    <div
+      className="w-full max-w-7xl mx-auto rounded-lg overflow-hidden px-4 md:px-0"
+      style={{
+        background: getCardBackgroundColor(isDarkMode),
+        marginBottom: 54
+      }}
+    >
       <div className="flex flex-col md:flex-row">
         {/* Left side - Contact Information */}
-        <div className="flex-1 p-4 sm:p-6 md:p-8 bg-gray-50">
+        <div
+          className="flex-1 p-4 sm:p-6 md:p-8"
+          style={{ backgroundColor: getCardBackgroundColor(isDarkMode) }}
+        >
           <div className="space-y-6">
             {/* Location Header */}
             <div className="space-y-1">
-              <h1 className="text-lg sm:text-xl font-bold text-black">Bangladesh</h1>
-              <p className="text-sm sm:text-base text-gray-600">Dhaka</p>
+              <h1
+                className="text-lg sm:text-xl font-bold"
+                style={{ color: getThemeColor(isDarkMode, 'secondaryText') }}
+              >
+                Bangladesh
+              </h1>
+              <p
+                className="text-sm sm:text-base"
+                style={{ color: getThemeColor(isDarkMode, 'mutedText') }}
+              >
+                Dhaka
+              </p>
             </div>
             
             {/* Address and Contact in responsive columns */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
               {/* Address Column */}
               <div>
-                <h3 className="text-sm font-semibold text-black mb-2">Address</h3>
-                <div className="text-sm text-black leading-relaxed">
+                <h3
+                  className="text-sm font-semibold mb-2"
+                  style={{ color: getThemeColor(isDarkMode, 'secondaryText') }}
+                >
+                  Address
+                </h3>
+                <div
+                  className="text-sm leading-relaxed"
+                  style={{ color: getThemeColor(isDarkMode, 'secondaryText') }}
+                >
                   <div>58/3/1/3-b, North</div>
                   <div>Mugdapara</div>
                   <div>Dhaka-1214, Bangladesh</div>
                 </div>
               </div>
-              
+
               {/* Contact Column */}
               <div>
-                <h3 className="text-sm font-semibold text-black mb-2">Contact</h3>
+                <h3
+                  className="text-sm font-semibold mb-2"
+                  style={{ color: getThemeColor(isDarkMode, 'secondaryText') }}
+                >
+                  Contact
+                </h3>
                 <div className="space-y-2">
-                  <a 
-                    href="tel:+8801310654721" 
-                    className="flex items-center gap-2 text-sm hover:text-teal-700"
+                  <a
+                    href="tel:+8801310654721"
+                    className="flex items-center gap-2 text-sm hover:opacity-80 transition-opacity"
                   >
-                    <Image src="/call-02.svg" alt="Call" width={16} height={16} />
-                    <span style={{ color: '#0E4F53' }}>+8801310654721</span>
+                    <Phone
+                      size={16}
+                      style={{ color: getAccentColor(isDarkMode) }}
+                    />
+                    <span style={{ color: getAccentColor(isDarkMode) }}>+8801310654721</span>
                   </a>
-                  <a 
-                    href="#" 
-                    className="flex items-center gap-2 text-sm hover:text-teal-700"
+                  <a
+                    href="#"
+                    className="flex items-center gap-2 text-sm hover:opacity-80 transition-opacity"
                   >
-                    <Image src="/location-04.svg" alt="Location" width={16} height={16} />
-                    <span style={{ color: '#0E4F53' }}>Get direction</span>
+                    <MapPin
+                      size={16}
+                      style={{ color: getAccentColor(isDarkMode) }}
+                    />
+                    <span style={{ color: getAccentColor(isDarkMode) }}>Get direction</span>
                   </a>
-                  <a 
-                    href="mailto:contact@example.com" 
-                    className="flex items-center gap-2 text-sm hover:text-teal-700"
+                  <a
+                    href="mailto:contact@example.com"
+                    className="flex items-center gap-2 text-sm hover:opacity-80 transition-opacity"
                   >
-                    <Image src="/mail-at-sign-01.svg" alt="Mail" width={16} height={16} />
-                    <span style={{ color: '#0E4F53' }}>Email us</span>
+                    <Mail
+                      size={16}
+                      style={{ color: getAccentColor(isDarkMode) }}
+                    />
+                    <span style={{ color: getAccentColor(isDarkMode) }}>Email us</span>
                   </a>
                 </div>
               </div>

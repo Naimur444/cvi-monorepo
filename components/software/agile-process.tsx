@@ -2,8 +2,13 @@
 import { ArrowRight } from "lucide-react"
 import { motion, useInView } from "framer-motion"
 import { useRef } from "react"
+import { useTheme } from "../../contexts/ThemeContext"
+import { getCardBackgroundColor, getThemeColor, getAccentColor } from "../../lib/theme-utils"
 
 export default function AgileProcessSection() {
+  // Theme context for dark/light mode
+  const { isDarkMode } = useTheme()
+
   const sectionRef = useRef(null)
   const isInView = useInView(sectionRef, { once: true, margin: "-100px" })
   const phases = [
@@ -51,7 +56,8 @@ export default function AgileProcessSection() {
         transition={{ duration: 0.7, ease: "easeOut" }}
       >
         <motion.h2
-          className="text-3xl font-semibold tracking-tight   sm:text-4xl md:text-5xl"
+          className="text-3xl font-semibold tracking-tight sm:text-4xl md:text-5xl"
+          style={{ color: getThemeColor(isDarkMode, 'secondaryText') }}
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
           transition={{ duration: 0.7, delay: 0.2, ease: "easeOut" }}
@@ -59,7 +65,8 @@ export default function AgileProcessSection() {
           Speeding Up Success: Agile
         </motion.h2>
         <motion.p
-          className="pt-8 max-w-3xl mx-auto text-lg  "
+          className="pt-8 max-w-3xl mx-auto text-lg"
+          style={{ color: getThemeColor(isDarkMode, 'mutedText') }}
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: 0.7, delay: 0.3, ease: "easeOut" }}
@@ -82,7 +89,8 @@ export default function AgileProcessSection() {
               transition={{ duration: 0.6, delay: 0.5 + index * 0.15, ease: "easeOut" }}
             >
               <motion.div
-                className="bg-[#0E4F53] text-white px-6 py-4 rounded-lg font-semibold text-lg mb-6 w-full text-center"
+                className="text-white px-6 py-4 rounded-lg font-semibold text-lg mb-6 w-full text-center"
+                style={{ backgroundColor: getAccentColor(isDarkMode) }}
                 initial={{ opacity: 0, y: 20 }}
                 animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
                 transition={{ duration: 0.5, delay: 0.6 + index * 0.15, ease: "easeOut" }}
@@ -93,13 +101,26 @@ export default function AgileProcessSection() {
                 {phase.items.map((item, itemIndex) => (
                   <motion.div
                     key={itemIndex}
-                    className="flex items-center space-x-3 bg-white p-4 rounded-lg shadow-sm text-gray-800"
+                    className="flex items-center space-x-3 p-4 rounded-lg shadow-sm"
+                    style={{
+                      backgroundColor: getCardBackgroundColor(isDarkMode),
+                      color: getThemeColor(isDarkMode, 'secondaryText')
+                    }}
                     initial={{ opacity: 0, x: -20 }}
                     animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }}
                     transition={{ duration: 0.4, delay: 0.7 + index * 0.15 + itemIndex * 0.07, ease: "easeOut" }}
                   >
-                    <div className="p-2 rounded-md border border-gray-200 bg-white">
-                      <ArrowRight className="h-5 w-5 text-[#004d40]" />
+                    <div
+                      className="p-2 rounded-md border"
+                      style={{
+                        backgroundColor: getCardBackgroundColor(isDarkMode),
+                        borderColor: isDarkMode ? '#404040' : '#E5E7EB'
+                      }}
+                    >
+                      <ArrowRight
+                        className="h-5 w-5"
+                        style={{ color: getAccentColor(isDarkMode) }}
+                      />
                     </div>
                     <span>{item}</span>
                   </motion.div>

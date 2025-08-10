@@ -10,8 +10,13 @@ const inter = Inter({ subsets: ["latin"] })
 
 // SEO metadata configuration for the products showcase website
 export const metadata: Metadata = {
-  title: "Cloud Vertex Innovation - Our Products",
+  title: "Cloud Vortex Innovation",
   description: "Dedicated UI/UX talent providing partners with economical solutions for company expansion.",
+  icons: {
+    icon: "/nav.svg",
+    shortcut: "/nav.svg",
+    apple: "/nav.svg",
+  },
 }
 
 /**
@@ -25,6 +30,26 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="dark">
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  var savedTheme = localStorage.getItem('theme');
+                  var shouldBeDark = savedTheme === 'dark' || (!savedTheme && true);
+                  document.documentElement.classList.toggle('dark', shouldBeDark);
+                  document.body.style.backgroundColor = shouldBeDark ? '#131313' : '#F4F3F7';
+                } catch (e) {
+                  // Fallback to dark mode if localStorage is not available
+                  document.documentElement.classList.add('dark');
+                  document.body.style.backgroundColor = '#131313';
+                }
+              })();
+            `,
+          }}
+        />
+      </head>
       <body className={inter.className}>
         <ThemeProvider>
           <AppWrapper>

@@ -24,14 +24,20 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
 
   // Initialize theme from localStorage and system preference
   useEffect(() => {
+    // Apply dark mode immediately on mount since we default to dark
+    applyTheme(true)
+    setIsInitialized(true)
+
     if (typeof window !== 'undefined') {
       const savedTheme = localStorage.getItem('theme')
       const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
       const shouldBeDark = savedTheme === 'dark' || (!savedTheme && true) // Default to dark mode
-      
-      setIsDarkMode(shouldBeDark)
-      applyTheme(shouldBeDark)
-      setIsInitialized(true)
+
+      // Only update if different from default
+      if (shouldBeDark !== true) {
+        setIsDarkMode(shouldBeDark)
+        applyTheme(shouldBeDark)
+      }
     }
   }, [])
 
@@ -39,11 +45,11 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
   const applyTheme = (darkMode: boolean) => {
     if (typeof document !== 'undefined') {
       document.documentElement.classList.toggle('dark', darkMode)
-      
+
       // Update body background color immediately
       document.body.style.backgroundColor = darkMode ? '#131313' : '#F4F3F7'
     }
-    
+
     if (typeof window !== 'undefined') {
       localStorage.setItem('theme', darkMode ? 'dark' : 'light')
     }
@@ -63,11 +69,7 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
     applyTheme(darkMode)
   }
 
-  // Prevent flash of unstyled content
-  if (!isInitialized) {
-    return null
-  }
-
+  // Always render children, no need to wait for initialization since we apply dark theme immediately
   return (
     <ThemeContext.Provider value={{ isDarkMode, toggleTheme, setTheme }}>
       {children}

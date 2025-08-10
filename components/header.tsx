@@ -6,6 +6,7 @@ import { ChevronDown, Menu, X } from 'lucide-react'
 import Link from "next/link"
 import ThemeToggle from "./ThemeToggle"
 import { useTheme } from "../contexts/ThemeContext"
+import { getAccentColor } from "../lib/theme-utils"
 
 /** 
  * Main navigation header component with responsive design
@@ -89,13 +90,13 @@ export default function Header() {
         {/* Company logo and brand name - clickable, redirects to home */}
         <Link href="/" className="flex items-center space-x-2" style={{ textDecoration: 'none' }}>
           <Image
-            src="/nav.svg"
-            alt="Cloud Vertex Innovation Logo"
+            src={isDarkMode ? "/darknav.svg" : "/nav.svg"}
+            alt="Cloud Vortex Innovation Logo"
             width={32}
             height={32}
             className="w-8 h-8"
           />
-          <span className="text-lg font-semibold" style={{ color: '#0E4F53' }}>Cloud Vertex Innovation</span>
+          <span className="text-lg font-semibold" style={{ color: getAccentColor(isDarkMode) }}>Cloud Vortex Innovation</span>
         </Link>
 
         {/* Desktop navigation menu - hidden on mobile */}

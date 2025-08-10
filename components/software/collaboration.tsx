@@ -4,7 +4,7 @@ import Image from "next/image"
 import { motion, useInView } from "framer-motion"
 import { useRef } from "react"
 import { useTheme } from "../../contexts/ThemeContext"
-import { getCardBackgroundColor, getThemeColor } from "../../lib/theme-utils"
+import { getCardBackgroundColor, getThemeColor, getAccentColor } from "../../lib/theme-utils"
 
 export default function CollaborationProcessSection() {
   const sectionRef = useRef(null)
@@ -149,7 +149,10 @@ export default function CollaborationProcessSection() {
                     animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -10 }}
                     transition={{ duration: 0.4, delay: 0.7 + index * 0.15, ease: "easeOut" }}
                   >
-                    <div className="h-16 w-1 bg-[#0E4F53] mr-2" />
+                    <div
+                      className="h-16 w-1 mr-2"
+                      style={{ backgroundColor: getAccentColor(isDarkMode) }}
+                    />
                     <div className="flex flex-col gap-2">
                       <span
                         className="text-[16px] font-normal"

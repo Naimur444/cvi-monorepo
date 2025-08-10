@@ -8,7 +8,7 @@ const UiDesign = () => {
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 place-items-center gap-10 md:gap-20 relative">
           <div className="absolute -top-12 left-0">
-            <p className="text-white bg-[#003C42] rounded-full py-1 px-6">
+            <p className="text-white bg-theme-accent rounded-full py-1 px-6">
               Step 3
             </p>
           </div>
@@ -28,7 +28,7 @@ const UiDesign = () => {
             </svg>
           </div>
           <div>
-            <h2 className="text-2xl md:text-3xl text-[#003C42] font-bold mb-6">
+            <h2 className="text-2xl md:text-3xl text-theme-accent font-bold mb-6">
               UI Design
             </h2>
             <p className="  mb-6">

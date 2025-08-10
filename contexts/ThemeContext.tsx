@@ -19,7 +19,7 @@ interface ThemeProviderProps {
  * Provides theme context to all child components
  */
 export function ThemeProvider({ children }: ThemeProviderProps) {
-  const [isDarkMode, setIsDarkMode] = useState(false)
+  const [isDarkMode, setIsDarkMode] = useState(true) // Default to dark mode
   const [isInitialized, setIsInitialized] = useState(false)
 
   // Initialize theme from localStorage and system preference
@@ -27,7 +27,7 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
     if (typeof window !== 'undefined') {
       const savedTheme = localStorage.getItem('theme')
       const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-      const shouldBeDark = savedTheme === 'dark' || (!savedTheme && prefersDark)
+      const shouldBeDark = savedTheme === 'dark' || (!savedTheme && true) // Default to dark mode
       
       setIsDarkMode(shouldBeDark)
       applyTheme(shouldBeDark)

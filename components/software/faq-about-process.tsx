@@ -5,7 +5,7 @@ import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "..
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 import { useTheme } from "../../contexts/ThemeContext";
-import { getCardBackgroundColor, getThemeColor } from "../../lib/theme-utils";
+import { getCardBackgroundColor, getThemeColor, getAccentColor } from "../../lib/theme-utils";
 
 const FAQAboutProcess = () => {
   const sectionRef = useRef(null);
@@ -58,7 +58,7 @@ const FAQAboutProcess = () => {
                 className="rounded-lg shadow-md"
                 style={{
                   backgroundColor: getCardBackgroundColor(isDarkMode),
-                  borderTop: '4px solid #0E4F53',
+                  borderTop: `4px solid ${getAccentColor(isDarkMode)}`,
                   borderLeft: isDarkMode ? 'none' : '1px solid #E5E7EB',
                   borderRight: isDarkMode ? 'none' : '1px solid #E5E7EB',
                   borderBottom: isDarkMode ? 'none' : '1px solid #E5E7EB'

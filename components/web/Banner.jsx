@@ -26,7 +26,7 @@ const Banner = () => {
               Utilizing Leading Tech
             </h2>
             <button
-              className="py-2 px-6 bg-[#003C42] font-semibold text-white rounded-lg w-1/2 mb-6"
+              className="py-2 px-6 bg-theme-accent hover:bg-theme-accent/90 font-semibold text-white rounded-lg w-1/2 mb-6"
               onClick={scrollToContact}
             >
               Get in Touch

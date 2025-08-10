@@ -4,6 +4,8 @@ import { motion } from "framer-motion"
 import { useInView } from "framer-motion"
 import { useRef } from "react"
 import Image from "next/image"
+import { useTheme } from "../contexts/ThemeContext"
+import { getAccentColor } from "../lib/theme-utils"
 
 /**
  * Site footer component with company branding and social links
@@ -11,6 +13,9 @@ import Image from "next/image"
  * Includes scroll-triggered animation for smooth appearance
  */
 export default function Footer() {
+  // Theme context
+  const { isDarkMode } = useTheme()
+
   // Intersection observer for scroll-triggered animation
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: "-50px" })
@@ -31,18 +36,18 @@ export default function Footer() {
             {/* Company logo and name */}
             <div className="flex items-center space-x-2">
               <Image
-                src="/nav.svg"
-                alt="Cloud Vertex Innovation Logo"
+                src={isDarkMode ? "/darknav.svg" : "/nav.svg"}
+                alt="Cloud Vortex Innovation Logo"
                 width={32}
                 height={32}
                 className="w-8 h-8"
               />
-              <span className="text-lg font-semibold" style={{ color: '#0E4F53' }}>Cloud Vertex Innovation</span>
+              <span className="text-lg font-semibold" style={{ color: getAccentColor(isDarkMode) }}>Cloud Vortex Innovation</span>
             </div>
 
             {/* Company tagline */}
             <p className="  text-sm max-w-md">
-              This is a cloud. A vertex of innovation is just the beginning.
+              This is a cloud. A vortex of innovation is just the beginning.
             </p>
           </div>
 
@@ -54,7 +59,7 @@ export default function Footer() {
               target="_blank"
               rel="noopener noreferrer"
               className="w-8 h-8 rounded-full flex items-center justify-center text-white hover:opacity-80 transition-opacity duration-200"
-              style={{ backgroundColor: '#0E4F53' }}
+              style={{ backgroundColor: getAccentColor(isDarkMode) }}
               aria-label="Facebook"
             >
               <Image
@@ -71,7 +76,7 @@ export default function Footer() {
               target="_blank"
               rel="noopener noreferrer"
               className="w-8 h-8 rounded-full flex items-center justify-center text-white hover:opacity-80 transition-opacity duration-200"
-              style={{ backgroundColor: '#0E4F53' }}
+              style={{ backgroundColor: getAccentColor(isDarkMode) }}
               aria-label="LinkedIn"
             >
               <Image
@@ -88,7 +93,7 @@ export default function Footer() {
               target="_blank"
               rel="noopener noreferrer"
               className="w-8 h-8 rounded-full flex items-center justify-center text-white hover:opacity-80 transition-opacity duration-200"
-              style={{ backgroundColor: '#0E4F53' }}
+              style={{ backgroundColor: getAccentColor(isDarkMode) }}
               aria-label="X (Twitter)"
             >
               <Image
@@ -105,7 +110,7 @@ export default function Footer() {
               target="_blank"
               rel="noopener noreferrer"
               className="w-8 h-8 rounded-full flex items-center justify-center text-white hover:opacity-80 transition-opacity duration-200"
-              style={{ backgroundColor: '#0E4F53' }}
+              style={{ backgroundColor: getAccentColor(isDarkMode) }}
               aria-label="YouTube"
             >
               <Image
@@ -123,7 +128,7 @@ export default function Footer() {
         <div className="flex flex-col md:flex-row justify-between items-center pt-6 border-t border-gray-200">
           {/* Copyright notice */}
           <p className="text-sm   mb-4 md:mb-0">
-            Copyright © 2025 Cloud Vertex Innovation All rights reserved
+            Copyright © 2025 Cloud Vortex Innovation All rights reserved
           </p>
 
           {/* Legal links and company badge */}

@@ -3,6 +3,8 @@
 import Image from "next/image";
 import React, { useRef, useState, useEffect } from "react";
 import { motion, useInView, useMotionValue, useTransform, animate } from "framer-motion";
+import { useTheme } from '../../contexts/ThemeContext';
+import { getAccentColor } from '../../lib/theme-utils';
 
 // Custom hook for counting animation
 const useCountAnimation = (end, duration = 2, delay = 0) => {
@@ -56,6 +58,7 @@ const AnimatedCounter = ({ value, suffix = "", isInView, delay = 0 }) => {
 };
 
 const Hero = () => {
+  const { isDarkMode } = useTheme();
   const sectionRef = useRef(null);
   const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
 
@@ -83,8 +86,8 @@ const Hero = () => {
             Empowering <br /> Business With
           </motion.h1>
           <motion.h1
-            style={{ fontSize: '39px', lineHeight: '120%', fontWeight: 700 }}
-            className="text-[#0E4F53] mb-6"
+            style={{ fontSize: '39px', lineHeight: '120%', fontWeight: 700, color: getAccentColor(isDarkMode) }}
+            className="mb-6"
             initial={{ opacity: 0, y: 30 }}
             animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
             transition={{ duration: 0.6, delay: 0.4, ease: "easeOut" }}
@@ -146,7 +149,8 @@ const Hero = () => {
               className="text-center flex-1 min-w-0 py-2 sm:py-3"
             >
               <motion.h3
-                className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-[#0E4F53] mb-1"
+                className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-1"
+                style={{ color: getAccentColor(isDarkMode) }}
                 animate={isInView ? {
                   scale: [1, 1.1, 1],
                 } : {}}

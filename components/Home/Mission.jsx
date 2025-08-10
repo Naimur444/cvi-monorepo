@@ -4,7 +4,7 @@ import React, { useRef } from "react";
 import Image from "next/image";
 import { motion, useInView } from "framer-motion";
 import { useTheme } from "../../contexts/ThemeContext";
-import { getCardBackgroundColor, getThemeColor } from "../../lib/theme-utils";
+import { getCardBackgroundColor, getThemeColor, getAccentColor } from "../../lib/theme-utils";
 
 const Mission = () => {
   const sectionRef = useRef(null);
@@ -86,7 +86,9 @@ const Mission = () => {
               whileHover={{
                 y: -12,
                 scale: 1.02,
-                boxShadow: "0 32px 64px -12px rgba(14, 79, 83, 0.25)"
+                boxShadow: isDarkMode
+                  ? "0 32px 64px -12px rgba(5, 124, 128, 0.25)"
+                  : "0 32px 64px -12px rgba(14, 79, 83, 0.25)"
                 // Removed backgroundColor to prevent white background in dark mode
               }}
               whileTap={{
@@ -95,7 +97,11 @@ const Mission = () => {
               }}
             >
               <motion.div
-                className="text-xl text-[#0E4F53] bg-[#0e4f5333] p-2 rounded-lg flex items-center justify-center w-10 h-10 relative overflow-hidden"
+                className="text-xl p-2 rounded-lg flex items-center justify-center w-10 h-10 relative overflow-hidden"
+                style={{
+                  color: getAccentColor(isDarkMode),
+                  backgroundColor: `${getAccentColor(isDarkMode)}33`
+                }}
                 transition={{
                   scale: { type: "spring", stiffness: 500, damping: 25 },
                   rotate: { type: "spring", stiffness: 400, damping: 20 },
@@ -104,7 +110,7 @@ const Mission = () => {
                 whileHover={{
                   scale: 1.15,
                   rotate: 8,
-                  backgroundColor: "#0E4F53"
+                  backgroundColor: getAccentColor(isDarkMode)
                 }}
               >
                 <motion.div
@@ -131,7 +137,7 @@ const Mission = () => {
                   scale: { type: "spring", stiffness: 400, damping: 25 }
                 }}
                 whileHover={{
-                  color: "#0E4F53",
+                  color: getAccentColor(isDarkMode),
                   scale: 1.05
                 }}
               >

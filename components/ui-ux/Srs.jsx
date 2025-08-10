@@ -1,13 +1,18 @@
+"use client"
+
 import Image from "next/image";
 import React from "react";
+import { useTheme } from '../../contexts/ThemeContext';
 
 const Srs = () => {
+  const { theme } = useTheme();
+  const accentColor = theme === 'dark' ? '#057C80' : '#003C42';
   return (
     <section className="  py-10 md:py-20">
       <div className="w-11/12 md:w-9/12 mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 place-items-center gap-10 md:gap-20 relative">
           <div className="absolute -top-12 right-0">
-            <p className="text-white bg-[#003C42] rounded-full py-1 px-6">
+            <p className="text-white rounded-full py-1 px-6" style={{ backgroundColor: accentColor }}>
               Step 4
             </p>
           </div>
@@ -36,7 +41,7 @@ const Srs = () => {
             />
           </div>
           <div>
-            <h2 className="text-2xl md:text-3xl text-[#003C42] font-bold mb-6">
+            <h2 className="text-2xl md:text-3xl font-bold mb-6" style={{ color: accentColor }}>
               SRS
             </h2>
             <p className="  mb-6">

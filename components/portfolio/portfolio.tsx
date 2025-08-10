@@ -335,7 +335,7 @@ export default function Component() {
                   <div className="mb-3 sm:mb-4">
                     <span
                       className={`inline-block text-white px-3 sm:px-4 py-1 sm:py-2 rounded-full text-xs sm:text-sm font-medium`}
-                      style={{ backgroundColor: project.tagColor }}
+                      style={{ backgroundColor: getAccentColor(isDarkMode) }}
                     >
                       {project.tag}
                     </span>
@@ -469,7 +469,7 @@ export default function Component() {
                             <div className="mb-2 sm:mb-3">
                               <span
                                 className="inline-block text-white px-2 sm:px-3 py-1 rounded-full text-xs font-medium"
-                                style={{ backgroundColor: project.tagColor }}
+                                style={{ backgroundColor: getAccentColor(isDarkMode) }}
                               >
                                 {project.tag}
                               </span>

@@ -18,7 +18,7 @@ const Collaboration = () => {
             <h3 className="text-xl font-semibold  ">
               Daily Scrum
             </h3>
-            <div className="border-l-4 border-[#003C42] p-2 space-y-2">
+            <div className="border-l-4 border-theme-accent p-2 space-y-2">
               <p className="text-[#181818]">Every Day</p>
               <p className="text-[#181818]">15 Minutes</p>
             </div>
@@ -34,7 +34,7 @@ const Collaboration = () => {
             <h3 className="text-xl font-semibold  ">
               Daily Scrum
             </h3>
-            <div className="border-l-4 border-[#003C42] p-2 space-y-2">
+            <div className="border-l-4 border-theme-accent p-2 space-y-2">
               <p className="text-[#181818]">Every Day</p>
               <p className="text-[#181818]">15 Minutes</p>
             </div>
@@ -50,7 +50,7 @@ const Collaboration = () => {
             <h3 className="text-xl font-semibold  ">
               Weekly Priority
             </h3>
-            <div className="border-l-4 border-[#003C42] p-2 space-y-2">
+            <div className="border-l-4 border-theme-accent p-2 space-y-2">
               <p className="text-[#181818]">Every Day</p>
               <p className="text-[#181818]">1 hour</p>
             </div>
@@ -67,7 +67,7 @@ const Collaboration = () => {
             <h3 className="text-xl font-semibold  ">
               Sprint Planning
             </h3>
-            <div className="border-l-4 border-[#003C42] p-2 space-y-2">
+            <div className="border-l-4 border-theme-accent p-2 space-y-2">
               <p className="text-[#181818]">Every 4 Weeks</p>
               <p className="text-[#181818]">1-2 hours</p>
             </div>
@@ -83,7 +83,7 @@ const Collaboration = () => {
             <h3 className="text-xl font-semibold  ">
               Sprint Delivery Review
             </h3>
-            <div className="border-l-4 border-[#003C42] p-2 space-y-2">
+            <div className="border-l-4 border-theme-accent p-2 space-y-2">
               <p className="text-[#181818]">Every 4 weeks</p>
               <p className="text-[#181818]">1-2 hours</p>
             </div>
@@ -99,7 +99,7 @@ const Collaboration = () => {
             <h3 className="text-xl font-semibold  ">
               Special Quarterly Meeting
             </h3>
-            <div className="border-l-4 border-[#003C42] p-2 space-y-2">
+            <div className="border-l-4 border-theme-accent p-2 space-y-2">
               <p className="text-[#181818]">Every Quarter</p>
               <p className="text-[#181818]">1-2 hours</p>
             </div>

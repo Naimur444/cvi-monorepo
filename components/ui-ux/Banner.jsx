@@ -48,7 +48,7 @@ export default function Banner() {
           </div>
           <div className="flex flex-col gap-4">
             <Button
-              className="w-[340px] h-[46px] text-lg font-medium bg-[#003C42] text-primary-foreground hover:bg-[#003C42]/90"
+              className="w-[340px] h-[46px] text-lg font-medium bg-theme-accent text-primary-foreground hover:bg-theme-accent/90"
               onClick={scrollToContact}
             >
               Get In Touch

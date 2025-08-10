@@ -3,8 +3,11 @@
 import Image from "next/image";
 import React, { useRef } from "react";
 import { motion, useInView } from "framer-motion";
+import { useTheme } from "../../contexts/ThemeContext";
+import { getAccentColor } from "../../lib/theme-utils";
 
 const Revolution = () => {
+  const { isDarkMode } = useTheme();
   const sectionRef = useRef(null);
   const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
   const items = [
@@ -122,11 +125,12 @@ const Revolution = () => {
                 }}
               >
                 <motion.div
-                  className="bg-[#0E4F53] p-3 rounded-lg flex items-center justify-center w-12 h-12"
+                  className="p-3 rounded-lg flex items-center justify-center w-12 h-12"
+                  style={{ backgroundColor: getAccentColor(isDarkMode) }}
                   whileHover={{
                     scale: 1.1,
                     rotate: 5,
-                    backgroundColor: "#0A3D41"
+                    backgroundColor: isDarkMode ? "#046B70" : "#0A3D41"
                   }}
                   transition={{ duration: 0.2 }}
                 >
@@ -138,8 +142,9 @@ const Revolution = () => {
                   />
                 </motion.div>
                 <motion.h3
-                  className="text-xl font-semibold text-[#0E4F53] mt-4"
-                  whileHover={{ color: "#0A3D41" }}
+                  className="text-xl font-semibold mt-4"
+                  style={{ color: getAccentColor(isDarkMode) }}
+                  whileHover={{ color: isDarkMode ? "#046B70" : "#0A3D41" }}
                   transition={{ duration: 0.2 }}
                 >
                   {item.title}

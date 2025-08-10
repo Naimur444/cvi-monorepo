@@ -1,9 +1,14 @@
+"use client";
 import React from "react";
 import Header from '../../components/header';
 import Footer from '../../components/footer';
+import { useTheme } from '../../contexts/ThemeContext';
+import { getAccentColor } from '../../lib/theme-utils';
 
 
 const page = () => {
+  const { isDarkMode } = useTheme();
+
   return (
     <>
       <Header />
@@ -239,7 +244,14 @@ const page = () => {
               <p className="leading-relaxed mb-6" style={{ fontSize: '16px', lineHeight: '24px', fontWeight: 400 }}>
                 If you would like to contact us to understand more about this
                 Agreement or wish to contact us concerning any matter relating to it,
-                you may send an email to hello@cloudvortexinnovation.com
+                you may send an email to{' '}
+                <a
+                  href="mailto:hello@cloudvortexinnovation.com"
+                  style={{ color: getAccentColor(isDarkMode) }}
+                  className="hover:underline"
+                >
+                  hello@cloudvortexinnovation.com
+                </a>
               </p>
             </div>
           </div>

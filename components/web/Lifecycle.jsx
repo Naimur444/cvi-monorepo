@@ -1,7 +1,12 @@
+"use client"
+
 import Image from "next/image";
 import React from "react";
+import { useTheme } from '../../contexts/ThemeContext';
+import { getAccentColor } from '../../lib/theme-utils';
 
 const Lifecycle = () => {
+  const { isDarkMode } = useTheme();
   return (
     <section className="w-full   py-12 md:py-24 lg:py-32">
       <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
@@ -16,7 +21,7 @@ const Lifecycle = () => {
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 place-items-center gap-10 md:gap-20 relative">
             <div className="absolute -top-12 left-0">
-              <p className="text-white bg-[#003C42] rounded-full py-1 px-6">
+              <p className="text-white rounded-full py-1 px-6" style={{ backgroundColor: getAccentColor(isDarkMode) }}>
                 Step 1
               </p>
             </div>
@@ -36,7 +41,7 @@ const Lifecycle = () => {
               </svg>
             </div>
             <div>
-              <h2 className="text-2xl md:text-3xl text-[#003C42] font-bold mb-6">
+              <h2 className="text-2xl md:text-3xl font-bold mb-6" style={{ color: getAccentColor(isDarkMode) }}>
                 User Journey Map
               </h2>
               <p className="  mb-6">

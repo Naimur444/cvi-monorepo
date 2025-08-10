@@ -1,6 +1,11 @@
+"use client"
+
 import Image from "next/image"
+import { useTheme } from '../../contexts/ThemeContext'
 
 export default function ProcessLifecycle() {
+  const { theme } = useTheme()
+  const accentColor = theme === 'dark' ? '#057C80' : '#003C42'
   return (
     <section className="  py-10 md:py-20">
       <div className="w-11/12 md:w-9/12 mx-auto">
@@ -15,13 +20,13 @@ export default function ProcessLifecycle() {
         <div className="mb-16 md:mb-24">
           <div className="grid grid-cols-1 md:grid-cols-2 place-items-center gap-10 md:gap-20 relative">
             <div className="absolute -top-12 left-0">
-              <p className="text-white bg-[#003C42] rounded-full py-1 px-6">
+              <p className="text-white rounded-full py-1 px-6" style={{ backgroundColor: accentColor }}>
                 Step 1
               </p>
             </div>
 
             <div className="order-2 md:order-1">
-              <h2 className="text-2xl md:text-3xl text-[#003C42] font-bold mb-6">
+              <h2 className="text-2xl md:text-3xl font-bold mb-6" style={{ color: accentColor }}>
                 User Journey Map
               </h2>
               <p className="  mb-6">
@@ -60,7 +65,7 @@ export default function ProcessLifecycle() {
         <div className="mb-16 md:mb-24">
           <div className="grid grid-cols-1 md:grid-cols-2 place-items-center gap-10 md:gap-20 relative">
             <div className="absolute -top-12 left-0 md:left-auto md:right-0">
-              <p className="text-white bg-[#003C42] rounded-full py-1 px-6">
+              <p className="text-white rounded-full py-1 px-6" style={{ backgroundColor: accentColor }}>
                 Step 2
               </p>
             </div>
@@ -75,7 +80,7 @@ export default function ProcessLifecycle() {
             </div>
 
             <div className="order-2 md:text-right">
-              <h2 className="text-2xl md:text-3xl text-[#003C42] font-bold mb-6">
+              <h2 className="text-2xl md:text-3xl font-bold mb-6" style={{ color: accentColor }}>
                 Wireframe
               </h2>
               <p className="  mb-6">
@@ -104,13 +109,13 @@ export default function ProcessLifecycle() {
         <div className="mb-16 md:mb-24">
           <div className="grid grid-cols-1 md:grid-cols-2 place-items-center gap-10 md:gap-20 relative">
             <div className="absolute -top-12 left-0">
-              <p className="text-white bg-[#003C42] rounded-full py-1 px-6">
+              <p className="text-white rounded-full py-1 px-6" style={{ backgroundColor: accentColor }}>
                 Step 3
               </p>
             </div>
 
             <div className="order-2 md:order-1">
-              <h2 className="text-2xl md:text-3xl text-[#003C42] font-bold mb-6">
+              <h2 className="text-2xl md:text-3xl font-bold mb-6" style={{ color: accentColor }}>
                 UI Design
               </h2>
               <p className="  mb-6">
@@ -155,7 +160,7 @@ export default function ProcessLifecycle() {
         <div className="mb-16 md:mb-24">
           <div className="grid grid-cols-1 md:grid-cols-2 place-items-center gap-10 md:gap-20 relative">
             <div className="absolute -top-12 left-0 md:left-auto md:right-0">
-              <p className="text-white bg-[#003C42] rounded-full py-1 px-6">
+              <p className="text-white rounded-full py-1 px-6" style={{ backgroundColor: accentColor }}>
                 Step 4
               </p>
             </div>
@@ -170,7 +175,7 @@ export default function ProcessLifecycle() {
             </div>
 
             <div className="order-2 md:text-right">
-              <h2 className="text-2xl md:text-3xl text-[#003C42] font-bold mb-6">
+              <h2 className="text-2xl md:text-3xl font-bold mb-6" style={{ color: accentColor }}>
                 SRS
               </h2>
               <p className="  mb-6">
@@ -204,13 +209,13 @@ export default function ProcessLifecycle() {
         <div className="mb-16 md:mb-24">
           <div className="grid grid-cols-1 md:grid-cols-2 place-items-center gap-10 md:gap-20 relative">
             <div className="absolute -top-12 left-0">
-              <p className="text-white bg-[#003C42] rounded-full py-1 px-6">
+              <p className="text-white rounded-full py-1 px-6" style={{ backgroundColor: accentColor }}>
                 Step 5
               </p>
             </div>
 
             <div className="order-2 md:order-1">
-              <h2 className="text-2xl md:text-3xl text-[#003C42] font-bold mb-6">
+              <h2 className="text-2xl md:text-3xl font-bold mb-6" style={{ color: accentColor }}>
                 Developing & Testing
               </h2>
               <p className="  mb-6">

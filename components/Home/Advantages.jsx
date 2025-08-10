@@ -3,8 +3,11 @@
 import Image from "next/image";
 import React, { useRef } from "react";
 import { motion, useInView } from "framer-motion";
+import { useTheme } from "../../contexts/ThemeContext";
+import { getAccentColor } from "../../lib/theme-utils";
 
 const Advantages = () => {
+  const { isDarkMode } = useTheme();
   const sectionRef = useRef(null);
   const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
 
@@ -62,7 +65,8 @@ const Advantages = () => {
               transition={{ duration: 0.6, delay: 0.7, ease: "easeOut" }}
             >
               <motion.div
-                className="bg-[#0E4F53] p-3 sm:p-4 rounded-xl sm:rounded-2xl w-40 sm:w-48 md:w-64"
+                className="p-3 sm:p-4 rounded-xl sm:rounded-2xl w-40 sm:w-48 md:w-64"
+                style={{ backgroundColor: getAccentColor(isDarkMode) }}
                 whileHover={{
                   scale: 1.05,
                   boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)"

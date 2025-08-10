@@ -1,5 +1,4 @@
 "use client"
-import Image from "next/image"
 import { Phone, MapPin, Mail } from "lucide-react"
 import { useTheme } from "../../contexts/ThemeContext"
 import { getCardBackgroundColor, getThemeColor, getAccentColor } from "../../lib/theme-utils"

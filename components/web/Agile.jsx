@@ -1,6 +1,11 @@
+"use client"
+
 import React from "react";
+import { useTheme } from '../../contexts/ThemeContext';
 
 const Agile = () => {
+  const { theme } = useTheme();
+  const accentColor = theme === 'dark' ? '#057C80' : '#003C42';
   const designPhaseItems = [
     "Design Strategy",
     "Business Understanding",
@@ -42,7 +47,7 @@ const Agile = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Design Phase */}
           <div>
-            <div className="w-full py-2 font-semibold text-white bg-[#003C42] text-center rounded-lg mb-6">
+            <div className="w-full py-2 font-semibold text-white text-center rounded-lg mb-6" style={{ backgroundColor: accentColor }}>
               Design Phase
             </div>
             {designPhaseItems.map((item, index) => (
@@ -81,7 +86,7 @@ const Agile = () => {
 
           {/* Development Phase */}
           <div>
-            <div className="w-full py-2 font-semibold text-white bg-[#003C42] text-center rounded-lg mb-6">
+            <div className="w-full py-2 font-semibold text-white text-center rounded-lg mb-6" style={{ backgroundColor: accentColor }}>
               Development Phase
             </div>
             {developmentPhaseItems.map((item, index) => (
@@ -120,7 +125,7 @@ const Agile = () => {
 
           {/* Deploy and Testing Phase */}
           <div>
-            <div className="w-full py-2 font-semibold text-white bg-[#003C42] text-center rounded-lg mb-6">
+            <div className="w-full py-2 font-semibold text-white text-center rounded-lg mb-6" style={{ backgroundColor: accentColor }}>
               Deploy & Testing Phase
             </div>
             {deployPhaseItems.map((item, index) => (

@@ -159,6 +159,44 @@
     background: radial-gradient(ellipse 800px 1000px at top left, #0a4a52 0%, #041e21 55%, transparent 80%),
       radial-gradient(ellipse 800px 1000px at bottom right, #0a4a52 0%, #041e21 55%, transparent 80%), #000000;
   }
+
+  /* Theme-aware accent color utilities */
+  .bg-theme-accent {
+    background-color: var(--theme-accent);
+  }
+
+  .text-theme-accent {
+    color: var(--theme-accent);
+  }
+
+  .border-theme-accent {
+    border-color: var(--theme-accent);
+  }
+
+  .stroke-theme-accent {
+    stroke: var(--theme-accent);
+  }
+
+  .hover\:bg-theme-accent:hover {
+    background-color: var(--theme-accent);
+  }
+
+  .hover\:text-theme-accent:hover {
+    color: var(--theme-accent);
+  }
+
+  .hover\:border-theme-accent:hover {
+    border-color: var(--theme-accent);
+  }
+
+  /* Theme-aware accent with opacity */
+  .bg-theme-accent\/90 {
+    background-color: color-mix(in oklab, var(--theme-accent) 90%, transparent);
+  }
+
+  .hover\:bg-theme-accent\/90:hover {
+    background-color: color-mix(in oklab, var(--theme-accent) 90%, transparent);
+  }
 }
 
 /* LIQUID GLASS MODAL STYLES */

@@ -7,6 +7,8 @@ import Image from "next/image"
 import { Check } from "lucide-react"
 import { Calendar } from "@/components/ui/calendar"
 import * as React from "react"
+import { useTheme } from "../../contexts/ThemeContext"
+import { getAccentColor } from "../../lib/theme-utils"
 
 type HeroSectionProps = {
   title?: string;
@@ -14,6 +16,7 @@ type HeroSectionProps = {
 };
 
 export default function HeroSection({ title = "Custom Software Development", image }: HeroSectionProps) {
+  const { isDarkMode } = useTheme()
   const [showCalendar, setShowCalendar] = React.useState(false)
   const calendarRef = React.useRef<HTMLDivElement>(null)
   const sectionRef = useRef(null)
@@ -66,7 +69,8 @@ export default function HeroSection({ title = "Custom Software Development", ima
         >
           <div className="space-y-4">
             <motion.h1
-              className="text-[39px] font-bold tracking-tight text-[#0E4F53] sm:text-[39px] md:text-[39px] lg:text-[39px]"
+              className="text-[39px] font-bold tracking-tight sm:text-[39px] md:text-[39px] lg:text-[39px]"
+              style={{ color: getAccentColor(isDarkMode) }}
               initial={{ opacity: 0, y: 30 }}
               animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
               transition={{ duration: 0.7, delay: 0.3, ease: "easeOut" }}
@@ -84,7 +88,7 @@ export default function HeroSection({ title = "Custom Software Development", ima
           </div>
           <div className="flex flex-col gap-4">
             <Button
-              className="w-[340px] h-[46px] text-lg font-medium bg-[#003C42] text-primary-foreground hover:bg-[#003C42]/90"
+              className="w-[340px] h-[46px] text-lg font-medium bg-theme-accent text-white hover:bg-theme-accent/90"
               onClick={scrollToContact}
             >
               Get In Touch

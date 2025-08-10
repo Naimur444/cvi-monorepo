@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
+import { useTheme } from "../contexts/ThemeContext"
+import { getAccentColor, getCardBackgroundColor } from "../lib/theme-utils"
 
 interface PreloaderProps {
   onComplete?: () => void
@@ -9,6 +11,7 @@ interface PreloaderProps {
 }
 
 export default function Preloader({ onComplete, duration = 3000 }: PreloaderProps) {
+  const { isDarkMode } = useTheme()
   const [isVisible, setIsVisible] = useState(true)
   const [progress, setProgress] = useState(0)
   const [counter, setCounter] = useState(0)
@@ -54,7 +57,8 @@ export default function Preloader({ onComplete, duration = 3000 }: PreloaderProp
           animate={{ opacity: 1 }}
           exit={{ opacity: 0, y: -50 }}
           transition={{ duration: 0.6 }}
-          className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-white"
+          className="fixed inset-0 z-50 flex flex-col items-center justify-center"
+          style={{ backgroundColor: getCardBackgroundColor(isDarkMode) }}
         >
           {/* Animated Background Elements */}
           <div className="absolute inset-0 overflow-hidden">
@@ -64,7 +68,7 @@ export default function Preloader({ onComplete, duration = 3000 }: PreloaderProp
                 key={i}
                 className="absolute opacity-5"
                 style={{
-                  backgroundColor: "#0E4F53",
+                  backgroundColor: getAccentColor(isDarkMode),
                   width: `${20 + i * 10}px`,
                   height: `${20 + i * 10}px`,
                   borderRadius: i % 2 === 0 ? "50%" : "20%",
@@ -89,36 +93,72 @@ export default function Preloader({ onComplete, duration = 3000 }: PreloaderProp
             <div
               className="absolute inset-0 opacity-5"
               style={{
-                backgroundImage: `radial-gradient(circle at 1px 1px, #0E4F53 1px, transparent 0)`,
+                backgroundImage: `radial-gradient(circle at 1px 1px, ${getAccentColor(isDarkMode)} 1px, transparent 0)`,
                 backgroundSize: "40px 40px",
               }}
             />
           </div>
 
-          {/* Main Logo Container with Notification */}
+          {/* Main Logo Container - Horizontal Layout */}
           <motion.div
             initial={{ scale: 0, rotate: -90 }}
             animate={{ scale: 1, rotate: 0 }}
             transition={{ duration: 1, ease: "easeOut", type: "spring", stiffness: 100 }}
-            className="relative z-10 mb-6"
+            className="relative z-10 mb-8"
           >
-            {/* Logo with Subtle Animation */}
+            {/* Horizontal Logo and CVI Layout */}
             <motion.div
               animate={{
-                y: [-3, 3, -3],
-                rotate: [0, 1, -1, 0],
+                y: [-1, 1, -1],
               }}
               transition={{
-                duration: 3,
+                duration: 4,
                 repeat: Number.POSITIVE_INFINITY,
                 ease: "easeInOut",
               }}
-              className="relative p-6 rounded-3xl bg-gradient-to-br from-gray-50 to-white shadow-2xl border border-gray-100"
+              className="relative flex items-center space-x-6 p-6 rounded-3xl shadow-2xl border"
               style={{
-                boxShadow: "0 20px 40px -12px rgba(14, 79, 83, 0.15), 0 0 0 1px rgba(14, 79, 83, 0.05)",
+                background: isDarkMode
+                  ? "linear-gradient(135deg, rgba(19, 19, 19, 0.95) 0%, rgba(30, 30, 30, 0.95) 100%)"
+                  : "linear-gradient(135deg, rgba(249, 250, 251, 0.95) 0%, rgba(255, 255, 255, 0.95) 100%)",
+                borderColor: isDarkMode ? "rgba(255, 255, 255, 0.1)" : "rgba(0, 0, 0, 0.1)",
+                boxShadow: isDarkMode
+                  ? `0 20px 40px -12px rgba(5, 124, 128, 0.15), 0 0 0 1px rgba(5, 124, 128, 0.05)`
+                  : `0 20px 40px -12px rgba(14, 79, 83, 0.15), 0 0 0 1px rgba(14, 79, 83, 0.05)`,
               }}
             >
-              <img src="/nav.svg" alt="Cloud Vertex Innovation" className="w-20 h-16" />
+              {/* Logo */}
+              <img
+                src={isDarkMode ? "/darknav.svg" : "/nav.svg"}
+                alt="Cloud Vertex Innovation"
+                className="w-16 h-12"
+              />
+
+              {/* CVI Text */}
+              <motion.h1
+                className="text-5xl font-bold tracking-wider"
+                style={{ color: getAccentColor(isDarkMode) }}
+                animate={{
+                  textShadow: isDarkMode
+                    ? [
+                        "0 0 0px rgba(5, 124, 128, 0)",
+                        "0 0 10px rgba(5, 124, 128, 0.2)",
+                        "0 0 0px rgba(5, 124, 128, 0)",
+                      ]
+                    : [
+                        "0 0 0px rgba(14, 79, 83, 0)",
+                        "0 0 10px rgba(14, 79, 83, 0.2)",
+                        "0 0 0px rgba(14, 79, 83, 0)",
+                      ],
+                }}
+                transition={{
+                  duration: 3,
+                  repeat: Number.POSITIVE_INFINITY,
+                  ease: "easeInOut",
+                }}
+              >
+                CVI
+              </motion.h1>
 
               {/* Notification Counter Badge */}
               <motion.div
@@ -126,7 +166,7 @@ export default function Preloader({ onComplete, duration = 3000 }: PreloaderProp
                 animate={{ scale: 1 }}
                 transition={{ duration: 0.5, delay: 0.8, type: "spring", stiffness: 200 }}
                 className="absolute -top-2 -right-2 min-w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-bold shadow-lg"
-                style={{ backgroundColor: "#0E4F53" }}
+                style={{ backgroundColor: getAccentColor(isDarkMode) }}
               >
                 <motion.span
                   key={counter}
@@ -140,7 +180,7 @@ export default function Preloader({ onComplete, duration = 3000 }: PreloaderProp
                 {/* Pulse Ring Animation */}
                 <motion.div
                   className="absolute inset-0 rounded-full border-2"
-                  style={{ borderColor: "#0E4F53" }}
+                  style={{ borderColor: getAccentColor(isDarkMode) }}
                   animate={{
                     scale: [1, 1.8],
                     opacity: [0.8, 0],
@@ -155,33 +195,6 @@ export default function Preloader({ onComplete, duration = 3000 }: PreloaderProp
             </motion.div>
           </motion.div>
 
-          {/* CVI Text */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.5 }}
-            className="relative z-10 mb-8"
-          >
-            <motion.h1
-              className="text-6xl font-bold tracking-wider"
-              style={{ color: "#0E4F53" }}
-              animate={{
-                textShadow: [
-                  "0 0 0px rgba(14, 79, 83, 0)",
-                  "0 0 20px rgba(14, 79, 83, 0.3)",
-                  "0 0 0px rgba(14, 79, 83, 0)",
-                ],
-              }}
-              transition={{
-                duration: 2,
-                repeat: Number.POSITIVE_INFINITY,
-                ease: "easeInOut",
-              }}
-            >
-              CVI
-            </motion.h1>
-          </motion.div>
-
           {/* Progress Dots */}
           <motion.div
             initial={{ opacity: 0 }}
@@ -194,7 +207,9 @@ export default function Preloader({ onComplete, duration = 3000 }: PreloaderProp
                 key={i}
                 className="w-3 h-3 rounded-full"
                 style={{
-                  backgroundColor: progress > i * 20 ? "#0E4F53" : "#e5e7eb",
+                  backgroundColor: progress > i * 20
+                    ? getAccentColor(isDarkMode)
+                    : isDarkMode ? "#374151" : "#e5e7eb",
                 }}
                 animate={{
                   scale: progress > i * 20 ? [1, 1.3, 1] : 1,
@@ -218,11 +233,14 @@ export default function Preloader({ onComplete, duration = 3000 }: PreloaderProp
               animate={{ opacity: [0.5, 1, 0.5] }}
               transition={{ duration: 1.5, repeat: Number.POSITIVE_INFINITY }}
               className="text-lg font-medium mb-2"
-              style={{ color: "#0E4F53" }}
+              style={{ color: getAccentColor(isDarkMode) }}
             >
               Loading Experience...
             </motion.p>
-            <motion.p className="text-sm font-light opacity-60" style={{ color: "#0E4F53" }}>
+            <motion.p
+              className="text-sm font-light opacity-60"
+              style={{ color: getAccentColor(isDarkMode) }}
+            >
               Cloud Vortex Innovation
             </motion.p>
           </motion.div>
@@ -234,7 +252,7 @@ export default function Preloader({ onComplete, duration = 3000 }: PreloaderProp
                 key={i}
                 className="absolute h-px opacity-10"
                 style={{
-                  backgroundColor: "#0E4F53",
+                  backgroundColor: getAccentColor(isDarkMode),
                   width: "100px",
                   left: `${20 + i * 30}%`,
                   top: `${30 + i * 20}%`,

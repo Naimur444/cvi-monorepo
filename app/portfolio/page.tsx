@@ -3,6 +3,7 @@
 
 import Header from "../../components/header"
 import Footer from "../../components/footer"
+import ContactSection from '../../components/contact-section';
 import HeroSection from "../../components/software/hero-section"
 import Portfolio from "../../components/portfolio/portfolio"
 
@@ -16,6 +17,7 @@ export default function PortfolioPage() {
           <HeroSection title="Our Portfolio" image="/portfolio-banner.png" />
         </div>
         <Portfolio />
+        <ContactSection />
       </main>
       <Footer />
     </>

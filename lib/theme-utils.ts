@@ -76,14 +76,14 @@ export function createThemeStyle(
   isDarkMode: boolean,
   styles: Partial<Record<keyof typeof themeColors.light, string>>
 ): React.CSSProperties {
-  const result: React.CSSProperties = {}
-  
+  const result: Record<string, string> = {}
+
   Object.entries(styles).forEach(([key, cssProperty]) => {
     if (cssProperty && key in themeColors.light) {
       const colorKey = key as keyof typeof themeColors.light
-      result[cssProperty as keyof React.CSSProperties] = getThemeColor(isDarkMode, colorKey)
+      result[cssProperty] = getThemeColor(isDarkMode, colorKey)
     }
   })
-  
-  return result
+
+  return result as React.CSSProperties
 }

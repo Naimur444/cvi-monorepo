@@ -5,8 +5,8 @@ import React from "react";
 import { useTheme } from '../../contexts/ThemeContext';
 
 const WebDev = () => {
-  const { theme } = useTheme();
-  const strokeColor = theme === 'dark' ? '#057C80' : '#003C42';
+  const { isDarkMode } = useTheme();
+  const strokeColor = isDarkMode ? '#057C80' : '#003C42';
 
   return (
     <div>

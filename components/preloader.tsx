@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
+import Image from "next/image"
 import { useTheme } from "../contexts/ThemeContext"
 import { getAccentColor, getCardBackgroundColor } from "../lib/theme-utils"
 
@@ -128,9 +129,11 @@ export default function Preloader({ onComplete, duration = 3000 }: PreloaderProp
               }}
             >
               {/* Logo */}
-              <img
+              <Image
                 src={isDarkMode ? "/darknav.svg" : "/nav.svg"}
                 alt="Cloud Vertex Innovation"
+                width={64}
+                height={48}
                 className="w-16 h-12"
               />
 

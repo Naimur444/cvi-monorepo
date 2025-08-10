@@ -4,8 +4,8 @@ import React from "react";
 import { useTheme } from '../../contexts/ThemeContext';
 
 const Agile = () => {
-  const { theme } = useTheme();
-  const accentColor = theme === 'dark' ? '#057C80' : '#003C42';
+  const { isDarkMode } = useTheme();
+  const accentColor = isDarkMode ? '#057C80' : '#003C42';
   const designPhaseItems = [
     "Design Strategy",
     "Business Understanding",

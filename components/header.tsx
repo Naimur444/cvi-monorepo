@@ -229,9 +229,9 @@ export default function Header() {
                         <motion.a
                           href="/services"
                           className="flex items-center gap-2 px-8 py-3 rounded-lg text-base font-semibold text-white transition-colors"
-                          style={{ backgroundColor: '#0E4F53' }}
-                          onMouseEnter={e => e.currentTarget.style.backgroundColor = '#003C42'}
-                          onMouseLeave={e => e.currentTarget.style.backgroundColor = '#0E4F53'}
+                          style={{ backgroundColor: getAccentColor(isDarkMode) }}
+                          onMouseEnter={e => e.currentTarget.style.backgroundColor = isDarkMode ? '#003C42' : '#0E4F53'}
+                          onMouseLeave={e => e.currentTarget.style.backgroundColor = getAccentColor(isDarkMode)}
                           initial={{ opacity: 0 }}
                           animate={{ opacity: 1 }}
                           transition={{ delay: 0.2, duration: 0.2 }}

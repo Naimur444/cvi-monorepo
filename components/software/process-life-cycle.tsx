@@ -4,8 +4,8 @@ import Image from "next/image"
 import { useTheme } from '../../contexts/ThemeContext'
 
 export default function ProcessLifecycle() {
-  const { theme } = useTheme()
-  const accentColor = theme === 'dark' ? '#057C80' : '#003C42'
+  const { isDarkMode } = useTheme()
+  const accentColor = isDarkMode ? '#057C80' : '#003C42'
   return (
     <section className="  py-10 md:py-20">
       <div className="w-11/12 md:w-9/12 mx-auto">

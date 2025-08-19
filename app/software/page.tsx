@@ -31,9 +31,9 @@ const Page = () => {
         <Wireframe />
         <UiDesign />
         <Srs />
-        <Testing />
+        <Testing /> 
         <LiveProgressTracking />
-        <LiveReporting />
+        <LiveReporting /> 
         <FAQAboutProcess
           header="FAQ About Our Process"
           description="Answers to common questions about our full-service custom software development process."

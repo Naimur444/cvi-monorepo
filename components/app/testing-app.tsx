@@ -47,38 +47,39 @@ const Testing = () => {
               <div className="space-y-2">
                 {" "}
                 <Image
-                  src="/js.svg"
-                  alt="javascript"
-                  width={40}
-                  height={40}
+                  src="/flutter.png"
+                  alt="flutter"
+                  width={60}
+                  height={60}
                 />
                 <p className=" text-sm font-semibold text-center">
-                  Javascript
+                  Flutter
                 </p>
               </div>
 
               <div className="space-y-2">
                 {" "}
-                <Image src="/node.svg" alt="nodejs" width={40} height={40} />
+                <Image src="/kotlin.jpg" alt="kotlin" width={60} height={60} />
                 <p className=" text-sm font-semibold text-center">
-                  Node Js
+                  Kotlin
                 </p>
               </div>
 
               <div className="space-y-2">
                 {" "}
-                <Image src="/react.svg" alt="react" width={40} height={40} />
+                <Image src="/swift.jpg" alt="swift" width={60} height={60} />
                 <p className=" text-sm font-semibold text-center">
-                  React
+                  Swift
                 </p>
               </div>
+
               <div className="space-y-2">
-                {" "}
-                <Image src="/etc.png" alt="etc" width={75} height={75} />
-                <p className=" text-sm font-semibold text-center">
-                  Etc
-                </p>
-              </div>
+                              {" "}
+                              <Image src="/etc.png" alt="etc" width={100} height={100} />
+                              <p className=" text-sm font-semibold text-center">
+                                Etc
+                              </p>
+                            </div>
             </div>
           </div>
 
@@ -90,6 +91,7 @@ const Testing = () => {
               className="object-contain"
             />
           </div>
+          
         </div>
       </div>
       </div>

@@ -17,6 +17,7 @@
     "date-fns": "^4.1.0",
     "framer-motion": "^12.23.12",
     "google-map-react": "^2.2.5",
+    "hugeicons-react": "^0.3.0",
     "lucide-react": "^0.536.0",
     "next": "15.2.4",
     "react": "^19.0.0",

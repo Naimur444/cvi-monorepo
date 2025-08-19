@@ -63,6 +63,7 @@ export default function Opening() {
 	const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
 	return (
 		<section
+			id="opening-section"
 			ref={sectionRef}
 			className="w-full px-6 py-16"
 			style={{ backgroundColor: getCardBackgroundColor(isDarkMode) }}

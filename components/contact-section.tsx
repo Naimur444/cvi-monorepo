@@ -115,8 +115,8 @@ export default function ContactSection() {
                 transition={{ duration: 0.2 }}
               >
                 <Image
-                  src="/Ellipse 2.svg?height=64&width=64"
-                  alt="Nobir Hossain Samuel - Project Manager"
+                  src="/coo.jpg?height=64&width=64"
+                  alt="Shabab Musficul Islam - COO"
                   fill
                   className="object-cover"
                 />
@@ -126,13 +126,13 @@ export default function ContactSection() {
                   className="font-semibold"
                   style={{ color: getThemeColor(isDarkMode, 'secondaryText') }}
                 >
-                  Nobir Hossain Samuel
+                  Shabab Musficul Islam 
                 </h3>
                 <p
                   className=""
                   style={{ color: getThemeColor(isDarkMode, 'mutedText') }}
                 >
-                  Project Manager
+                  COO
                 </p>
               </div>
             </motion.div>

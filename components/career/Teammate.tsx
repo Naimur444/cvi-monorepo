@@ -3,7 +3,7 @@
 import React, { useRef } from "react";
 import { useTheme } from "../../contexts/ThemeContext";
 import { getAccentColor } from "../../lib/theme-utils";
-import { Rocket, Globe, Users, Award, Target, TrendingUp } from "lucide-react";
+import { Rocket, Globe, Users, Award, TrendingUp, Trophy } from "lucide-react";
 import { motion, useInView } from "framer-motion";
 
 const items = [
@@ -40,7 +40,7 @@ const items = [
     title: "Shared Success",
     description:
       "We believe in collective success, fostering a culture where shared goals, teamwork, and mutual support lead to accomplishments that resonate throughout the team.",
-    icon: Target,
+    icon: Trophy,
   },
   {
     id: 6,

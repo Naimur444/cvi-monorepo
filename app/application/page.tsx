@@ -10,7 +10,7 @@ import Lifecycle from "@/components/web/Lifecycle";
 import Wireframe from "@/components/web/Wireframe";
 import UiDesign from "@/components/web/UiDesign";
 import Srs from "@/components/web/Srs";
-import Testing from "@/components/web/Testing";
+import Testing from "@/components/app/testing-app";
 import LiveProgressTracking from '../../components/software/live-progress-tracking';
 import LiveReporting from '../../components/software/live-reporting';
 import FAQAboutProcess from '../../components/software/faq-about-process';

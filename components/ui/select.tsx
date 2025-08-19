@@ -37,10 +37,10 @@ function SelectTrigger({
       data-slot="select-trigger"
       data-size={size}
       className={cn(
-        // Match Input: w-full, h-12, bg-gray-50, px-4, border, rounded, text-sm
-        "w-full h-12 bg-gray-50 px-4 py-0 text-sm rounded-md border border-input focus-visible:border-ring focus-visible:ring-ring/50 transition-colors duration-200 flex items-center justify-between gap-2 data-[placeholder]:text-muted-foreground outline-none disabled:cursor-not-allowed disabled:opacity-50",
-        className
-      )}
+          // Match Input: w-full, h-12, bg-transparent, dark:bg-input/30, px-4, border, rounded, text-sm
+          "w-full h-12 bg-transparent dark:bg-input/30 px-4 py-0 text-sm rounded-md border border-input focus-visible:border-ring focus-visible:ring-ring/50 transition-colors duration-200 flex items-center justify-between gap-2 data-[placeholder]:text-muted-foreground outline-none disabled:cursor-not-allowed disabled:opacity-50",
+          className
+        )}
       {...props}
     >
       {children}
@@ -62,10 +62,8 @@ function SelectContent({
       <SelectPrimitive.Content
         data-slot="select-content"
         className={cn(
-          // Match Input dropdown: bg-white, border, rounded, shadow, min-w-full
-          "bg-white text-popover-foreground border border-input rounded-md shadow-md min-w-full data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 relative z-50 max-h-(--radix-select-content-available-height) origin-(--radix-select-content-transform-origin) overflow-x-hidden overflow-y-auto",
-          position === "popper" &&
-            "data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1",
+          // Match Input dropdown: bg-card for both light and dark mode
+          "bg-card text-popover-foreground border border-input rounded-md shadow-md min-w-full data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 relative z-50 max-h-(--radix-select-content-available-height) origin-(--radix-select-content-transform-origin) overflow-x-hidden overflow-y-auto",
           className
         )}
         position={position}

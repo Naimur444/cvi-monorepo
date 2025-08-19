@@ -1,6 +1,6 @@
 "use client";
 import { useTheme } from "../../contexts/ThemeContext";
-import { getCardBackgroundColor, getAccentColor } from "../../lib/theme-utils";
+import { getAccentColor } from "../../lib/theme-utils";
 import { Briefcase, Gift, Utensils, TrendingUp, Star, Calendar } from "lucide-react";
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
@@ -17,7 +17,7 @@ const benefits = [
 export default function Benefits() {
 	const { isDarkMode } = useTheme();
 	const textColor = isDarkMode ? "#fff" : "#18181b";
-	const cardBg = isDarkMode ? "#23232a" : "#fff";
+		const cardBg = isDarkMode ? "#23232a" : "#fff"; // cardBg is not used, but kept for future use
 	const accent = getAccentColor(isDarkMode);
 	const sectionRef = useRef(null);
 	const isInView = useInView(sectionRef, { once: true, margin: "-100px" });

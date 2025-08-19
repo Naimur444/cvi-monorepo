@@ -40,9 +40,11 @@ const Career = () => {
               Innovation team. Join us — and let’s innovate the future together.
             </p>
 
-            <button className="px-6 py-2 bg-[#057C80] hover:bg-[#046469] transition-colors duration-300 rounded-md text-white shadow-lg shadow-[#057C80]/40">
-              Join Our Team
-            </button>
+            <a href="/career">
+              <button className="px-6 py-2 bg-[#057C80] hover:bg-[#046469] transition-colors duration-300 rounded-md text-white shadow-lg shadow-[#057C80]/40">
+                Join Our Team
+              </button>
+            </a>
           </motion.div>
 
           {/* Image with Glow */}

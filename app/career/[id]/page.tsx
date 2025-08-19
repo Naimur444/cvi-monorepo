@@ -98,7 +98,7 @@ const Page = () => {
       document.removeEventListener('mousedown', handleClick);
     }
     return () => document.removeEventListener('mousedown', handleClick);
-  }, [shareOpen]);
+  }, [shareOpen, shareBtnRef, shareDropdownRef]);
 
   if (!job) return notFound();
 
@@ -166,13 +166,13 @@ const Page = () => {
               </motion.div>
             </div>
             <motion.div
-              className="w-full md:w-auto md:max-w-xs flex flex-col gap-2 bg-transparent md:bg-transparent md:ml-8"
+              className="w-full px-4 md:px-0 md:w-auto md:max-w-xs flex flex-col gap-2 bg-transparent md:bg-transparent md:ml-8"
               initial={{ opacity: 0, x: 30 }}
               animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 30 }}
               transition={{ duration: 0.7, delay: 0.5, ease: "easeOut" }}
             >
-              <div className="text-[#181818] dark:text-[#eee]" style={{ fontSize: '20px', fontWeight: 600 }}>Ready to apply? <br/> We can't wait to meet you!</div>
-              <div className="text-xs text-[#888] dark:text-[#aaa] mb-2">Next, you'll face an assessment to proceed. Apply for one job at a time and prepare well.</div>
+              <div className="text-[#181818] dark:text-[#eee]" style={{ fontSize: '20px', fontWeight: 600 }}>Ready to apply? <br/> We can&apos;t wait to meet you!</div>
+              <div className="text-xs text-[#888] dark:text-[#aaa] mb-2">Next, you&apos;ll face an assessment to proceed. Apply for one job at a time and prepare well.</div>
               <div className="flex gap-2">
                 <a
                   href={`/career/${job.id}/apply`}
@@ -208,17 +208,33 @@ const Page = () => {
                   {shareOpen && (
                     <div
                       ref={shareDropdownRef}
-                      className="absolute z-20 left-0 mt-2 w-max bg-white dark:bg-[#23232a] border border-gray-200 dark:border-[#23232a] rounded-xl shadow-lg px-4 py-3 flex gap-6 items-center"
+                      className={`absolute z-20 left-0 mt-2 w-72 rounded-2xl shadow-lg px-6 py-4 border ${isDarkMode ? 'bg-[#23232a] border-[#23232a]' : 'bg-white border-gray-200'}`}
                     >
-                      <a href="#" title="Share on Facebook" className="hover:scale-110 transition-transform">
-                        <Facebook size={28} style={{ color: '#1877F3' }} />
-                      </a>
-                      <a href="#" title="Share on LinkedIn" className="hover:scale-110 transition-transform">
-                        <Linkedin size={28} style={{ color: '#0A66C2' }} />
-                      </a>
-                      <a href="#" title="Share on X" className="hover:scale-110 transition-transform">
-                        <Twitter size={28} style={{ color: '#222' }} />
-                      </a>
+                      <div className="flex items-center justify-between mb-4">
+                        <span className={`text-base font-semibold ${isDarkMode ? 'text-white' : 'text-[#181818]'}`}>Share On</span>
+                        <button
+                          onClick={() => setShareOpen(false)}
+                          className="text-2xl text-black dark:text-white hover:scale-110 transition-transform"
+                          style={{ lineHeight: 1 }}
+                          aria-label="Close share dropdown"
+                        >
+                          ×
+                        </button>
+                      </div>
+                      <div className="flex justify-between items-center mb-1">
+                        <a href="#" title="Share on Facebook" className="flex flex-col items-center gap-2 group">
+                          <Facebook size={28} style={{ color: '#1877F3' }} className="group-hover:scale-110 transition-transform" />
+                          <span className="text-xs text-white mt-1">Facebook</span>
+                        </a>
+                        <a href="#" title="Share on LinkedIn" className="flex flex-col items-center gap-2 group">
+                          <Linkedin size={28} style={{ color: '#0A66C2' }} className="group-hover:scale-110 transition-transform" />
+                          <span className="text-xs text-white mt-1">Linkedin</span>
+                        </a>
+                        <a href="#" title="Share on X" className="flex flex-col items-center gap-2 group">
+                          <Twitter size={28} style={{ color: '#222' }} className="group-hover:scale-110 transition-transform" />
+                          <span className="text-xs text-white mt-1">X</span>
+                        </a>
+                      </div>
                     </div>
                   )}
                 </div>
@@ -241,7 +257,7 @@ const Page = () => {
             </p>
             <h3 className="font-semibold text-base mb-1 mt-6" style={{ color: secondaryText }}>Education</h3>
             <ul className="list-disc pl-5 text-sm mb-4" style={{ color: mutedText }}>
-              <li>Bachelor's degree/MBA/Master's from any reputed University.</li>
+              <li>Bachelor&apos;s degree/MBA/Master&apos;s from any reputed University.</li>
               <li>Public University will be preferable.</li>
             </ul>
             <h3 className="font-semibold text-base mb-1 mt-6" style={{ color: secondaryText }}>Additional Requirements</h3>

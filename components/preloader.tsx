@@ -12,7 +12,7 @@ interface PreloaderProps {
   duration?: number
 }
 
-export default function Preloader({ onComplete, duration = 1500 }: PreloaderProps) {
+export default function Preloader({ onComplete, duration = 1000 }: PreloaderProps) {
   const { isDarkMode } = useTheme()
   const [isVisible, setIsVisible] = useState(true)
   const [progress, setProgress] = useState(0)

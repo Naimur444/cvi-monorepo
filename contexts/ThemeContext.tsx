@@ -19,8 +19,8 @@ interface ThemeProviderProps {
  * Provides theme context to all child components
  */
 export function ThemeProvider({ children }: ThemeProviderProps) {
-  // Initial state is just a placeholder, we'll set it properly in the useEffect
-  const [isDarkMode, setIsDarkMode] = useState(false) 
+  // Initial state should default to dark mode to prevent flash of light mode
+  const [isDarkMode, setIsDarkMode] = useState(true) 
   const [isInitialized, setIsInitialized] = useState(false)
 
   // Initialize theme from localStorage and system preference

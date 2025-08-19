@@ -37,6 +37,7 @@ const Leadership = () => {
           transition={{ duration: 0.7, delay: 0.3, ease: "easeOut" }}
         >
           <motion.div
+            className="relative group overflow-hidden rounded-lg cursor-pointer"
             initial={{ opacity: 0, x: -30 }}
             animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -30 }}
             transition={{ duration: 0.6, delay: 0.4, ease: "easeOut" }}
@@ -46,11 +47,22 @@ const Leadership = () => {
               alt="Shahriar"
               width={500}
               height={500}
-              className="w-full h-full"
+              className="w-full h-full object-cover block transition-transform duration-300 group-hover:scale-110"
             />
+            {/* Hover overlay - use explicit rgba so it stays semi-transparent */}
+            <div
+              className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end"
+              style={{ backgroundColor: 'rgba(0,0,0,0.45)' }}
+            >
+              <div className="w-full p-6 text-white transform translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+                <h3 className="text-xl font-bold mb-2">Shahriar Mushficul Islam</h3>
+                <p className="text-lg">Founder & CEO</p>
+              </div>
+            </div>
           </motion.div>
 
           <motion.div
+            className="relative group overflow-hidden rounded-lg cursor-pointer"
             initial={{ opacity: 0, x: 30 }}
             animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 30 }}
             transition={{ duration: 0.6, delay: 0.5, ease: "easeOut" }}
@@ -60,8 +72,18 @@ const Leadership = () => {
               alt="Shabab Musficul Islam"
               width={500}
               height={500}
-              className="w-full h-full"
+              className="w-full h-full object-cover block transition-transform duration-300 group-hover:scale-110"
             />
+            {/* Hover overlay - use explicit rgba so it stays semi-transparent */}
+            <div
+              className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end"
+              style={{ backgroundColor: 'rgba(0,0,0,0.45)' }}
+            >
+              <div className="w-full p-6 text-white transform translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+                <h3 className="text-xl font-bold mb-2">Shabab Mushficul Islam</h3>
+                <p className="text-lg">Co-Founder & COO</p>
+              </div>
+            </div>
           </motion.div>
         </motion.div>
       </motion.div>

@@ -214,15 +214,15 @@ const Page = () => {
                         <span className={`text-base font-semibold ${isDarkMode ? 'text-white' : 'text-[#181818]'}`}>Share On</span>
                       </div>
                       <div className="flex justify-between items-center mb-1">
-                        <a href="#" title="Share on Facebook" className="flex flex-col items-center gap-2 group">
+                        <a href="https://www.facebook.com/profile.php?id=61557546942505" title="Share on Facebook" target="_blank" rel="noopener noreferrer" className="flex flex-col items-center gap-2 group">
                           <img src="/fb.webp" alt="Facebook" className="w-7 h-7 group-hover:scale-110 transition-transform" />
                           <span className={`text-xs mt-1 ${isDarkMode ? 'text-white' : 'text-black'}`}>Facebook</span>
                         </a>
-                        <a href="#" title="Share on LinkedIn" className="flex flex-col items-center gap-2 group">
+                        <a href="https://www.linkedin.com/company/cloud-vortex-innovation-technology" title="Share on LinkedIn" target="_blank" rel="noopener noreferrer" className="flex flex-col items-center gap-2 group">
                           <img src="/lk.svg" alt="LinkedIn" className="w-7 h-7 group-hover:scale-110 transition-transform" />
                           <span className={`text-xs mt-1 ${isDarkMode ? 'text-white' : 'text-black'}`}>Linkedin</span>
                         </a>
-                        <a href="#" title="Share on X" className="flex flex-col items-center gap-2 group">
+                        <a href="https://x.com/home" title="Share on X" target="_blank" rel="noopener noreferrer" className="flex flex-col items-center gap-2 group">
                           <img src="/x.webp" alt="X" className="w-7 h-7 group-hover:scale-110 transition-transform" />
                           <span className={`text-xs mt-1 ${isDarkMode ? 'text-white' : 'text-black'}`}>X</span>
                         </a>

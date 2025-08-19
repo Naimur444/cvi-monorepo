@@ -1,14 +1,14 @@
 "use client";
 import { useTheme } from "../../contexts/ThemeContext";
 import { getAccentColor } from "../../lib/theme-utils";
-import { Briefcase, Gift, Utensils, TrendingUp, Star, Calendar } from "lucide-react";
+import { Briefcase, Gift, HandPlatter, TrendingUp, Star, Calendar } from "lucide-react";
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 
 const benefits = [
 	{ icon: Briefcase, label: "Excellent Culture & Environment" },
 	{ icon: Gift, label: "Two Festival Bonuses" },
-	{ icon: Utensils, label: "Meals, Coffee & Snacks" },
+	{ icon: HandPlatter, label: "Meals, Coffee & Snacks" },
 	{ icon: TrendingUp, label: "Mentorship & Personal Growth" },
 	{ icon: Star, label: "Performance Bonus" },
 	{ icon: Calendar, label: "Leave Encashment" },

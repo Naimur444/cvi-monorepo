@@ -42,7 +42,7 @@ const Leadership = () => {
             transition={{ duration: 0.6, delay: 0.4, ease: "easeOut" }}
           >
             <Image
-              src="/shahriar.png"
+              src="/ceo.png"
               alt="Shahriar"
               width={500}
               height={500}
@@ -56,8 +56,8 @@ const Leadership = () => {
             transition={{ duration: 0.6, delay: 0.5, ease: "easeOut" }}
           >
             <Image
-              src="/shabab.png"
-              alt="Shahriar"
+              src="/coo.jpg"
+              alt="Shabab Musficul Islam"
               width={500}
               height={500}
               className="w-full h-full"

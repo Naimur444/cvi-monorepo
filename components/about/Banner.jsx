@@ -90,7 +90,7 @@ const Banner = () => {
               {/* Manual Box */}
               <div className="w-full sm:w-[150px] md:w-[180px] lg:w-[200px] h-[150px] sm:h-[150px] md:h-[180px] lg:h-[200px] bg-[#0E4F53] flex flex-col items-start justify-end p-3 md:p-4 rounded-tr-[48px] sm:rounded-tr-[64px] md:rounded-tr-[80px] lg:rounded-tr-[96px]">
                 <p className="text-lg md:text-xl text-white">Team</p>
-                <h3 className="text-3xl md:text-4xl font-bold text-white">50+</h3>
+                <h3 className="text-3xl md:text-4xl font-bold text-white">14+</h3>
               </div>
             </motion.div>
 
@@ -104,7 +104,7 @@ const Banner = () => {
               {/* Manual Box */}
               <div className="w-full sm:w-[150px] md:w-[180px] lg:w-[200px] h-[150px] sm:h-[150px] md:h-[180px] lg:h-[200px] bg-[#0E4F53] flex flex-col items-start justify-start p-3 md:p-4 rounded-bl-[48px] sm:rounded-bl-[64px] md:rounded-bl-[80px] lg:rounded-bl-[96px] order-2 sm:order-1">
                 <p className="text-lg md:text-xl text-white">Experience</p>
-                <h3 className="text-3xl md:text-4xl font-bold text-white">4+</h3>
+                <h3 className="text-3xl md:text-4xl font-bold text-white">2+</h3>
               </div>
 
               {/* Image */}

@@ -5,8 +5,12 @@ import React from "react";
 import { useTheme } from '../../contexts/ThemeContext';
 import { getAccentColor } from '../../lib/theme-utils';
 
-const Testing = () => {
+const DEFAULT_TEXT =
+  "Development and Testing ensures the Quality and Functionality of Your Custom Software. Our development process follows industry best practices and standards, while our rigorous testing phase ensures that the final product is free of defects and meets the requirements set out in the design phase.";
+
+const Testing = ({ text }) => {
   const { isDarkMode } = useTheme();
+  const description = text || DEFAULT_TEXT;
   return (
     <section className="w-full   py-12 md:py-24 lg:py-32">
       <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
@@ -37,11 +41,7 @@ const Testing = () => {
               Developing & Testing
             </h2>
             <p className="  mb-6">
-              Development and Testing ensures the Quality and Functionality of
-              Your Custom Software. Our development process follows industry
-              best practices and standards, while our rigorous testing phase
-              ensures that the final product is free of defects and meets the
-              requirements set out in the design phase.
+              {description}
             </p>
             <div className="flex items-center gap-4 md:gap-8">
               <div className="space-y-2">

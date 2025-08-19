@@ -31,7 +31,7 @@ const Page = () => {
         <Wireframe />
         <UiDesign />
         <Srs />
-        <Testing />
+        <Testing text="Development and Testing ensures the Quality and Functionality of Your Custom Website. Our development process follows industry best practices and standards, while our rigorous testing phase ensures that the final product is free of defects and meets the requirements set out in the design phase." />
         <LiveProgressTracking />
         <LiveReporting />
         <FAQAboutProcess

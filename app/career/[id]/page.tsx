@@ -3,7 +3,7 @@ import React, { useRef } from 'react';
 import Header from '../../../components/header';
 import Footer from '../../../components/footer';
 import { notFound, useParams } from 'next/navigation';
-import { Share2, Facebook, Linkedin, Twitter } from 'lucide-react';
+import { Share2 } from 'lucide-react';
 import { getAccentColor } from '../../../lib/theme-utils';
 import { useState, useRef as useReactRef, useEffect } from 'react';
 import { motion, useInView } from 'framer-motion';
@@ -210,29 +210,21 @@ const Page = () => {
                       ref={shareDropdownRef}
                       className={`absolute z-20 left-0 mt-2 w-72 rounded-2xl shadow-lg px-6 py-4 border ${isDarkMode ? 'bg-[#23232a] border-[#23232a]' : 'bg-white border-gray-200'}`}
                     >
-                      <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-center mb-4">
                         <span className={`text-base font-semibold ${isDarkMode ? 'text-white' : 'text-[#181818]'}`}>Share On</span>
-                        <button
-                          onClick={() => setShareOpen(false)}
-                          className="text-2xl text-black dark:text-white hover:scale-110 transition-transform"
-                          style={{ lineHeight: 1 }}
-                          aria-label="Close share dropdown"
-                        >
-                          ×
-                        </button>
                       </div>
                       <div className="flex justify-between items-center mb-1">
                         <a href="#" title="Share on Facebook" className="flex flex-col items-center gap-2 group">
-                          <Facebook size={28} style={{ color: '#1877F3' }} className="group-hover:scale-110 transition-transform" />
-                          <span className="text-xs text-white mt-1">Facebook</span>
+                          <img src="/fb.webp" alt="Facebook" className="w-7 h-7 group-hover:scale-110 transition-transform" />
+                          <span className={`text-xs mt-1 ${isDarkMode ? 'text-white' : 'text-black'}`}>Facebook</span>
                         </a>
                         <a href="#" title="Share on LinkedIn" className="flex flex-col items-center gap-2 group">
-                          <Linkedin size={28} style={{ color: '#0A66C2' }} className="group-hover:scale-110 transition-transform" />
-                          <span className="text-xs text-white mt-1">Linkedin</span>
+                          <img src="/lk.svg" alt="LinkedIn" className="w-7 h-7 group-hover:scale-110 transition-transform" />
+                          <span className={`text-xs mt-1 ${isDarkMode ? 'text-white' : 'text-black'}`}>Linkedin</span>
                         </a>
                         <a href="#" title="Share on X" className="flex flex-col items-center gap-2 group">
-                          <Twitter size={28} style={{ color: '#222' }} className="group-hover:scale-110 transition-transform" />
-                          <span className="text-xs text-white mt-1">X</span>
+                          <img src="/x.webp" alt="X" className="w-7 h-7 group-hover:scale-110 transition-transform" />
+                          <span className={`text-xs mt-1 ${isDarkMode ? 'text-white' : 'text-black'}`}>X</span>
                         </a>
                       </div>
                     </div>

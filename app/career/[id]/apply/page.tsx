@@ -2,13 +2,35 @@
 import React from 'react';
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select";
+// Removed Select imports for custom dropdown
 import { UploadCloud } from 'lucide-react';
 import Header from '../../../../components/header';
 import Footer from '../../../../components/footer';
 
 
 const Page = () => {
+  // Custom dropdown state and options for Location
+  const [dropdownOpen, setDropdownOpen] = React.useState(false);
+  const [location, setLocation] = React.useState("");
+  const locationOptions = [
+    { value: "dhaka", label: "Dhaka" },
+    { value: "chittagong", label: "Chittagong" },
+    { value: "rajshahi", label: "Rajshahi" },
+    { value: "khulna", label: "Khulna" },
+    { value: "barisal", label: "Barisal" },
+    { value: "sylhet", label: "Sylhet" },
+    { value: "rangpur", label: "Rangpur" },
+    { value: "mymensingh", label: "Mymensingh" },
+  ];
+  // Close dropdown on outside click
+  React.useEffect(() => {
+    if (!dropdownOpen) return;
+    const handle = (e: MouseEvent) => {
+      if (!(e.target instanceof HTMLElement && e.target.closest('.relative'))) setDropdownOpen(false);
+    };
+    document.addEventListener('mousedown', handle);
+    return () => document.removeEventListener('mousedown', handle);
+  }, [dropdownOpen]);
   return (
     <>
       <Header />
@@ -37,21 +59,47 @@ const Page = () => {
               </div>
               <div>
                 <label className="block text-sm font-medium mb-1">Location <span className="text-red-500">*</span></label>
-                <Select required>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select Location" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="dhaka">Dhaka</SelectItem>
-                    <SelectItem value="chittagong">Chittagong</SelectItem>
-                    <SelectItem value="rajshahi">Rajshahi</SelectItem>
-                    <SelectItem value="khulna">Khulna</SelectItem>
-                    <SelectItem value="barisal">Barisal</SelectItem>
-                    <SelectItem value="sylhet">Sylhet</SelectItem>
-                    <SelectItem value="rangpur">Rangpur</SelectItem>
-                    <SelectItem value="mymensingh">Mymensingh</SelectItem>
-                  </SelectContent>
-                </Select>
+                {/* Custom dropdown select for Location */}
+                <div className="relative">
+                  <button
+                    type="button"
+                    className="w-full h-12 px-3 py-2 text-sm rounded-md border border-input focus-visible:border-ring focus-visible:ring-ring/50 transition-colors duration-200 flex items-center justify-between bg-[#FAF9FC] dark:bg-[#191919] text-[#222] dark:text-[#eee]"
+                    onClick={() => setDropdownOpen((open) => !open)}
+                  >
+                    <span>{
+                      location ? locationOptions.find(opt => opt.value === location)?.label : 'Select Location'
+                    }</span>
+                    <svg width="20" height="20" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" strokeWidth="2" d="M6 9l6 6 6-6"/></svg>
+                  </button>
+                  {dropdownOpen && (
+                    <ul
+                      className="absolute left-0 right-0 mt-2 z-50 rounded-md shadow-lg bg-white dark:bg-[#191919]"
+                    >
+                      {locationOptions.map(option => (
+                        <li
+                          key={option.value}
+                          className="px-4 py-2 cursor-pointer hover:bg-accent transition-colors"
+                          style={{
+                            backgroundColor: location === option.value ? 'rgba(0,0,0,0.04)' : 'transparent',
+                            color: 'inherit'
+                          }}
+                          onClick={() => {
+                            setLocation(option.value);
+                            setDropdownOpen(false);
+                          }}
+                          onMouseEnter={e => {
+                            e.currentTarget.style.backgroundColor = 'rgba(0,0,0,0.05)';
+                          }}
+                          onMouseLeave={e => {
+                            e.currentTarget.style.backgroundColor = location === option.value ? 'rgba(0,0,0,0.04)' : 'transparent';
+                          }}
+                        >
+                          {option.label}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
               </div>
               <div>
                 <label className="block text-sm font-medium mb-1">Portfolio</label>

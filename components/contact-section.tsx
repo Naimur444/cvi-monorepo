@@ -1,12 +1,11 @@
 "use client"
-import type React from "react"
-import { useState, useRef } from "react"
+import React, { useState, useRef } from "react"
 import { motion, useInView } from "framer-motion"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+// Removed Select imports for custom dropdown
 import { useTheme } from "@/contexts/ThemeContext"
 import { getCardBackgroundColor, getThemeColor, getAccentColor } from "@/lib/theme-utils"
 
@@ -18,6 +17,25 @@ import { getCardBackgroundColor, getThemeColor, getAccentColor } from "@/lib/the
 export default function ContactSection() {
   // Theme context for dark/light mode
   const { isDarkMode } = useTheme()
+
+  // Custom dropdown state and options
+  const [dropdownOpen, setDropdownOpen] = useState(false)
+  const serviceOptions = [
+    { value: 'web-development', label: 'Web Development' },
+    { value: 'mobile-app', label: 'Mobile App Development' },
+    { value: 'ui-ux-design', label: 'UI/UX Design' },
+    { value: 'consulting', label: 'Consulting' },
+    { value: 'maintenance', label: 'Maintenance & Support' },
+  ]
+  // Close dropdown on outside click
+  React.useEffect(() => {
+    if (!dropdownOpen) return
+    const handle = (e: MouseEvent) => {
+      if (!(e.target as HTMLElement).closest('.relative')) setDropdownOpen(false)
+    }
+    document.addEventListener('mousedown', handle)
+    return () => document.removeEventListener('mousedown', handle)
+  }, [dropdownOpen])
 
   // Form state management for all input fields
   const [formData, setFormData] = useState({
@@ -92,7 +110,7 @@ export default function ContactSection() {
                 Simply fill out the form or email us at
               </p>
               <motion.a
-                href="mailto:cloudvertexinnovation@gmail.com"
+                href="mailto:info@cloudvortexinnovation.com"
                 className="transition-colors duration-200 font-medium"
                 style={{ color: getAccentColor(isDarkMode) }}
                 whileHover={{ scale: 1.05 }}
@@ -226,112 +244,64 @@ export default function ContactSection() {
                 transition={{ duration: 0.4, delay: 0.7, ease: "easeOut" }}
               >
                 <div>
-                  <label
-                    htmlFor="servicesRequired"
-                    className="block text-sm font-medium mb-3"
-                    style={{ color: getThemeColor(isDarkMode, 'secondaryText') }}
-                  >
-                    Services Required <span className="text-red-500">*</span>
-                  </label>
-                  <Select onValueChange={(value) => handleInputChange("servicesRequired", value)} value={formData.servicesRequired}>
-                    <SelectTrigger
-                      className="w-full h-12 px-3 py-2 text-sm rounded-md border border-input focus-visible:border-ring focus-visible:ring-ring/50 transition-colors duration-200"
-                      style={{
-                        backgroundColor: getCardBackgroundColor(isDarkMode),
-                        color: getThemeColor(isDarkMode, 'secondaryText')
-                      }}
+                    <label
+                      htmlFor="servicesRequired"
+                      className="block text-sm font-medium mb-3"
+                      style={{ color: getThemeColor(isDarkMode, 'secondaryText') }}
                     >
-                      <SelectValue placeholder="Select" />
-                    </SelectTrigger>
-                    <SelectContent
-                      className="z-50"
-                      style={{
-                        backgroundColor: getCardBackgroundColor(isDarkMode),
-                        borderColor: isDarkMode ? '#404040' : '#E5E7EB'
-                      }}
-                    >
-                      <SelectItem
-                        value="web-development"
-                        className="focus:bg-opacity-20"
+                      Services Required <span className="text-red-500">*</span>
+                    </label>
+                    {/* Custom dropdown select */}
+                    <div className="relative">
+                      <button
+                        type="button"
+                        className="w-full h-12 px-3 py-2 text-sm rounded-md border border-input focus-visible:border-ring focus-visible:ring-ring/50 transition-colors duration-200 flex items-center justify-between"
                         style={{
-                          color: getThemeColor(isDarkMode, 'secondaryText'),
-                          backgroundColor: 'transparent'
+                          backgroundColor: getCardBackgroundColor(isDarkMode),
+                          color: getThemeColor(isDarkMode, 'secondaryText')
                         }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.backgroundColor = isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.05)'
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.backgroundColor = 'transparent'
-                        }}
+                        onClick={() => setDropdownOpen((open) => !open)}
                       >
-                        Web Development
-                      </SelectItem>
-                      <SelectItem
-                        value="mobile-app"
-                        className="focus:bg-opacity-20"
-                        style={{
-                          color: getThemeColor(isDarkMode, 'secondaryText'),
-                          backgroundColor: 'transparent'
-                        }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.backgroundColor = isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.05)'
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.backgroundColor = 'transparent'
-                        }}
-                      >
-                        Mobile App Development
-                      </SelectItem>
-                      <SelectItem
-                        value="ui-ux-design"
-                        className="focus:bg-opacity-20"
-                        style={{
-                          color: getThemeColor(isDarkMode, 'secondaryText'),
-                          backgroundColor: 'transparent'
-                        }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.backgroundColor = isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.05)'
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.backgroundColor = 'transparent'
-                        }}
-                      >
-                        UI/UX Design
-                      </SelectItem>
-                      <SelectItem
-                        value="consulting"
-                        className="focus:bg-opacity-20"
-                        style={{
-                          color: getThemeColor(isDarkMode, 'secondaryText'),
-                          backgroundColor: 'transparent'
-                        }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.backgroundColor = isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.05)'
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.backgroundColor = 'transparent'
-                        }}
-                      >
-                        Consulting
-                      </SelectItem>
-                      <SelectItem
-                        value="maintenance"
-                        className="focus:bg-opacity-20"
-                        style={{
-                          color: getThemeColor(isDarkMode, 'secondaryText'),
-                          backgroundColor: 'transparent'
-                        }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.backgroundColor = isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.05)'
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.backgroundColor = 'transparent'
-                        }}
-                      >
-                        Maintenance & Support
-                      </SelectItem>
-                    </SelectContent>
-                  </Select>
+                        <span>{
+                          formData.servicesRequired
+                            ? serviceOptions.find(opt => opt.value === formData.servicesRequired)?.label
+                            : 'Select'
+                        }</span>
+                        <svg width="20" height="20" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" strokeWidth="2" d="M6 9l6 6 6-6"/></svg>
+                      </button>
+                      {dropdownOpen && (
+                        <ul
+                          className="absolute left-0 right-0 mt-2 z-50 rounded-md shadow-lg border"
+                          style={{
+                            backgroundColor: getCardBackgroundColor(isDarkMode),
+                            borderColor: isDarkMode ? '#404040' : '#E5E7EB'
+                          }}
+                        >
+                          {serviceOptions.map(option => (
+                            <li
+                              key={option.value}
+                              className="px-4 py-2 cursor-pointer hover:bg-accent transition-colors"
+                              style={{
+                                color: getThemeColor(isDarkMode, 'secondaryText'),
+                                backgroundColor: formData.servicesRequired === option.value ? (isDarkMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.04)') : 'transparent'
+                              }}
+                              onClick={() => {
+                                handleInputChange('servicesRequired', option.value)
+                                setDropdownOpen(false)
+                              }}
+                              onMouseEnter={e => {
+                                e.currentTarget.style.backgroundColor = isDarkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)'
+                              }}
+                              onMouseLeave={e => {
+                                e.currentTarget.style.backgroundColor = formData.servicesRequired === option.value ? (isDarkMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.04)') : 'transparent'
+                              }}
+                            >
+                              {option.label}
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </div>
                 </div>
                 <div>
                   <label

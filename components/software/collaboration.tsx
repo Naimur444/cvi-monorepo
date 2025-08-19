@@ -6,7 +6,11 @@ import { useRef } from "react"
 import { useTheme } from "../../contexts/ThemeContext"
 import { getCardBackgroundColor, getThemeColor, getAccentColor } from "../../lib/theme-utils"
 
-export default function CollaborationProcessSection() {
+interface CollaborationSectionProps {
+  subtitle?: string;
+}
+
+export default function CollaborationProcessSection({ subtitle }: CollaborationSectionProps) {
   const sectionRef = useRef(null)
   const isInView = useInView(sectionRef, { once: true, margin: "-100px" })
   const { isDarkMode } = useTheme()
@@ -83,8 +87,7 @@ export default function CollaborationProcessSection() {
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: 0.7, delay: 0.3, ease: "easeOut" }}
         >
-          Regular meetings, daily standups, and ongoing collaboration for the best outcomes for your custom software
-          development needs.
+          {subtitle || 'Regular meetings, daily standups, and ongoing collaboration for the best outcomes for your custom software development needs.'}
         </motion.p>
 
         <motion.div

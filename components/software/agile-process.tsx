@@ -5,7 +5,11 @@ import { useRef } from "react"
 import { useTheme } from "../../contexts/ThemeContext"
 import { getCardBackgroundColor, getThemeColor, getAccentColor } from "../../lib/theme-utils"
 
-export default function AgileProcessSection() {
+interface AgileProcessSectionProps {
+  subtitle?: string;
+}
+
+export default function AgileProcessSection({ subtitle }: AgileProcessSectionProps) {
   // Theme context for dark/light mode
   const { isDarkMode } = useTheme()
 
@@ -71,7 +75,7 @@ export default function AgileProcessSection() {
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: 0.7, delay: 0.3, ease: "easeOut" }}
         >
-          Flexible, fast and goal-oriented. CVI Agile software development approach delivers results.
+          {subtitle || 'Flexible, fast and goal-oriented. CVI Agile software development approach delivers results.'}
         </motion.p>
 
         <motion.div

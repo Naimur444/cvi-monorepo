@@ -40,7 +40,7 @@ export default function Diamond() {
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: 0.7, delay: 0.3, ease: "easeOut" }}
         >
-          Flexible, fast and goal-oriented. At CVI, Agile software development approach delivers results.
+          Flexible, fast and goal-oriented. At CVI, Agile UI/UX Design approach delivers results.
         </motion.p>
         <motion.div
           className="relative inline-block"

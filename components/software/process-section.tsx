@@ -77,7 +77,7 @@ export default function ProcessSection() {
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: 0.7, delay: 0.3, ease: "easeOut" }}
         >
-          Ensuring Success through Quality Assurance, Timely Delivery, Scalability, and Collaboration.
+          Ensuring Success through Collaboration, Timely Delivery, Quality Assurance and Scalability.
         </motion.p>
         <motion.div
           className="mt-12 grid grid-cols-1 gap-20 md:grid-cols-2 lg:grid-cols-4 justify-between"

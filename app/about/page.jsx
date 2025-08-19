@@ -21,7 +21,32 @@ const page = () => {
       </div>
       <Leadership />
       <Career />
-      <FAQAboutProcess />
+      <FAQAboutProcess
+        header="About Our Company: FAQ"
+        description="Answers to common questions about our company, mission, and values."
+        faqs={[
+          {
+            question: "Who are you and what does your company do?",
+            answer: `We are a full-service software solution and technology company. Our mission is to help businesses of all sizes transform their ideas into innovative, reliable, and scalable digital solutions.`
+          },
+          {
+            question: "What makes your company different from others?",
+            answer: `We combine technical expertise with a client-focused approach. Our team prioritizes understanding your business goals, delivering tailored solutions, and maintaining transparency throughout the project lifecycle. With experience across multiple industries, we ensure each project is innovative, reliable, and aligned with best practices.`
+          },
+          {
+            question: "Who are your clients?",
+            answer: `We serve a wide range of clients, from startups and small businesses to mid-sized enterprises and large corporations worldwide. Our solutions are customized to meet the unique needs and budgets of each client.`
+          },
+          {
+            question: "What is your company’s mission and vision?",
+            answer: `Our mission is to empower businesses through innovative digital solutions, providing seamless technology experiences that drive growth and efficiency. Our vision is to be recognized globally as a trusted partner for delivering exceptional software solutions and services.`
+          },
+          {
+            question: "What values guide your company?",
+            answer: `We are guided by integrity, innovation, collaboration, and customer satisfaction. These core values shape our approach to projects, teamwork, and client relationships, ensuring we consistently deliver quality and value.`
+          }
+        ]}
+      />
       <Footer />
     </motion.div>
   );

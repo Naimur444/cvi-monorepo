@@ -7,7 +7,19 @@ import { useRef } from "react";
 import { useTheme } from "../../contexts/ThemeContext";
 import { getCardBackgroundColor, getThemeColor, getAccentColor } from "../../lib/theme-utils";
 
-const FAQAboutProcess = () => {
+
+interface FAQItem {
+  question: string;
+  answer: string;
+}
+
+interface FAQAboutProcessProps {
+  header?: string;
+  description?: string;
+  faqs: FAQItem[];
+}
+
+const FAQAboutProcess: React.FC<FAQAboutProcessProps> = ({ header = "FAQ About Our Process", description = "Answers to Common Questions: A Guide to Understanding Our Process.", faqs }) => {
   const sectionRef = useRef(null);
   const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
   const { isDarkMode } = useTheme();
@@ -29,13 +41,13 @@ const FAQAboutProcess = () => {
             className="text-4xl md:text-5xl font-bold mb-4"
             style={{ color: getThemeColor(isDarkMode, 'secondaryText') }}
           >
-            FAQ About Our Process
+            {header}
           </h2>
           <p
             className="text-lg"
             style={{ color: getThemeColor(isDarkMode, 'mutedText') }}
           >
-            Answers to Common Questions: A Guide to Understanding Our Process.
+            {description}
           </p>
         </motion.div>
 
@@ -53,93 +65,33 @@ const FAQAboutProcess = () => {
             transition={{ duration: 0.6, delay: 0.4, ease: "easeOut" }}
           >
             <Accordion type="single" collapsible className="space-y-4">
-              <AccordionItem
-                value="item-1"
-                className="rounded-lg shadow-md"
-                style={{
-                  backgroundColor: getCardBackgroundColor(isDarkMode),
-                  borderTop: `4px solid ${getAccentColor(isDarkMode)}`,
-                  borderLeft: isDarkMode ? 'none' : '1px solid #E5E7EB',
-                  borderRight: isDarkMode ? 'none' : '1px solid #E5E7EB',
-                  borderBottom: isDarkMode ? 'none' : '1px solid #E5E7EB'
-                }}
-              >
-                <AccordionTrigger
-                  className="font-bold hover:no-underline px-6 py-4"
-                  style={{ color: getThemeColor(isDarkMode, 'secondaryText') }}
+              {faqs.map((faq, idx) => (
+                <AccordionItem
+                  key={idx}
+                  value={`item-${idx + 1}`}
+                  className="rounded-lg shadow-md"
+                  style={{
+                    backgroundColor: getCardBackgroundColor(isDarkMode),
+                    borderTop: idx === 0 ? `4px solid ${getAccentColor(isDarkMode)}` : undefined,
+                    borderLeft: isDarkMode ? 'none' : '1px solid #E5E7EB',
+                    borderRight: isDarkMode ? 'none' : '1px solid #E5E7EB',
+                    borderBottom: isDarkMode ? 'none' : '1px solid #E5E7EB'
+                  }}
                 >
-                  How do you ensure the quality of the software being developed?
-                </AccordionTrigger>
-                <AccordionContent
-                  className="px-6 pb-4"
-                  style={{ color: getThemeColor(isDarkMode, 'mutedText') }}
-                >
-                  CVI ensures the quality of the software being developed by following a rigorous testing phase. This includes unit testing, integration testing, and acceptance testing. These tests are designed to ensure that the software meets the requirements set out in the design phase and is free of defects.
-                </AccordionContent>
-              </AccordionItem>
-              <AccordionItem
-                value="item-2"
-                className="rounded-lg shadow-md"
-                style={{
-                  backgroundColor: getCardBackgroundColor(isDarkMode),
-                  border: isDarkMode ? 'none' : '1px solid #E5E7EB'
-                }}
-              >
-                <AccordionTrigger
-                  className="font-bold hover:no-underline px-6 py-4"
-                  style={{ color: getThemeColor(isDarkMode, 'secondaryText') }}
-                >
-                  How do you handle securities issues?
-                </AccordionTrigger>
-                <AccordionContent
-                  className="px-6 pb-4"
-                  style={{ color: getThemeColor(isDarkMode, 'mutedText') }}
-                >
-                  We follow industry best practices and standards during the development process to ensure that the code is maintainable and scalable.
-                </AccordionContent>
-              </AccordionItem>
-              <AccordionItem
-                value="item-3"
-                className="rounded-lg shadow-md"
-                style={{
-                  backgroundColor: getCardBackgroundColor(isDarkMode),
-                  border: isDarkMode ? 'none' : '1px solid #E5E7EB'
-                }}
-              >
-                <AccordionTrigger
-                  className="font-bold hover:no-underline px-6 py-4"
-                  style={{ color: getThemeColor(isDarkMode, 'secondaryText') }}
-                >
-                  How CVI handles maintenance and support after the software is deployed?
-                </AccordionTrigger>
-                <AccordionContent
-                  className="px-6 pb-4"
-                  style={{ color: getThemeColor(isDarkMode, 'mutedText') }}
-                >
-                  We use agile development methodologies that allow us to receive feedback from clients and make adjustments as needed to ensure that the final product meets their requirements.
-                </AccordionContent>
-              </AccordionItem>
-              <AccordionItem
-                value="item-4"
-                className="rounded-lg shadow-md"
-                style={{
-                  backgroundColor: getCardBackgroundColor(isDarkMode),
-                  border: isDarkMode ? 'none' : '1px solid #E5E7EB'
-                }}
-              >
-                <AccordionTrigger
-                  className="font-bold hover:no-underline px-6 py-4"
-                  style={{ color: getThemeColor(isDarkMode, 'secondaryText') }}
-                >
-                  How is CVI able to work with so many different industries?
-                </AccordionTrigger>
-                <AccordionContent
-                  className="px-6 pb-4"
-                  style={{ color: getThemeColor(isDarkMode, 'mutedText') }}
-                >
-                  Our team is experienced in adapting to various industry standards and requirements, ensuring tailored solutions for each client.
-                </AccordionContent>
-              </AccordionItem>
+                  <AccordionTrigger
+                    className="font-bold hover:no-underline px-6 py-4"
+                    style={{ color: getThemeColor(isDarkMode, 'secondaryText') }}
+                  >
+                    {faq.question}
+                  </AccordionTrigger>
+                  <AccordionContent
+                    className="px-6 pb-4"
+                    style={{ color: getThemeColor(isDarkMode, 'mutedText') }}
+                  >
+                    {faq.answer}
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
             </Accordion>
           </motion.div>
 

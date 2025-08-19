@@ -1,4 +1,8 @@
+"use client";
 import React from 'react';
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select";
 import { UploadCloud } from 'lucide-react';
 import Header from '../../../../components/header';
 import Footer from '../../../../components/footer';
@@ -21,37 +25,41 @@ const Page = () => {
             <form className="flex flex-col gap-4">
               <div>
                 <label className="block text-sm font-medium mb-1">Full Name <span className="text-red-500">*</span></label>
-                <input type="text" required placeholder="e.g. Johan" className="w-full border   rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-theme-accent placeholder:text-[#555]" />
+                <Input type="text" required placeholder="e.g. Johan" />
               </div>
               <div>
                 <label className="block text-sm font-medium mb-1">Phone Number <span className="text-red-500">*</span></label>
-                <input type="tel" required placeholder="+880" className="w-full border   rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-theme-accent placeholder:text-[#555]" />
+                <Input type="tel" required placeholder="+880" />
               </div>
               <div>
                 <label className="block text-sm font-medium mb-1">Email <span className="text-red-500">*</span></label>
-                <input type="email" required placeholder="e.g. abc@gmail.com" className="w-full border   rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-theme-accent placeholder:text-[#555]" />
+                <Input type="email" required placeholder="e.g. abc@gmail.com" />
               </div>
               <div>
                 <label className="block text-sm font-medium mb-1">Location <span className="text-red-500">*</span></label>
-                <select required className="w-full border   rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-theme-accent placeholder:text-[#555]">
-                  <option value="">Select Location</option>
-                  <option value="dhaka">Dhaka</option>
-                  <option value="chittagong">Chittagong</option>
-                  <option value="rajshahi">Rajshahi</option>
-                  <option value="khulna">Khulna</option>
-                  <option value="barisal">Barisal</option>
-                  <option value="sylhet">Sylhet</option>
-                  <option value="rangpur">Rangpur</option>
-                  <option value="mymensingh">Mymensingh</option>
-                </select>
+                <Select required>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select Location" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="dhaka">Dhaka</SelectItem>
+                    <SelectItem value="chittagong">Chittagong</SelectItem>
+                    <SelectItem value="rajshahi">Rajshahi</SelectItem>
+                    <SelectItem value="khulna">Khulna</SelectItem>
+                    <SelectItem value="barisal">Barisal</SelectItem>
+                    <SelectItem value="sylhet">Sylhet</SelectItem>
+                    <SelectItem value="rangpur">Rangpur</SelectItem>
+                    <SelectItem value="mymensingh">Mymensingh</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
               <div>
                 <label className="block text-sm font-medium mb-1">Portfolio</label>
-                <input type="url" placeholder="link" className="w-full border   rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-theme-accent placeholder:text-[#555]" />
+                <Input type="url" placeholder="link" />
               </div>
               <div>
                 <label className="block text-sm font-medium mb-1">LinkedIn <span className="text-red-500">*</span></label>
-                <input type="url" required placeholder="link" className="w-full border   rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-theme-accent placeholder:text-[#555]" />
+                <Input type="url" required placeholder="link" />
               </div>
               {/* Upload Image */}
               <div>
@@ -59,7 +67,7 @@ const Page = () => {
                 <label className="w-full flex flex-row items-center justify-center gap-3 border border-gray-300 rounded-lg px-4 py-6  text-[#222] cursor-pointer transition-all hover:border-theme-accent focus-within:border-theme-accent">
                   <UploadCloud className="w-8 h-8 text-gray-400" />
                   <span className="text-base font-normal text-[#888] text-center">Choose or drag & drop an Image</span>
-                  <input type="file" accept="image/*" className="hidden" />
+                  <Input type="file" accept="image/*" className="hidden" />
                 </label>
               </div>
               {/* Upload CV */}
@@ -68,10 +76,10 @@ const Page = () => {
                 <label className="w-full flex flex-row items-center justify-center gap-3 border border-gray-300 rounded-lg px-4 py-6  text-[#222] cursor-pointer transition-all hover:border-theme-accent focus-within:border-theme-accent">
                   <UploadCloud className="w-8 h-8 text-gray-400" />
                   <span className="text-base font-normal text-[#888] text-center">Choose or drag & drop an CV</span>
-                  <input type="file" required accept=".pdf,.doc,.docx" className="hidden" />
+                  <Input type="file" required accept=".pdf,.doc,.docx" className="hidden" />
                 </label>
               </div>
-              <button type="submit" className="mt-6 px-8 py-2 rounded-md text-white font-medium text-base bg-theme-accent hover:bg-theme-accent/90 transition-all mx-auto block w-auto">Submit</button>
+              <Button type="submit" className="mt-6 px-8 py-2 rounded-md text-white font-medium text-base bg-theme-accent hover:bg-theme-accent/90 transition-all mx-auto block w-auto">Submit</Button>
             </form>
           </div>
         </div>

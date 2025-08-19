@@ -132,7 +132,7 @@ const Hero = () => {
       >
         <div className="grid grid-cols-2 sm:grid-cols-4 md:flex md:items-center md:justify-between gap-4 sm:gap-6 md:gap-8 lg:gap-16">
           {[
-            { number: "4", suffix: "+", label: "Years of Experience" },
+            { number: "2", suffix: "+", label: "Years of Experience" },
             { number: "50", suffix: "+", label: "Project Completed" },
             { number: "45", suffix: "+", label: "Happy Clients" },
             { number: "4.9", suffix: "", label: "Client Feedbacks" }

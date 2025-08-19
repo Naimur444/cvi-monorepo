@@ -45,9 +45,8 @@ export default function ThemeToggle({ className = "" }: ThemeToggleProps) {
           x: isDarkMode ? 32 : 4
         }}
         transition={{
-          type: "spring",
-          stiffness: 500,
-          damping: 30
+          duration: 0.3,
+          ease: "linear"
         }}
       >
         {/* Icon inside the toggle circle */}

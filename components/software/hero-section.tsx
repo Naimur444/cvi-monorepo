@@ -5,7 +5,7 @@ import { useRef } from "react"
 import { Button } from "@/components/ui/button"
 import Image from "next/image"
 import { Check } from "lucide-react"
-import { Calendar } from "@/components/ui/calendar"
+// Calendar removed as requested
 import * as React from "react"
 import { useTheme } from "../../contexts/ThemeContext"
 import { getAccentColor } from "../../lib/theme-utils"
@@ -17,41 +17,54 @@ type HeroSectionProps = {
 
 export default function HeroSection({ title = "Custom Software Development", image }: HeroSectionProps) {
   const { isDarkMode } = useTheme()
-  const [showCalendar, setShowCalendar] = React.useState(false)
-  const calendarRef = React.useRef<HTMLDivElement>(null)
+  const [isScrolling, setIsScrolling] = React.useState(false)
   const sectionRef = useRef(null)
   const isInView = useInView(sectionRef, { once: true, margin: "-100px" })
 
-  // Smooth scroll to contact section
+  const recognitions = [
+    "Recognized for Excellent Software Solution Support",
+    "Recognized for Excellent Team Support management",
+    "Recognized for Trusted Global Partner of Excellence",
+  ]
+
+  // Enhanced smooth scroll to contact section with better easing
   const scrollToContact = () => {
+    setIsScrolling(true)
     const contactSection = document.getElementById('contact-section')
     if (contactSection) {
-      contactSection.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start'
-      })
+      // Get the current position and target position
+      const targetPosition = contactSection.offsetTop - 80 // 80px offset for better visual positioning
+      const startPosition = window.pageYOffset
+      const distance = targetPosition - startPosition
+      const duration = 1800 // 1.8 seconds for slower, smoother animation
+      
+      let start: number | null = null
+
+      // Custom easing function for ultra-smooth animation (ease-in-out-quart)
+      const easeInOutQuart = (t: number): number => {
+        return t < 0.5 ? 8 * t * t * t * t : 1 - 8 * (--t) * t * t * t
+      }
+
+      const step = (timestamp: number) => {
+        if (!start) start = timestamp
+        const progress = Math.min((timestamp - start) / duration, 1)
+        const easedProgress = easeInOutQuart(progress)
+        
+        window.scrollTo(0, startPosition + distance * easedProgress)
+        
+        if (progress < 1) {
+          window.requestAnimationFrame(step)
+        } else {
+          // Reset scrolling state when animation completes
+          setTimeout(() => setIsScrolling(false), 100)
+        }
+      }
+
+      window.requestAnimationFrame(step)
     }
   }
 
-  // Close calendar when clicking outside
-  React.useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (
-        calendarRef.current &&
-        !calendarRef.current.contains(event.target as Node)
-      ) {
-        setShowCalendar(false)
-      }
-    }
-    if (showCalendar) {
-      document.addEventListener("mousedown", handleClickOutside)
-    } else {
-      document.removeEventListener("mousedown", handleClickOutside)
-    }
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside)
-    }
-  }, [showCalendar])
+  // calendar UI removed
 
   return (
     <section ref={sectionRef} className="w-full px-6 py-8 md:py-16 lg:py-20 ">
@@ -88,44 +101,23 @@ export default function HeroSection({ title = "Custom Software Development", ima
           </div>
           <div className="flex flex-col gap-4">
             <Button
-              className="w-[340px] h-[46px] text-lg font-medium bg-theme-accent text-white hover:bg-theme-accent/90"
+              className="w-[340px] h-[46px] text-lg font-medium bg-theme-accent text-white hover:bg-theme-accent/90 transition-all duration-200"
               onClick={scrollToContact}
+              disabled={isScrolling}
             >
-              Get In Touch
-            </Button>
-            <div className="relative w-fit">
-              <button
-                type="button"
-                aria-label="Open calendar"
-                className="flex items-center text-primary hover:underline w-fit focus:outline-none"
-                onClick={() => setShowCalendar((v) => !v)}
-              >
-                {/* Calendar icon (lucide-react) for clickable trigger */}
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="mr-2 h-5 w-5"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                >
-                  <rect x="3" y="4" width="18" height="18" rx="2" />
-                  <path d="M16 2v4M8 2v4M3 10h18" />
-                </svg>
-                Or, Schedule a Free Consultation
-              </button>
-              {showCalendar && (
-                <div
-                  ref={calendarRef}
-                  className="absolute z-50 mt-2 left-0 bg-white rounded-lg shadow-lg p-4 border border-gray-200"
-                >
-                  <Calendar />
+              {isScrolling ? (
+                <div className="flex items-center gap-2">
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  Scrolling...
                 </div>
+              ) : (
+                "Get In Touch"
               )}
-            </div>
+            </Button>
+            {/* calendar trigger removed as requested */}
           </div>
           <div className="space-y-2  ">
-            {[0, 1, 2].map((i) => (
+            {recognitions.map((text, i) => (
               <motion.div
                 key={i}
                 className="flex items-center space-x-2"
@@ -134,7 +126,7 @@ export default function HeroSection({ title = "Custom Software Development", ima
                 transition={{ duration: 0.5, delay: 0.5 + i * 0.1, ease: "easeOut" }}
               >
                 <Check className="h-5 w-5 text-primary" />
-                <span>Recognized as Delaware&apos;s Top Software Developer 2023</span>
+                <span>{text}</span>
               </motion.div>
             ))}
           </div>

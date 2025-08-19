@@ -3,6 +3,7 @@ import Image from "next/image";
 import React from "react";
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
+import { Marquee, MarqueeContent, MarqueeItem } from "../ui/shadcn-io/marquee";
 
 const Banner = () => {
   const sectionRef = useRef(null);
@@ -145,59 +146,33 @@ const Banner = () => {
           </motion.p>
 
           <motion.div
-            className="max-w-7xl mx-auto flex flex-wrap justify-between items-center gap-y-6 pt-[42px]"
+            className="pt-[42px]"
             initial={{ opacity: 0, y: 30 }}
             animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
-            transition={{ duration: 0.7, delay: 1.2, ease: "easeOut" }}
+            transition={{ duration: 0.7, delay: 1.1, ease: "easeOut" }}
           >
-            {[
-              { src: "/wrongs.png", alt: "wrongs" },
-              { src: "/zen.png", alt: "zen" },
-              { src: "/tree.png", alt: "tree" },
-              { src: "/t.png", alt: "t" },
-              { src: "/security.png", alt: "security" },
-              { src: "/insight.png", alt: "insight" }
-            ].map((logo, index) => (
-              <motion.div
-                key={logo.alt}
-                className="cursor-pointer"
-                initial={{ opacity: 0, y: 20 }}
-                animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-                transition={{
-                  duration: 0.4,
-                  delay: 1.3 + index * 0.1,
-                  ease: "easeOut",
-                  // Optimized transitions for each property
-                  scale: { type: "spring", stiffness: 400, damping: 25 },
-                  y: { type: "spring", stiffness: 300, damping: 30 }
-                }}
-                whileHover={{
-                  scale: 1.08,
-                  y: -4
-                }}
-                whileTap={{
-                  scale: 0.95,
-                  transition: { duration: 0.1, ease: "easeOut" }
-                }}
-              >
-                <motion.div
-                  transition={{
-                    filter: { duration: 0.15, ease: "easeOut" }
-                  }}
-                  whileHover={{
-                    filter: "brightness(1.1) saturate(1.2)"
-                  }}
-                >
-                  <Image
-                    src={logo.src}
-                    alt={logo.alt}
-                    width={170}
-                    height={70}
-                    className="object-contain"
-                  />
-                </motion.div>
-              </motion.div>
-            ))}
+            <Marquee className="w-full py-4">
+              <MarqueeContent speed={50} direction="left">
+                {[
+                  { src: "/wrongs.png", alt: "wrongs" },
+                  { src: "/zen.png", alt: "zen" },
+                  { src: "/tree.png", alt: "tree" },
+                  { src: "/t.png", alt: "t" },
+                  { src: "/security.png", alt: "security" },
+                  { src: "/insight.png", alt: "insight" }
+                ].map((logo) => (
+                  <MarqueeItem key={logo.alt} className="mx-8">
+                    <Image
+                      src={logo.src}
+                      alt={logo.alt}
+                      width={170}
+                      height={70}
+                      className="object-contain opacity-70 hover:opacity-100 transition-opacity duration-300"
+                    />
+                  </MarqueeItem>
+                ))}
+              </MarqueeContent>
+            </Marquee>
           </motion.div>
         </motion.div>
       </motion.div>

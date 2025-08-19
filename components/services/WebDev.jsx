@@ -64,7 +64,7 @@ const WebDev = () => {
             that grow your digital presence.
           </p>
 
-          <Link href="/services/web-development">
+          <Link href="/web">
             <button className="flex items-center gap-4 group transition-colors duration-300 ease-in-out hover:bg-[#0E4F53] hover:text-white pr-4 py-2 rounded-md cursor-pointer hover:pl-4">
               Learn More
               <div className="bg-[#0E4F53] w-6 h-6 p-1 rounded-full flex items-center justify-center transition-transform duration-300 ease-in-out group-hover:translate-x-1">

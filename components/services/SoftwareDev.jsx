@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "next/link";
 
 const SoftwareDev = () => {
   return (
@@ -51,32 +52,34 @@ const SoftwareDev = () => {
             tools to client-facing platforms — we build what fits.
           </p>
 
-          <button className="flex items-center gap-4 group transition-colors duration-300 ease-in-out hover:bg-[#0E4F53] hover:text-white pr-4 py-2 rounded-md cursor-pointer hover:pl-4">
-            Learn More
-            <div className="bg-[#0E4F53] w-6 h-6 p-1 rounded-full flex items-center justify-center transition-transform duration-300 ease-in-out group-hover:translate-x-1">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
-                viewBox="0 0 16 16"
-                fill="none"
-                className="stroke-white transition-all duration-300 ease-in-out group-hover:translate-x-0.5"
-              >
-                <path
-                  d="M13.3334 7.99988H2.66675"
-                  stroke="white"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M10.0003 11.3334C10.0003 11.3334 13.3336 8.87842 13.3336 8.00002C13.3336 7.12162 10.0002 4.66669 10.0002 4.66669"
-                  stroke="white"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </div>
-          </button>
+          <Link href="/software">
+            <button className="flex items-center gap-4 group transition-colors duration-300 ease-in-out hover:bg-[#0E4F53] hover:text-white pr-4 py-2 rounded-md cursor-pointer hover:pl-4">
+              Learn More
+              <div className="bg-[#0E4F53] w-6 h-6 p-1 rounded-full flex items-center justify-center transition-transform duration-300 ease-in-out group-hover:translate-x-1">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  className="stroke-white transition-all duration-300 ease-in-out group-hover:translate-x-0.5"
+                >
+                  <path
+                    d="M13.3334 7.99988H2.66675"
+                    stroke="white"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M10.0003 11.3334C10.0003 11.3334 13.3336 8.87842 13.3336 8.00002C13.3336 7.12162 10.0002 4.66669 10.0002 4.66669"
+                    stroke="white"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </div>
+            </button>
+          </Link>
         </div>
 
         <div className="space-y-2">

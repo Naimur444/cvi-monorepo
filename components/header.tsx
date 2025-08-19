@@ -2,7 +2,7 @@
 import { useState, useRef, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import Image from "next/image"
-import { ChevronDown, Menu, X } from 'lucide-react'
+import { ChevronDown, Menu, X, Briefcase } from 'lucide-react'
 import Link from "next/link"
 import ThemeToggle from "./ThemeToggle"
 import { useTheme } from "../contexts/ThemeContext"
@@ -328,6 +328,20 @@ export default function Header() {
                           <h3 className="font-medium ">About Us</h3>
                         </div>
                       </motion.a>
+                        <motion.a
+                          href="/career"
+                          className="flex items-center gap-3 p-3 rounded-lg hover:bg-white/40 transition-all duration-200"
+                          initial={{ opacity: 0, y: 5 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: 0.08, duration: 0.2 }}
+                        >
+                          <div className="p-2 bg-teal-50 rounded-lg">
+                            <Briefcase className="w-5 h-5 text-teal-700" />
+                          </div>
+                          <div>
+                            <h3 className="font-medium ">Career</h3>
+                          </div>
+                        </motion.a>
                       
                       <motion.a
                         href="/contact"

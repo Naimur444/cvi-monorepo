@@ -1,8 +1,11 @@
 
 'use client';
+
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 import Image from "next/image";
+import { useTheme } from "../../contexts/ThemeContext";
+import { getCardBackgroundColor, getThemeColor } from "../../lib/theme-utils";
 
 const designItems = [
   {
@@ -36,11 +39,17 @@ const designItems = [
 ];
 
 export default function Design() {
+
   const sectionRef = useRef(null);
   const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
+  const { isDarkMode } = useTheme();
 
   return (
-    <section ref={sectionRef} className="w-full px-6 py-20 bg-white">
+    <section
+      ref={sectionRef}
+      className="w-full px-6 py-20"
+      style={{ backgroundColor: getCardBackgroundColor(isDarkMode) }}
+    >
       <motion.div
         className="max-w-7xl mx-auto w-full text-center"
         initial={{ opacity: 0, y: 50 }}
@@ -48,7 +57,8 @@ export default function Design() {
         transition={{ duration: 0.7, ease: "easeOut" }}
       >
         <motion.h2
-          className="text-3xl font-semibold tracking-tight text-black sm:text-4xl md:text-5xl font-[600]"
+          className="text-3xl font-semibold tracking-tight sm:text-4xl md:text-5xl font-[600]"
+          style={{ color: getThemeColor(isDarkMode, 'secondaryText') }}
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
           transition={{ duration: 0.7, delay: 0.2, ease: "easeOut" }}
@@ -56,7 +66,8 @@ export default function Design() {
           What We Do in Design
         </motion.h2>
         <motion.p
-          className="mt-4 pt-4 mx-auto text-lg  "
+          className="mt-4 pt-4 mx-auto text-lg"
+          style={{ color: getThemeColor(isDarkMode, 'mutedText') }}
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: 0.7, delay: 0.3, ease: "easeOut" }}
@@ -84,8 +95,13 @@ export default function Design() {
                 height={48}
                 className="mb-4"
               />
-              <h3 className="font-semibold  mb-4 text-lg">{item.title}</h3>
-              <p className=" ">{item.description}</p>
+              <h3
+                className="font-semibold mb-4 text-lg"
+                style={{ color: getThemeColor(isDarkMode, 'secondaryText') }}
+              >
+                {item.title}
+              </h3>
+              <p style={{ color: getThemeColor(isDarkMode, 'mutedText') }}>{item.description}</p>
             </motion.div>
           ))}
         </motion.div>

@@ -33,9 +33,8 @@ const Advantages = () => {
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: 0.7, delay: 0.3, ease: "easeOut" }}
         >
-          By utilizing our full off-shore team of experienced software
-          developers, responsible <br /> American companies are enjoying an
-          impressive range of benefits.
+          By utilizing our full offshore team of experienced software developers, leading <br /> global companies enjoy an impressive range of benefits.
+          
         </motion.p>
 
         <motion.div
@@ -74,7 +73,7 @@ const Advantages = () => {
                 transition={{ duration: 0.2 }}
               >
                 <h2 className="text-xl sm:text-2xl font-bold text-white mb-1 sm:mb-2 md:mb-4">
-                  4+
+                  2+
                 </h2>
                 <p className="text-sm sm:text-base text-white font-semibold">Years of Experience</p>
               </motion.div>
@@ -92,7 +91,7 @@ const Advantages = () => {
               animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
               transition={{ duration: 0.6, delay: 0.7, ease: "easeOut" }}
             >
-              Cost Savings By 50%
+              Cost Savings By 35%
             </motion.h3>
             <motion.p
               className="text-[#7C7C7C] mb-6 sm:mb-8 md:mb-10"
@@ -101,7 +100,7 @@ const Advantages = () => {
               transition={{ duration: 0.6, delay: 0.8, ease: "easeOut" }}
             >
               By working with our custom software company, our clients can save
-              at least 50% on their software development costs. Our personalized
+              at least 35% on their software development costs. Our personalized
               solutions are designed specifically for the needs and goals of
               each client, ensuring that they get the most value for their
               investment. We work closely with our clients to understand their

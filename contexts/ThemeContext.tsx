@@ -19,25 +19,20 @@ interface ThemeProviderProps {
  * Provides theme context to all child components
  */
 export function ThemeProvider({ children }: ThemeProviderProps) {
-  const [isDarkMode, setIsDarkMode] = useState(true) // Default to dark mode
+  // Initial state is just a placeholder, we'll set it properly in the useEffect
+  const [isDarkMode, setIsDarkMode] = useState(false) 
   const [isInitialized, setIsInitialized] = useState(false)
 
   // Initialize theme from localStorage and system preference
   useEffect(() => {
-    // Apply dark mode immediately on mount since we default to dark
-    applyTheme(true)
-    setIsInitialized(true)
-
     if (typeof window !== 'undefined') {
       const savedTheme = localStorage.getItem('theme')
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-      const shouldBeDark = savedTheme === 'dark' || (!savedTheme && true) // Default to dark mode
-
-      // Only update if different from default
-      if (shouldBeDark !== true) {
-        setIsDarkMode(shouldBeDark)
-        applyTheme(shouldBeDark)
-      }
+      // Use saved theme or default to dark if none saved
+      const shouldBeDark = savedTheme ? savedTheme === 'dark' : true
+      
+      setIsDarkMode(shouldBeDark)
+      applyTheme(shouldBeDark)
+      setIsInitialized(true)
     }
   }, [])
 

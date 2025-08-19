@@ -45,7 +45,7 @@ export default function AppWrapper({ children }: AppWrapperProps) {
       {isLoading && (
         <Preloader 
           onComplete={handlePreloaderComplete}
-          duration={3000} // 3 seconds duration
+          duration={1500} // 1.5 seconds duration
         />
       )}
       

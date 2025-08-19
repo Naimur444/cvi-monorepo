@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import Image from "next/image"
 import { useTheme } from "../../contexts/ThemeContext"
@@ -14,6 +14,7 @@ const portfolioData = [
     image: "/images/travel-card.png",
     tag: "Saas",
     tagColor: "#003C42",
+    previewUrl: "https://example.com/travel-website",
   },
   {
     id: 2,
@@ -22,6 +23,7 @@ const portfolioData = [
     image: "/placeholder.svg?height=240&width=360&text=Mobile+App+Interface",
     tag: "Mobile App",
     tagColor: "#003C42",
+    previewUrl: "https://example.com/mobile-app",
   },
   {
     id: 3,
@@ -30,6 +32,7 @@ const portfolioData = [
     image: "/placeholder.svg?height=240&width=360&text=Coffee+Shop+Laptop+Scene",
     tag: "Blog",
     tagColor: "#003C42",
+    previewUrl: "https://example.com/blog-website",
   },
   {
     id: 4,
@@ -38,6 +41,7 @@ const portfolioData = [
     image: "/placeholder.svg?height=240&width=360&text=Website+Design+Mockup",
     tag: "Website",
     tagColor: "#003C42",
+    previewUrl: "https://example.com/website-design",
   },
   {
     id: 5,
@@ -46,6 +50,7 @@ const portfolioData = [
     image: "/placeholder.svg?height=240&width=360&text=Web+Application+Dashboard",
     tag: "Website",
     tagColor: "#003C42",
+    previewUrl: "https://example.com/web-dashboard",
   },
   {
     id: 6,
@@ -54,6 +59,7 @@ const portfolioData = [
     image: "/placeholder.svg?height=240&width=360&text=Responsive+Website+Design",
     tag: "Website",
     tagColor: "#003C42",
+    previewUrl: "https://example.com/responsive-website",
   },
   // Additional Management projects to show "See More" button
   {
@@ -63,6 +69,7 @@ const portfolioData = [
     image: "/placeholder.svg?height=240&width=360&text=CRM+Dashboard",
     tag: "Dashboard",
     tagColor: "#003C42",
+    previewUrl: "https://example.com/crm-system",
   },
   {
     id: 17,
@@ -71,6 +78,7 @@ const portfolioData = [
     image: "/placeholder.svg?height=240&width=360&text=Project+Management",
     tag: "Saas",
     tagColor: "#003C42",
+    previewUrl: "https://example.com/project-management",
   },
   {
     id: 18,
@@ -79,6 +87,7 @@ const portfolioData = [
     image: "/placeholder.svg?height=240&width=360&text=HR+System",
     tag: "Website",
     tagColor: "#003C42",
+    previewUrl: "https://example.com/hr-system",
   },
   // System projects (formerly E-Commerce)
   {
@@ -88,6 +97,7 @@ const portfolioData = [
     image: "/placeholder.svg?height=240&width=360&text=System+Store",
     tag: "Website",
     tagColor: "#003C42",
+    previewUrl: "https://example.com/system-store",
   },
   {
     id: 8,
@@ -96,6 +106,7 @@ const portfolioData = [
     image: "/placeholder.svg?height=240&width=360&text=Shopping+App",
     tag: "Mobile App",
     tagColor: "#003C42",
+    previewUrl: "https://example.com/shopping-app",
   },
   {
     id: 9,
@@ -104,6 +115,7 @@ const portfolioData = [
     image: "/placeholder.svg?height=240&width=360&text=Online+Store+Dashboard",
     tag: "Dashboard",
     tagColor: "#003C42",
+    previewUrl: "https://example.com/store-dashboard",
   },
   {
     id: 20,
@@ -112,6 +124,7 @@ const portfolioData = [
     image: "/placeholder.svg?height=240&width=360&text=Fashion+Store",
     tag: "Website",
     tagColor: "#003C42",
+    previewUrl: "https://example.com/fashion-store",
   },
   {
     id: 21,
@@ -120,6 +133,7 @@ const portfolioData = [
     image: "/placeholder.svg?height=240&width=360&text=Electronics+Store",
     tag: "Website",
     tagColor: "#003C42",
+    previewUrl: "https://example.com/electronics-store",
   },
   {
     id: 22,
@@ -128,6 +142,7 @@ const portfolioData = [
     image: "/placeholder.svg?height=240&width=360&text=Marketplace+App",
     tag: "Mobile App",
     tagColor: "#003C42",
+    previewUrl: "https://example.com/marketplace-app",
   },
   {
     id: 23,
@@ -136,6 +151,7 @@ const portfolioData = [
     image: "/placeholder.svg?height=240&width=360&text=Food+Delivery",
     tag: "Mobile App",
     tagColor: "#003C42",
+    previewUrl: "https://example.com/food-delivery",
   },
   // Website projects
   {
@@ -145,6 +161,7 @@ const portfolioData = [
     image: "/placeholder.svg?height=240&width=360&text=Corporate+Website",
     tag: "Website",
     tagColor: "#003C42",
+    previewUrl: "https://example.com/corporate-website",
   },
   {
     id: 11,
@@ -153,6 +170,7 @@ const portfolioData = [
     image: "/placeholder.svg?height=240&width=360&text=Portfolio+Website",
     tag: "Website",
     tagColor: "#003C42",
+    previewUrl: "https://example.com/portfolio-website",
   },
   {
     id: 12,
@@ -161,6 +179,7 @@ const portfolioData = [
     image: "/placeholder.svg?height=240&width=360&text=Business+Website",
     tag: "Website",
     tagColor: "#003C42",
+    previewUrl: "https://example.com/business-website",
   },
   {
     id: 24,
@@ -169,6 +188,7 @@ const portfolioData = [
     image: "/placeholder.svg?height=240&width=360&text=Real+Estate",
     tag: "Website",
     tagColor: "#003C42",
+    previewUrl: "https://example.com/real-estate",
   },
   {
     id: 25,
@@ -177,6 +197,7 @@ const portfolioData = [
     image: "/placeholder.svg?height=240&width=360&text=Healthcare+Site",
     tag: "Website",
     tagColor: "#003C42",
+    previewUrl: "https://example.com/healthcare-site",
   },
   {
     id: 26,
@@ -185,6 +206,7 @@ const portfolioData = [
     image: "/placeholder.svg?height=240&width=360&text=Education+Platform",
     tag: "Website",
     tagColor: "#003C42",
+    previewUrl: "https://example.com/education-platform",
   },
   {
     id: 27,
@@ -193,6 +215,7 @@ const portfolioData = [
     image: "/placeholder.svg?height=240&width=360&text=News+Portal",
     tag: "Website",
     tagColor: "#003C42",
+    previewUrl: "https://example.com/news-portal",
   },
   // Mobile App projects
   {
@@ -202,6 +225,7 @@ const portfolioData = [
     image: "/placeholder.svg?height=240&width=360&text=Travel+Mobile+App",
     tag: "Mobile App",
     tagColor: "#003C42",
+    previewUrl: "https://example.com/travel-mobile-app",
   },
   {
     id: 14,
@@ -210,6 +234,7 @@ const portfolioData = [
     image: "/placeholder.svg?height=240&width=360&text=iOS+App+Design",
     tag: "Mobile App",
     tagColor: "#003C42",
+    previewUrl: "https://example.com/ios-app",
   },
   {
     id: 15,
@@ -218,6 +243,7 @@ const portfolioData = [
     image: "/placeholder.svg?height=240&width=360&text=Android+App+Interface",
     tag: "Mobile App",
     tagColor: "#003C42",
+    previewUrl: "https://example.com/android-app",
   },
   {
     id: 28,
@@ -226,6 +252,7 @@ const portfolioData = [
     image: "/placeholder.svg?height=240&width=360&text=Fitness+App",
     tag: "Mobile App",
     tagColor: "#003C42",
+    previewUrl: "https://example.com/fitness-app",
   },
   {
     id: 29,
@@ -234,6 +261,7 @@ const portfolioData = [
     image: "/placeholder.svg?height=240&width=360&text=Banking+App",
     tag: "Mobile App",
     tagColor: "#003C42",
+    previewUrl: "https://example.com/banking-app",
   },
   {
     id: 30,
@@ -242,6 +270,7 @@ const portfolioData = [
     image: "/placeholder.svg?height=240&width=360&text=Social+Media",
     tag: "Mobile App",
     tagColor: "#003C42",
+    previewUrl: "https://example.com/social-media-app",
   },
 ]
 
@@ -256,6 +285,25 @@ export default function Component() {
 
   const filteredProjects = portfolioData.filter((project) => project.category === activeCategory).slice(0, 6)
   const allFilteredProjects = portfolioData.filter((project) => project.category === activeCategory)
+
+  // Handle scroll lock when modal opens/closes
+  useEffect(() => {
+    if (isModalOpen) {
+      // Lock scroll on body
+      document.body.style.overflow = 'hidden'
+      document.body.style.paddingRight = '0px' // Prevent layout shift
+    } else {
+      // Restore scroll
+      document.body.style.overflow = 'unset'
+      document.body.style.paddingRight = '0px'
+    }
+
+    // Cleanup function to restore scroll when component unmounts
+    return () => {
+      document.body.style.overflow = 'unset'
+      document.body.style.paddingRight = '0px'
+    }
+  }, [isModalOpen])
 
   return (
   <section className="w-full px-4 sm:px-6 py-8 md:py-16 lg:py-20  ">
@@ -343,13 +391,68 @@ export default function Component() {
 
                   {/* Title */}
                   <h3
-                    className="text-base sm:text-lg font-bold transition-colors duration-200"
+                    className="text-base sm:text-lg font-bold transition-colors duration-200 mb-3 sm:mb-4"
                     style={{
                       color: getThemeColor(isDarkMode, 'secondaryText')
                     }}
                   >
                     {project.title}
                   </h3>
+
+                  {/* Enhanced Preview Button */}
+                  <motion.button
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      window.open(project.previewUrl, '_blank')
+                    }}
+                    className="group/btn flex items-center justify-between border-2 rounded-lg px-4 py-3 cursor-pointer"
+                    style={{
+                      backgroundColor: getCardBackgroundColor(isDarkMode),
+                      borderColor: isDarkMode ? '#404040' : '#E5E7EB',
+                      width: 'auto',
+                      minWidth: 0
+                    }}
+                    whileHover={{
+                      borderColor: getAccentColor(isDarkMode),
+                      scale: 1.02,
+                      y: -2
+                    }}
+                    whileTap={{ scale: 0.98 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <span
+                      className="font-medium"
+                      style={{ color: getThemeColor(isDarkMode, 'secondaryText') }}
+                    >
+                      Preview Project
+                    </span>
+
+                    {/* Animated icon with rotation and color change */}
+                    <motion.div
+                      className="w-8 h-8 rounded flex items-center justify-center ml-3"
+                      style={{ backgroundColor: getAccentColor(isDarkMode) }}
+                      whileHover={{
+                        backgroundColor: isDarkMode ? '#046B6F' : '#002A30',
+                        rotate: 5
+                      }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      {/* Arrow icon with movement animation */}
+                      <motion.svg
+                        className="w-4 h-4 text-white"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        whileHover={{
+                          x: 2,
+                          y: -2
+                        }}
+                        transition={{ duration: 0.2 }}
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                      </motion.svg>
+                    </motion.div>
+                  </motion.button>
                 </div>
               </motion.div>
             ))}
@@ -386,8 +489,9 @@ export default function Component() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 z-50 flex items-center justify-center p-4"
+              className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-hidden"
               onClick={() => setIsModalOpen(false)}
+              onWheel={(e) => e.stopPropagation()}
             >
               {/* Glass Background */}
               <div className="absolute inset-0 bg-black/20 backdrop-blur-md" />
@@ -397,8 +501,9 @@ export default function Component() {
                 initial={{ scale: 0.9, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.9, opacity: 0 }}
-                className="modal-liquid-glass rounded-2xl max-w-6xl w-full max-h-[90vh]"
+                className="modal-liquid-glass rounded-2xl max-w-6xl w-full max-h-[90vh] overflow-hidden"
                 onClick={(e) => e.stopPropagation()}
+                onWheel={(e) => e.stopPropagation()}
               >
                 {/* Liquid Glass Effect Layers */}
                 <div className="modal-liquid-glass-effect"></div>
@@ -477,11 +582,64 @@ export default function Component() {
 
                             {/* Title */}
                             <h4
-                              className="text-sm sm:text-base font-bold transition-colors duration-200"
+                              className="text-sm sm:text-base font-bold transition-colors duration-200 mb-2 sm:mb-3"
                               style={{ color: getThemeColor(isDarkMode, 'secondaryText') }}
                             >
                               {project.title}
                             </h4>
+
+                            {/* Enhanced Preview Button for Modal */}
+                            <motion.button
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                window.open(project.previewUrl, '_blank')
+                              }}
+                              className="group/btn flex items-center justify-between w-full border-2 rounded-lg px-3 py-2 sm:px-4 sm:py-2.5 cursor-pointer text-xs sm:text-sm"
+                              style={{
+                                backgroundColor: getCardBackgroundColor(isDarkMode),
+                                borderColor: isDarkMode ? '#404040' : '#E5E7EB'
+                              }}
+                              whileHover={{
+                                borderColor: getAccentColor(isDarkMode),
+                                scale: 1.02,
+                                y: -1
+                              }}
+                              whileTap={{ scale: 0.98 }}
+                              transition={{ duration: 0.2 }}
+                            >
+                              <span
+                                className="font-medium"
+                                style={{ color: getThemeColor(isDarkMode, 'secondaryText') }}
+                              >
+                                Preview
+                              </span>
+
+                              {/* Animated icon with rotation and color change */}
+                              <motion.div
+                                className="w-6 h-6 sm:w-7 sm:h-7 rounded flex items-center justify-center ml-2"
+                                style={{ backgroundColor: getAccentColor(isDarkMode) }}
+                                whileHover={{
+                                  backgroundColor: isDarkMode ? '#046B6F' : '#002A30',
+                                  rotate: 5
+                                }}
+                                transition={{ duration: 0.2 }}
+                              >
+                                {/* Arrow icon with movement animation */}
+                                <motion.svg
+                                  className="w-3 h-3 sm:w-4 sm:h-4 text-white"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  viewBox="0 0 24 24"
+                                  whileHover={{
+                                    x: 1,
+                                    y: -1
+                                  }}
+                                  transition={{ duration: 0.2 }}
+                                >
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                </motion.svg>
+                              </motion.div>
+                            </motion.button>
                           </div>
                         </motion.div>
                       ))}

@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
+
 import { motion, AnimatePresence } from "framer-motion"
 import Image from "next/image"
 import { useTheme } from "../contexts/ThemeContext"
@@ -11,14 +12,14 @@ interface PreloaderProps {
   duration?: number
 }
 
-export default function Preloader({ onComplete, duration = 3000 }: PreloaderProps) {
+export default function Preloader({ onComplete, duration = 1500 }: PreloaderProps) {
   const { isDarkMode } = useTheme()
   const [isVisible, setIsVisible] = useState(true)
   const [progress, setProgress] = useState(0)
-  const [counter, setCounter] = useState(0)
+  const [counter, setCounter] = useState(1)
 
   useEffect(() => {
-    // Progress animation
+    // Progress animation (linear, matches duration)
     const progressInterval = setInterval(() => {
       setProgress((prev) => {
         if (prev >= 100) {
@@ -26,23 +27,25 @@ export default function Preloader({ onComplete, duration = 3000 }: PreloaderProp
           setTimeout(() => {
             setIsVisible(false)
             onComplete?.()
-          }, 800)
+          }, 200) // shorter exit
           return 100
         }
         return prev + 100 / (duration / 50)
       })
     }, 50)
 
-    // Counter animation - starts immediately and counts independently
-    let counterValue = 0
+    // Counter: 1 to 10, evenly spaced over duration
+    let counterValue = 1
+    const counterMax = 10
+    const counterStep = duration / counterMax
+    setCounter(1)
     const counterInterval = setInterval(() => {
-      if (counterValue < 100) {
-        counterValue += 1
-        setCounter(counterValue)
-      } else {
+      counterValue += 1
+      setCounter(counterValue)
+      if (counterValue >= counterMax) {
         clearInterval(counterInterval)
       }
-    }, duration / 100) // This ensures it counts from 1-100 over the full duration
+    }, counterStep)
 
     return () => {
       clearInterval(progressInterval)
@@ -56,8 +59,8 @@ export default function Preloader({ onComplete, duration = 3000 }: PreloaderProp
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          exit={{ opacity: 0, y: -50 }}
-          transition={{ duration: 0.6 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.4 }}
           className="fixed inset-0 z-50 flex flex-col items-center justify-center"
           style={{ backgroundColor: getCardBackgroundColor(isDarkMode) }}
         >
@@ -100,153 +103,74 @@ export default function Preloader({ onComplete, duration = 3000 }: PreloaderProp
             />
           </div>
 
-          {/* Main Logo Container - Horizontal Layout */}
+          {/* Logo and CVI Text - Simple Fade/Scale In */}
           <motion.div
-            initial={{ scale: 0, rotate: -90 }}
-            animate={{ scale: 1, rotate: 0 }}
-            transition={{ duration: 1, ease: "easeOut", type: "spring", stiffness: 100 }}
-            className="relative z-10 mb-8"
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.7, ease: "easeOut" }}
+            className="relative z-10 flex items-center space-x-4 mb-8"
           >
-            {/* Horizontal Logo and CVI Layout */}
-            <motion.div
-              animate={{
-                y: [-1, 1, -1],
-              }}
-              transition={{
-                duration: 4,
-                repeat: Number.POSITIVE_INFINITY,
-                ease: "easeInOut",
-              }}
-              className="relative flex items-center space-x-6 p-6 rounded-3xl shadow-2xl border"
-              style={{
-                background: isDarkMode
-                  ? "linear-gradient(135deg, rgba(19, 19, 19, 0.95) 0%, rgba(30, 30, 30, 0.95) 100%)"
-                  : "linear-gradient(135deg, rgba(249, 250, 251, 0.95) 0%, rgba(255, 255, 255, 0.95) 100%)",
-                borderColor: isDarkMode ? "rgba(255, 255, 255, 0.1)" : "rgba(0, 0, 0, 0.1)",
-                boxShadow: isDarkMode
-                  ? `0 20px 40px -12px rgba(5, 124, 128, 0.15), 0 0 0 1px rgba(5, 124, 128, 0.05)`
-                  : `0 20px 40px -12px rgba(14, 79, 83, 0.15), 0 0 0 1px rgba(14, 79, 83, 0.05)`,
-              }}
+            <Image
+              src={isDarkMode ? "/darknav.svg" : "/nav.svg"}
+              alt="Cloud Vertex Innovation"
+              width={48}
+              height={36}
+              className="w-12 h-9"
+            />
+            <h1
+              className="text-4xl font-bold tracking-wider"
+              style={{ color: getAccentColor(isDarkMode) }}
             >
-              {/* Logo */}
-              <Image
-                src={isDarkMode ? "/darknav.svg" : "/nav.svg"}
-                alt="Cloud Vertex Innovation"
-                width={64}
-                height={48}
-                className="w-16 h-12"
-              />
-
-              {/* CVI Text */}
-              <motion.h1
-                className="text-5xl font-bold tracking-wider"
-                style={{ color: getAccentColor(isDarkMode) }}
+              CVI
+            </h1>
+            {/* Counter Badge with Pulse Ring */}
+            <div
+              className="ml-2 min-w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-bold shadow-lg relative"
+              style={{ backgroundColor: getAccentColor(isDarkMode) }}
+            >
+              {counter}
+              {/* Pulse Ring Animation */}
+              <motion.div
+                className="absolute inset-0 rounded-full border-2"
+                style={{ borderColor: getAccentColor(isDarkMode) }}
                 animate={{
-                  textShadow: isDarkMode
-                    ? [
-                        "0 0 0px rgba(5, 124, 128, 0)",
-                        "0 0 10px rgba(5, 124, 128, 0.2)",
-                        "0 0 0px rgba(5, 124, 128, 0)",
-                      ]
-                    : [
-                        "0 0 0px rgba(14, 79, 83, 0)",
-                        "0 0 10px rgba(14, 79, 83, 0.2)",
-                        "0 0 0px rgba(14, 79, 83, 0)",
-                      ],
+                  scale: [1, 1.8],
+                  opacity: [0.8, 0],
                 }}
                 transition={{
-                  duration: 3,
+                  duration: 1.5,
                   repeat: Number.POSITIVE_INFINITY,
-                  ease: "easeInOut",
-                }}
-              >
-                CVI
-              </motion.h1>
-
-              {/* Notification Counter Badge */}
-              <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ duration: 0.5, delay: 0.8, type: "spring", stiffness: 200 }}
-                className="absolute -top-2 -right-2 min-w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-bold shadow-lg"
-                style={{ backgroundColor: getAccentColor(isDarkMode) }}
-              >
-                <motion.span
-                  key={counter}
-                  initial={{ scale: 1.2, opacity: 0, y: -5 }}
-                  animate={{ scale: 1, opacity: 1, y: 0 }}
-                  transition={{ duration: 0.4, ease: "easeOut" }}
-                >
-                  {counter}
-                </motion.span>
-
-                {/* Pulse Ring Animation */}
-                <motion.div
-                  className="absolute inset-0 rounded-full border-2"
-                  style={{ borderColor: getAccentColor(isDarkMode) }}
-                  animate={{
-                    scale: [1, 1.8],
-                    opacity: [0.8, 0],
-                  }}
-                  transition={{
-                    duration: 1.5,
-                    repeat: Number.POSITIVE_INFINITY,
-                    ease: "easeOut",
-                  }}
-                />
-              </motion.div>
-            </motion.div>
-          </motion.div>
-
-          {/* Progress Dots */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.6, delay: 1 }}
-            className="relative z-10 flex space-x-2 mb-6"
-          >
-            {[...Array(5)].map((_, i) => (
-              <motion.div
-                key={i}
-                className="w-3 h-3 rounded-full"
-                style={{
-                  backgroundColor: progress > i * 20
-                    ? getAccentColor(isDarkMode)
-                    : isDarkMode ? "#374151" : "#e5e7eb",
-                }}
-                animate={{
-                  scale: progress > i * 20 ? [1, 1.3, 1] : 1,
-                }}
-                transition={{
-                  duration: 0.3,
                   ease: "easeOut",
                 }}
               />
-            ))}
+            </div>
           </motion.div>
-
+          {/* Simple Progress Bar */}
+          <div className="w-40 h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden mb-6 relative z-10">
+            <div
+              className="h-full rounded-full"
+              style={{
+                width: `${progress}%`,
+                backgroundColor: getAccentColor(isDarkMode),
+                transition: "width 0.2s linear",
+              }}
+            />
+          </div>
           {/* Loading Text */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.6, delay: 1.2 }}
-            className="relative z-10 text-center"
-          >
-            <motion.p
-              animate={{ opacity: [0.5, 1, 0.5] }}
-              transition={{ duration: 1.5, repeat: Number.POSITIVE_INFINITY }}
+          <div className="relative z-10 text-center">
+            <p
               className="text-lg font-medium mb-2"
               style={{ color: getAccentColor(isDarkMode) }}
             >
               Loading Experience...
-            </motion.p>
-            <motion.p
+            </p>
+            <p
               className="text-sm font-light opacity-60"
               style={{ color: getAccentColor(isDarkMode) }}
             >
               Cloud Vortex Innovation
-            </motion.p>
-          </motion.div>
+            </p>
+          </div>
 
           {/* Subtle Animated Lines */}
           <div className="absolute inset-0 pointer-events-none">

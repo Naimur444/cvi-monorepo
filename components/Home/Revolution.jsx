@@ -53,7 +53,7 @@ const Revolution = () => {
       title: "Real Estate",
       icon: "/real-estate.svg",
       description:
-        "By integrating CVI’s advanced technology, healthcare can offer more accurate diagnostics, faster treatments, and seamless communication, transforming patient care and outcomes.",
+        "CVI’s advanced technology empowers real estate to streamline operations, accelerate transactions, and enhance client trust and outcomes.",
     },
     {
       id: 7,

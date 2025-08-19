@@ -1,4 +1,4 @@
-import Banner from "@/components/ui-ux/Banner";
+import HeroSection from "@/components/software/hero-section";
 import Diamond from "@/components/ui-ux/Diamond";
 import FAQAboutProcess from '../../components/software/faq-about-process';
 import Lifecycle from "@/components/ui-ux/Lifecycle";
@@ -18,12 +18,13 @@ const page = () => {
     <div>
       <Header />
       <div className="mt-8 md:mt-16 lg:mt-20">
-        <Banner />
+        <HeroSection 
+          title="UI/UX Design for your custom software"
+          image="/ui-ux-banner.png"
+        />
       </div>
       <Design />
-      <div className="mt-8 md:mt-16 lg:mt-20">
       <CollaborationSection />
-      </div>
       <Diamond />
       <Lifecycle />
       <Wireframe />

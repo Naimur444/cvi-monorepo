@@ -1,5 +1,6 @@
 "use client";
 import Layout from "@/app/components/Layout";
+import DataTable from "@/components/DataTable";
 import React, { useState } from "react";
 
 const ReportPage = () => {
@@ -36,42 +37,215 @@ const ReportPage = () => {
     },
   ];
 
-  // Different data for different cards
+  // Enhanced data for different cards with more realistic report data
   const tableDataMap = {
     today: [
-      { id: 1, country: "USA", state: "New York", social: "Facebook" },
-      { id: 2, country: "Canada", state: "Toronto", social: "Instagram" },
+      {
+        id: 1,
+        country: "USA",
+        state: "New York",
+        social: "Facebook",
+        visits: 25,
+        duration: "2m 30s",
+      },
+      {
+        id: 2,
+        country: "Canada",
+        state: "Toronto",
+        social: "Instagram",
+        visits: 15,
+        duration: "1m 45s",
+      },
+      {
+        id: 3,
+        country: "UK",
+        state: "London",
+        social: "Twitter",
+        visits: 10,
+        duration: "3m 15s",
+      },
     ],
     week: [
-      { id: 1, country: "UK", state: "London", social: "Twitter" },
-      { id: 2, country: "Germany", state: "Berlin", social: "LinkedIn" },
-      { id: 3, country: "France", state: "Paris", social: "Facebook" },
+      {
+        id: 1,
+        country: "UK",
+        state: "London",
+        social: "Twitter",
+        visits: 45,
+        duration: "2m 20s",
+      },
+      {
+        id: 2,
+        country: "Germany",
+        state: "Berlin",
+        social: "LinkedIn",
+        visits: 38,
+        duration: "4m 10s",
+      },
+      {
+        id: 3,
+        country: "France",
+        state: "Paris",
+        social: "Facebook",
+        visits: 32,
+        duration: "1m 55s",
+      },
+      {
+        id: 4,
+        country: "Spain",
+        state: "Madrid",
+        social: "Instagram",
+        visits: 28,
+        duration: "3m 40s",
+      },
     ],
     month: [
-      { id: 1, country: "India", state: "Delhi", social: "Instagram" },
-      { id: 2, country: "Japan", state: "Tokyo", social: "Twitter" },
-      { id: 3, country: "Brazil", state: "Rio", social: "Facebook" },
-      { id: 4, country: "Australia", state: "Sydney", social: "LinkedIn" },
+      {
+        id: 1,
+        country: "India",
+        state: "Delhi",
+        social: "Instagram",
+        visits: 180,
+        duration: "2m 15s",
+      },
+      {
+        id: 2,
+        country: "Japan",
+        state: "Tokyo",
+        social: "Twitter",
+        visits: 165,
+        duration: "3m 25s",
+      },
+      {
+        id: 3,
+        country: "Brazil",
+        state: "Rio",
+        social: "Facebook",
+        visits: 142,
+        duration: "2m 50s",
+      },
+      {
+        id: 4,
+        country: "Australia",
+        state: "Sydney",
+        social: "LinkedIn",
+        visits: 128,
+        duration: "4m 05s",
+      },
+      {
+        id: 5,
+        country: "South Korea",
+        state: "Seoul",
+        social: "Instagram",
+        visits: 115,
+        duration: "2m 35s",
+      },
     ],
     year: [
-      { id: 1, country: "China", state: "Beijing", social: "LinkedIn" },
-      { id: 2, country: "Russia", state: "Moscow", social: "Instagram" },
-      { id: 3, country: "Mexico", state: "Mexico City", social: "Facebook" },
+      {
+        id: 1,
+        country: "China",
+        state: "Beijing",
+        social: "LinkedIn",
+        visits: 1200,
+        duration: "3m 20s",
+      },
+      {
+        id: 2,
+        country: "Russia",
+        state: "Moscow",
+        social: "Instagram",
+        visits: 980,
+        duration: "2m 45s",
+      },
+      {
+        id: 3,
+        country: "Mexico",
+        state: "Mexico City",
+        social: "Facebook",
+        visits: 850,
+        duration: "2m 10s",
+      },
       {
         id: 4,
         country: "South Africa",
         state: "Cape Town",
         social: "Instagram",
+        visits: 720,
+        duration: "3m 55s",
       },
-      { id: 5, country: "Italy", state: "Rome", social: "Twitter" },
+      {
+        id: 5,
+        country: "Italy",
+        state: "Rome",
+        social: "Twitter",
+        visits: 650,
+        duration: "2m 30s",
+      },
+      {
+        id: 6,
+        country: "Turkey",
+        state: "Istanbul",
+        social: "Facebook",
+        visits: 580,
+        duration: "2m 15s",
+      },
     ],
+  };
+
+  // Handle delete functionality
+  const handleDelete = (reportId) => {
+    if (
+      window.confirm(
+        "Are you sure you want to delete this report entry? This action cannot be undone."
+      )
+    ) {
+      // Here you would make the actual API call to delete the report entry
+      console.log("Deleting report entry:", reportId);
+      alert("Report entry deleted successfully!");
+    }
+  };
+
+  // Handle export CSV
+  const handleExportCSV = () => {
+    if (selectedCard && tableDataMap[selectedCard]) {
+      const data = tableDataMap[selectedCard];
+      const csvContent = [
+        [
+          "SL No.",
+          "Country Name",
+          "State",
+          "Social Media",
+          "Visits",
+          "Duration",
+        ],
+        ...data.map((row, index) => [
+          index + 1,
+          row.country,
+          row.state,
+          row.social,
+          row.visits,
+          row.duration,
+        ]),
+      ]
+        .map((row) => row.join(","))
+        .join("\n");
+
+      const blob = new Blob([csvContent], { type: "text/csv" });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `${selectedCard}_report.csv`;
+      a.click();
+      window.URL.revokeObjectURL(url);
+    }
   };
 
   return (
     <section>
       <Layout>
         <h2 className="text-2xl font-bold mb-8">Dashboard</h2>
-        <div className="bg-[#FAF9FC] p-4 rounded-2xl mb-6">
+        <div className="bg-white p-6 rounded-2xl mb-6">
           <h4 className="text-[#181818] text-xl font-bold mb-6">
             Visit Report
           </h4>
@@ -109,9 +283,12 @@ const ReportPage = () => {
           {selectedCard && (
             <div>
               {/* Action Buttons */}
-              <div className="flex items-center justify-end gap-3">
+              <div className="flex items-center justify-end gap-3 mb-6">
                 {/* Export CSV Button */}
-                <button className="flex items-center gap-2 bg-gradient-to-r from-teal-600 to-cyan-500 text-white font-semibold px-5 py-2 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105 cursor-pointer">
+                <button
+                  onClick={handleExportCSV}
+                  className="flex items-center gap-2 bg-gradient-to-r from-teal-600 to-cyan-500 text-white font-semibold px-5 py-2 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105 cursor-pointer"
+                >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     className="h-5 w-5"
@@ -162,14 +339,14 @@ const ReportPage = () => {
                       <path
                         d="M20.3 5.5L19.6803 15.5251C19.5219 18.0864 19.4428 19.3671 18.8008 20.2879C18.4833 20.7431 18.0747 21.1273 17.6007 21.416C16.6421 22 15.359 22 12.7927 22C10.2232 22 8.93835 22 7.9791 21.4149C7.50485 21.1257 7.09605 20.7408 6.77873 20.2848C6.13693 19.3626 6.0595 18.0801 5.90466 15.5152L5.30005 5.5"
                         stroke="#ED1400"
-                        stroke-width="1.5"
-                        stroke-linecap="round"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
                       />
                       <path
                         d="M3.80005 5.5H21.8M16.8557 5.5L16.1731 4.09173C15.7196 3.15626 15.4928 2.68852 15.1017 2.39681C15.015 2.3321 14.9231 2.27454 14.827 2.2247C14.3939 2 13.8741 2 12.8345 2C11.7688 2 11.236 2 10.7957 2.23412C10.6981 2.28601 10.605 2.3459 10.5173 2.41317C10.1217 2.7167 9.90068 3.20155 9.45866 4.17126L8.85297 5.5"
                         stroke="#ED1400"
-                        stroke-width="1.5"
-                        stroke-linecap="round"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
                       />
                     </svg>
                     Delete
@@ -177,28 +354,51 @@ const ReportPage = () => {
                 )}
               </div>
 
-              {/* Table */}
-              <div className="overflow-x-auto bg-white rounded-2xl shadow mt-6">
-                <table className="min-w-full text-left text-sm text-gray-700">
-                  <thead className="bg-gray-100 text-xs uppercase text-gray-600">
-                    <tr>
-                      <th className="px-4 py-3">SL No.</th>
-                      <th className="px-4 py-3">Country Name</th>
-                      <th className="px-4 py-3">State</th>
-                      <th className="px-4 py-3">Social Media</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {tableDataMap[selectedCard].map((row, index) => (
-                      <tr key={row.id} className="border-b border-[#DCDCDC]">
-                        <td className="px-4 py-3">{index + 1}</td>
-                        <td className="px-4 py-3">{row.country}</td>
-                        <td className="px-4 py-3">{row.state}</td>
-                        <td className="px-4 py-3">{row.social}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+              {/* DataTable */}
+              <div className="bg-white rounded-2xl shadow">
+                <DataTable
+                  columns={[
+                    { key: "id", header: "SL No." },
+                    {
+                      key: "country",
+                      header: "Country Name",
+                      render: (value) => (
+                        <div className="font-medium text-gray-900">{value}</div>
+                      ),
+                    },
+                    {
+                      key: "state",
+                      header: "State",
+                      render: (value) => (
+                        <div className="text-sm text-gray-700">{value}</div>
+                      ),
+                    },
+                    {
+                      key: "social",
+                      header: "Social Media",
+                      render: (value) => (
+                        <div className="text-sm text-gray-700">{value}</div>
+                      ),
+                    },
+                    {
+                      key: "visits",
+                      header: "Visits",
+                      render: (value) => (
+                        <div className="text-sm font-medium text-blue-600">
+                          {value}
+                        </div>
+                      ),
+                    },
+                    {
+                      key: "duration",
+                      header: "Duration",
+                      render: (value) => (
+                        <div className="text-sm text-gray-600">{value}</div>
+                      ),
+                    },
+                  ]}
+                  data={tableDataMap[selectedCard]}
+                />
               </div>
             </div>
           )}

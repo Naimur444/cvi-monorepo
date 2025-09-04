@@ -1,6 +1,7 @@
 "use client";
 import Layout from "@/app/components/Layout";
 import MenuItem from "@/app/components/re-usable/MenuItem";
+import Link from "next/link";
 import React from "react";
 
 const AddSectionPage = () => {
@@ -93,9 +94,11 @@ const AddSectionPage = () => {
           </div>
 
           <div className="flex items-center justify-center gap-4">
-            <button className="text-[#ED1400] border border-[#ED1400] px-4 py-2 rounded-md cursor-pointer">
-              Cancel
-            </button>
+            <Link href={"/content/hero-section"}>
+              <button className="text-[#ED1400] border border-[#ED1400] px-4 py-2 rounded-md cursor-pointer">
+                Cancel
+              </button>
+            </Link>
             <button className="bg-[#0E4F53] text-white px-4 py-2 rounded-md cursor-pointer">
               Save
             </button>

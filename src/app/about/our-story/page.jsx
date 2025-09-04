@@ -18,7 +18,7 @@ const page = () => {
             <textarea
               name=""
               id=""
-              className="w-full h-64 border border-[#DCDCDC] rounded-lg p-2 font-bold bg-[#FAF9FC]"
+              className="w-full h-64 text-gray-500 border border-[#DCDCDC] rounded-lg p-2 font-bold bg-[#FAF9FC]"
               placeholder="Write text....."
             ></textarea>
 

@@ -1,11 +1,10 @@
-
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
 const Header = () => {
   return (
-    <header className="bg-[var(--bg-navbar)] text-[var(--foreground)] px-6 py-3 rounded-2xl flex items-center justify-between transition-all duration-700 ease-[cubic-bezier(0.4,0,0.2,1)] shadow-sm">
+    <header className="bg-white px-6 py-3 rounded-2xl flex items-center justify-between transition-all duration-700 ease-[cubic-bezier(0.4,0,0.2,1)] shadow-sm">
       <Link href={"/dashboard/report"}>
         <div className="flex items-center gap-2">
           <div>

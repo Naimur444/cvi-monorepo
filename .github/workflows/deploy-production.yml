@@ -65,35 +65,56 @@ jobs:
           $NODE_CMD -v || exit 1
           $NPM_CMD -v || exit 1
 
-          # Comprehensive cleanup - handle root-owned files
+          # Comprehensive cleanup - handle root-owned files without sudo
           echo "Starting cleanup process..."
           
-          # Remove git repository first
-          rm -rf .git 2>/dev/null || true
+          # If root-owned directories exist, use a different strategy
+          if [ -d "node_modules" ] && [ "$(stat -c '%U' node_modules 2>/dev/null)" = "root" ]; then
+            echo "Root-owned directories detected. Using temporary directory strategy."
+            
+            # Create a temporary directory for fresh deployment
+            TEMP_DIR="$HOME/www/temp_$(date +%s)"
+            mkdir -p "$TEMP_DIR"
+            
+            # Clone directly to temp directory
+            git clone https://${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/${{ github.repository }}.git "$TEMP_DIR"
+            cd "$TEMP_DIR" || exit 1
+            git checkout prod
+            
+            # Move contents from temp to production (this will overwrite user-owned files)
+            cd "$PRODUCTION_PATH" || exit 1
+            
+            # Remove user-owned files we can delete
+            find . -maxdepth 1 -user $(whoami) -exec rm -rf {} + 2>/dev/null || true
+            
+            # Move new files from temp directory
+            mv "$TEMP_DIR"/* . 2>/dev/null || true
+            mv "$TEMP_DIR"/.[^.]* . 2>/dev/null || true
+            
+            # Clean up temp directory
+            rm -rf "$TEMP_DIR" 2>/dev/null || true
+            
+          else
+            # Standard cleanup if no root directories
+            echo "Standard cleanup process..."
+            
+            # Remove git repository first
+            rm -rf .git 2>/dev/null || true
+            
+            # Fix permissions on files we can access
+            chmod -R u+w . 2>/dev/null || true
+            
+            # Remove files and directories we can access
+            find . -mindepth 1 -user $(whoami) -delete 2>/dev/null || true
+            
+            # Clone the repository
+            git clone https://${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/${{ github.repository }}.git .
+            git checkout prod
+          fi
           
-          # Try to take ownership of files (if possible)
-          sudo chown -R $(whoami):$(whoami) . 2>/dev/null || true
-          
-          # Fix permissions
-          chmod -R u+w . 2>/dev/null || true
-          
-          # Remove specific problematic directories first
-          sudo rm -rf node_modules 2>/dev/null || rm -rf node_modules 2>/dev/null || true
-          sudo rm -rf .next 2>/dev/null || rm -rf .next 2>/dev/null || true
-          
-          # Clean everything else
-          find . -mindepth 1 -maxdepth 1 -exec rm -rf {} + 2>/dev/null || {
-            # Fallback: remove remaining files
-            rm -rf * .[^.]* 2>/dev/null || true
-          }
-          
-          # Verify directory is clean
-          echo "Directory contents after cleanup:"
+          # Verify directory contents
+          echo "Directory contents after setup:"
           ls -la
-          
-          # Clone the private repository using Personal Access Token
-          git clone https://${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/${{ github.repository }}.git .
-          git checkout prod
 
           # Verify package.json presence
           if [ ! -f "package.json" ]; then

@@ -11,19 +11,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Create target directories via SSH
-      uses: appleboy/ssh-action@v0.1.7
-      with:
-        host: ${{ secrets.CONTABO_SSH_HOST }}
-        username: ${{ secrets.CONTABO_SSH_USER }}
-        password: ${{ secrets.CONTABO_SSH_PASS }}
-        port: 22
-        script: |
-          # Use home directory that user has permissions to
-          mkdir -p $HOME/www/cloudvortexinnovation.com
-          mkdir -p $HOME/www/cloudvortexinnovation.com/.next
-          mkdir -p $HOME/www/cloudvortexinnovation.com/public
-
     - name: Deploy via SSH
       uses: appleboy/ssh-action@v0.1.7
       with:
@@ -37,26 +24,21 @@ jobs:
         script: |
           NODE_CMD="node"
           NPM_CMD="npm"
-          PRODUCTION_PATH="$HOME/www/cloudvortexinnovation.com"
-
-          # Create production directory if it doesn't exist
-          mkdir -p $PRODUCTION_PATH
-
+          
           # Check if Node.js is available
           if ! $NODE_CMD -v > /dev/null 2>&1; then
               echo "Error: Node.js is not available"
               exit 1
           fi
 
-          # Verify user home directory
-          echo "Current user: $(whoami)"
-          echo "Home directory: $HOME"
+          # Navigate directly to existing www directory
+          cd $HOME/www || exit 1
           
-          # Navigate to production directory first
-          cd $PRODUCTION_PATH || exit 1
+          # Navigate to cloudvortexinnovation.com directory
+          cd cloudvortexinnovation.com || exit 1
           
-          # Verify we're in the correct directory
-          pwd
+          # Show current directory and contents
+          echo "Current directory: $(pwd)"
           echo "Current directory contents:"
           ls -la
 
@@ -65,56 +47,34 @@ jobs:
           $NODE_CMD -v || exit 1
           $NPM_CMD -v || exit 1
 
-          # Comprehensive cleanup - handle root-owned files without sudo
-          echo "Starting cleanup process..."
+          # Delete old files - remove everything except root-owned directories
+          echo "Cleaning up old files..."
           
-          # If root-owned directories exist, use a different strategy
-          if [ -d "node_modules" ] && [ "$(stat -c '%U' node_modules 2>/dev/null)" = "root" ]; then
-            echo "Root-owned directories detected. Using temporary directory strategy."
-            
-            # Create a temporary directory for fresh deployment
-            TEMP_DIR="$HOME/www/temp_$(date +%s)"
-            mkdir -p "$TEMP_DIR"
-            
-            # Clone directly to temp directory
-            git clone https://${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/${{ github.repository }}.git "$TEMP_DIR"
-            cd "$TEMP_DIR" || exit 1
-            git checkout prod
-            
-            # Move contents from temp to production (this will overwrite user-owned files)
-            cd "$PRODUCTION_PATH" || exit 1
-            
-            # Remove user-owned files we can delete
-            find . -maxdepth 1 -user $(whoami) -exec rm -rf {} + 2>/dev/null || true
-            
-            # Move new files from temp directory
-            mv "$TEMP_DIR"/* . 2>/dev/null || true
-            mv "$TEMP_DIR"/.[^.]* . 2>/dev/null || true
-            
-            # Clean up temp directory
-            rm -rf "$TEMP_DIR" 2>/dev/null || true
-            
-          else
-            # Standard cleanup if no root directories
-            echo "Standard cleanup process..."
-            
-            # Remove git repository first
-            rm -rf .git 2>/dev/null || true
-            
-            # Fix permissions on files we can access
-            chmod -R u+w . 2>/dev/null || true
-            
-            # Remove files and directories we can access
-            find . -mindepth 1 -user $(whoami) -delete 2>/dev/null || true
-            
-            # Clone the repository
-            git clone https://${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/${{ github.repository }}.git .
-            git checkout prod
-          fi
+          # Remove user-owned files and directories
+          find . -maxdepth 1 -user $(whoami) -exec rm -rf {} + 2>/dev/null || true
           
-          # Verify directory contents
-          echo "Directory contents after setup:"
+          # Remove remaining files we can access
+          rm -rf .git 2>/dev/null || true
+          for item in *; do
+            if [ -e "$item" ] && [ -w "$item" ]; then
+              rm -rf "$item" 2>/dev/null || true
+            fi
+          done
+          
+          # Remove hidden files we can access
+          for item in .[^.]*; do
+            if [ -e "$item" ] && [ -w "$item" ]; then
+              rm -rf "$item" 2>/dev/null || true
+            fi
+          done
+          
+          echo "Directory contents after cleanup:"
           ls -la
+
+          # Clone the repository
+          echo "Cloning repository..."
+          git clone https://${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/${{ github.repository }}.git .
+          git checkout prod
 
           # Verify package.json presence
           if [ ! -f "package.json" ]; then
@@ -162,7 +122,7 @@ jobs:
               name: 'cvi-public',
               script: 'npm',
               args: 'start',
-              cwd: '$PRODUCTION_PATH',
+              cwd: '$HOME/www/cloudvortexinnovation.com',
               instances: 1,
               autorestart: true,
               watch: false,

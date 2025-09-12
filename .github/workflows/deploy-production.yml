@@ -74,8 +74,14 @@ jobs:
           # Clean up any existing repository
           rm -rf .git
           
-          # Remove all files and directories safely
-          find . -mindepth 1 -delete
+          # Remove all files and directories safely with permission handling
+          chmod -R u+w . 2>/dev/null || true
+          find . -mindepth 1 -delete 2>/dev/null || {
+            # If find fails due to permissions, use more aggressive cleanup
+            rm -rf node_modules 2>/dev/null || true
+            rm -rf .next 2>/dev/null || true
+            rm -rf * .[^.]* 2>/dev/null || true
+          }
           
           # Clone the private repository using Personal Access Token
           git clone https://${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/${{ github.repository }}.git .

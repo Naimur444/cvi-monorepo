@@ -56,7 +56,7 @@ const Teammate: React.FC = () => {
   // Theme colors
   const textColor = isDarkMode ? "#ffffff" : "#181818";
   const descColor = isDarkMode ? "#d1d5db" : "#4b5563";
-  const dividerColor = isDarkMode ? "#374151" : "#e5e7eb";
+  const dividerColor = isDarkMode ? "#374151" : "#9ca3af";
   const accent = getAccentColor(isDarkMode);
   const sectionRef = useRef(null);
   const isInView = useInView(sectionRef, { once: true, margin: "-100px" });

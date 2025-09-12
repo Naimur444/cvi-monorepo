@@ -18,12 +18,12 @@ const Srs = () => {
             </p>
           </div>
 
-          <div className="absolute right-20 -top-8 hidden md:block">
+          <div className="absolute left-20 -top-8 hidden lg:block">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              width="1104"
-              height="322"
-              viewBox="0 0 1104 322"
+              width="1050"
+              height="323"
+              viewBox="0 0 1050 323"
               fill="none"
             >
               <path
@@ -33,10 +33,10 @@ const Srs = () => {
             </svg>
           </div>
 
-          <div className="relative w-full h-96">
+          <div className="relative w-full h-64 md:h-96">
             <Image
               src="/image-2.png"
-              alt="Miro"
+              alt="SRS Documentation"
               fill
               className="object-contain"
             />

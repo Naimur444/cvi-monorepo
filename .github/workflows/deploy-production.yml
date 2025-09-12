@@ -1,0 +1,152 @@
+name: Deploy CVI Public to Contabo (Production)
+
+on:
+  push:
+    branches:
+      - prod
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Create target directories via SSH
+      uses: appleboy/ssh-action@v0.1.7
+      with:
+        host: ${{ secrets.CONTABO_SSH_HOST }}
+        username: ${{ secrets.CONTABO_SSH_USER }}
+        password: ${{ secrets.CONTABO_SSH_PASS }}
+        port: 22
+        script: |
+          mkdir -p /home/cloudvortexi_usr/www/cloudvortexinnovation.com
+          mkdir -p /home/cloudvortexi_usr/www/cloudvortexinnovation.com/.next
+          mkdir -p /home/cloudvortexi_usr/www/cloudvortexinnovation.com/public
+
+    - name: Deploy via SSH
+      uses: appleboy/ssh-action@v0.1.7
+      with:
+        host: ${{ secrets.CONTABO_SSH_HOST }}
+        username: ${{ secrets.CONTABO_SSH_USER }}
+        password: ${{ secrets.CONTABO_SSH_PASS }}
+        port: 22
+        debug: true
+        timeout: 120s
+        command_timeout: 30m
+        script: |
+          NODE_CMD="node"
+          NPM_CMD="npm"
+          PRODUCTION_PATH="/home/cloudvortexi_usr/www/cloudvortexinnovation.com"
+
+          # Verify user home directory
+          echo "Current user: $(whoami)"
+          echo "Home directory: $HOME"
+          
+          # Create production directory if it doesn't exist
+          mkdir -p $PRODUCTION_PATH
+          mkdir -p $PRODUCTION_PATH/.next
+          mkdir -p $PRODUCTION_PATH/public
+          mkdir -p $PRODUCTION_PATH/components
+          mkdir -p $PRODUCTION_PATH/app
+          mkdir -p $PRODUCTION_PATH/lib
+          mkdir -p $PRODUCTION_PATH/contexts
+
+          # Check if Node.js is available
+          if ! $NODE_CMD -v > /dev/null 2>&1; then
+              echo "Error: Node.js is not available"
+              exit 1
+          fi
+
+          # Navigate to production directory
+          cd $PRODUCTION_PATH || exit 1
+          
+          # Verify we're in the correct directory
+          pwd
+          echo "Current directory contents:"
+          ls -la
+
+          # Checking Node.js installation
+          echo "Checking Node.js installation..."
+          $NODE_CMD -v || exit 1
+          $NPM_CMD -v || exit 1
+
+          # Clean up any existing repository
+          rm -rf .git
+          rm -rf * .* 2>/dev/null || true
+          
+          # Clone the private repository using Personal Access Token
+          git clone https://${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/${{ github.repository }}.git .
+          git checkout prod
+
+          # Verify package.json presence
+          if [ ! -f "package.json" ]; then
+              echo "Error: package.json not found in the deployment directory."
+              exit 1
+          fi
+
+          # Configure environment variables
+          if [ -f ".env.local" ]; then
+            cp .env.local .env.local.backup || true
+          else
+            echo "Creating production environment file..."
+            touch .env.local
+          fi
+
+          # Update .env.local for production
+          echo "NEXT_PUBLIC_API_URL=https://api.cloudvortexinnovation.com" > .env.local
+          echo "NEXT_PUBLIC_SITE_URL=https://cloudvortexinnovation.com" >> .env.local
+          echo "NODE_ENV=production" >> .env.local
+
+          # Install Node.js dependencies
+          echo "Installing Node.js dependencies..."
+          $NPM_CMD ci || exit 1
+          
+          echo "Building Next.js application..."
+          $NPM_CMD run build || exit 1
+
+          # Set proper permissions
+          find . -type f -exec chmod 644 {} \;
+          find . -type d -exec chmod 755 {} \;
+          chmod -R 755 .next
+          chmod -R 755 public
+          chmod 644 .env.local
+
+          # Install PM2 globally if not present
+          if ! command -v pm2 &> /dev/null; then
+              echo "Installing PM2..."
+              $NPM_CMD install -g pm2 || exit 1
+          fi
+
+          # Create PM2 ecosystem file
+          cat > ecosystem.config.js << EOF
+          module.exports = {
+            apps: [{
+              name: 'cvi-public',
+              script: 'npm',
+              args: 'start',
+              cwd: '$PRODUCTION_PATH',
+              instances: 1,
+              autorestart: true,
+              watch: false,
+              max_memory_restart: '1G',
+              env: {
+                NODE_ENV: 'production',
+                PORT: 3000
+              }
+            }]
+          };
+          EOF
+
+          # Stop existing PM2 process if running
+          pm2 stop cvi-public || true
+          pm2 delete cvi-public || true
+
+          # Start the application with PM2
+          pm2 start ecosystem.config.js
+          pm2 save
+          pm2 startup || true
+
+          echo "Production deployment completed successfully!"
+          echo "Production site: https://cloudvortexinnovation.com"
+          echo "PM2 status:"
+          pm2 status

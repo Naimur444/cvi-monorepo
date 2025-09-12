@@ -6,9 +6,10 @@ import { notFound, useParams } from 'next/navigation';
 import { Share2 } from 'lucide-react';
 import { getAccentColor } from '../../../lib/theme-utils';
 import { useState, useRef as useReactRef, useEffect } from 'react';
+import Image from 'next/image';
 import { motion, useInView } from 'framer-motion';
 import { useTheme } from '../../../contexts/ThemeContext';
-import { getCardBackgroundColor, getThemeColor } from '../../../lib/theme-utils';
+import { getCardBackgroundColor } from '../../../lib/theme-utils';
 
 // Should match the jobs array in Opening.tsx
 const jobs = [
@@ -69,8 +70,6 @@ const Page = () => {
   const job = jobs.find(j => j.id === jobId);
   const { isDarkMode } = useTheme();
   const cardBg = getCardBackgroundColor(isDarkMode);
-  const secondaryText = getThemeColor(isDarkMode, 'secondaryText');
-  const mutedText = getThemeColor(isDarkMode, 'mutedText');
   const accent = getAccentColor(isDarkMode);
 
   // Share dropdown state
@@ -135,7 +134,7 @@ const Page = () => {
                 animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
                 transition={{ duration: 0.7, delay: 0.4, ease: "easeOut" }}
               >
-                <div className="grid grid-cols-1 md:grid-cols-3 text-sm divide-y md:divide-y-0 md:divide-x divide-gray-200 dark:divide-[#374151] border-b border-gray-200 dark:border-[#374151]">
+                <div className="grid grid-cols-1 md:grid-cols-3 text-sm divide-y md:divide-y-0 md:divide-x divide-gray-400 dark:divide-[#374151] border-b border-gray-400 dark:border-[#374151]">
                   <div className="px-4 py-6 flex flex-col gap-1">
                     <div className="text-[#888] dark:text-[#aaa] font-medium">Salary</div>
                     <div className="font-bold text-[#181818] dark:text-[#eee]">{job.salary}</div>
@@ -149,7 +148,7 @@ const Page = () => {
                     <div className="font-bold text-[#181818] dark:text-[#eee]">Dhaka, Bangladesh</div>
                   </div>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-3 text-sm divide-y md:divide-y-0 md:divide-x divide-gray-200 dark:divide-[#374151]">
+                <div className="grid grid-cols-1 md:grid-cols-3 text-sm divide-y md:divide-y-0 md:divide-x divide-gray-400 dark:divide-[#374151]">
                   <div className="px-4 py-6 flex flex-col gap-1">
                     <div className="text-[#888] dark:text-[#aaa] font-medium">Vacancies</div>
                     <div className="font-bold text-[#181818] dark:text-[#eee]">03</div>
@@ -215,15 +214,15 @@ const Page = () => {
                       </div>
                       <div className="flex justify-between items-center mb-1">
                         <a href="https://www.facebook.com/profile.php?id=61557546942505" title="Share on Facebook" target="_blank" rel="noopener noreferrer" className="flex flex-col items-center gap-2 group">
-                          <img src="/fb.webp" alt="Facebook" className="w-7 h-7 group-hover:scale-110 transition-transform" />
+                          <Image src="/fb.webp" alt="Facebook" width={28} height={28} className="group-hover:scale-110 transition-transform" />
                           <span className={`text-xs mt-1 ${isDarkMode ? 'text-white' : 'text-black'}`}>Facebook</span>
                         </a>
                         <a href="https://www.linkedin.com/company/cloud-vortex-innovation-technology" title="Share on LinkedIn" target="_blank" rel="noopener noreferrer" className="flex flex-col items-center gap-2 group">
-                          <img src="/lk.svg" alt="LinkedIn" className="w-7 h-7 group-hover:scale-110 transition-transform" />
+                          <Image src="/lk.svg" alt="LinkedIn" width={28} height={28} className="group-hover:scale-110 transition-transform" />
                           <span className={`text-xs mt-1 ${isDarkMode ? 'text-white' : 'text-black'}`}>Linkedin</span>
                         </a>
                         <a href="https://x.com/home" title="Share on X" target="_blank" rel="noopener noreferrer" className="flex flex-col items-center gap-2 group">
-                          <img src="/x.webp" alt="X" className="w-7 h-7 group-hover:scale-110 transition-transform" />
+                          <Image src="/x.webp" alt="X" width={28} height={28} className="group-hover:scale-110 transition-transform" />
                           <span className={`text-xs mt-1 ${isDarkMode ? 'text-white' : 'text-black'}`}>X</span>
                         </a>
                       </div>
@@ -243,17 +242,41 @@ const Page = () => {
           transition={{ duration: 0.7, delay: 0.7, ease: "easeOut" }}
         >
           <div className='max-w-7xl mx-auto '>
-            <h2 className="font-semibold text-lg mb-2" style={{ color: secondaryText }}>Description</h2>
-            <p className="text-sm mb-4" style={{ color: mutedText }}>
+            <h2
+              className="font-semibold text-base md:text-lg mb-2"
+              style={{ color: isDarkMode ? '#fff' : '#181818' }}
+            >
+              Description
+            </h2>
+            <p
+              className="text-sm md:text-base mb-4"
+              style={{ color: isDarkMode ? '#fff' : '#181818' }}
+            >
               Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
             </p>
-            <h3 className="font-semibold text-base mb-1 mt-6" style={{ color: secondaryText }}>Education</h3>
-            <ul className="list-disc pl-5 text-sm mb-4" style={{ color: mutedText }}>
+            <h3
+              className="font-semibold text-base md:text-lg mb-1 mt-6"
+              style={{ color: isDarkMode ? '#fff' : '#181818' }}
+            >
+              Education
+            </h3>
+            <ul
+              className="list-disc pl-5 text-sm md:text-base mb-4"
+              style={{ color: isDarkMode ? '#fff' : '#181818' }}
+            >
               <li>Bachelor&apos;s degree/MBA/Master&apos;s from any reputed University.</li>
               <li>Public University will be preferable.</li>
             </ul>
-            <h3 className="font-semibold text-base mb-1 mt-6" style={{ color: secondaryText }}>Additional Requirements</h3>
-            <ul className="list-disc pl-5 text-sm mb-4" style={{ color: mutedText }}>
+            <h3
+              className="font-semibold text-base md:text-lg mb-1 mt-6"
+              style={{ color: isDarkMode ? '#fff' : '#181818' }}
+            >
+              Additional Requirements
+            </h3>
+            <ul
+              className="list-disc pl-5 text-sm md:text-base mb-4"
+              style={{ color: isDarkMode ? '#fff' : '#181818' }}
+            >
               <li>Oversee store operations, including receipt, storage, and dispatch of goods.</li>
               <li>Maintain accurate inventory records and ensure proper documentation.</li>
               <li>Conduct regular stock audits and reconcile variances</li>
@@ -265,8 +288,16 @@ const Page = () => {
               <li>Report to the Management for Inventory Statement.</li>
               <li>Any other job assigned by the management.</li>
             </ul>
-            <h3 className="font-semibold text-base mb-1 mt-6" style={{ color: secondaryText }}>Skills</h3>
-            <ul className="list-disc pl-5 text-sm mb-4" style={{ color: mutedText }}>
+            <h3
+              className="font-semibold text-base md:text-lg mb-1 mt-6"
+              style={{ color: isDarkMode ? '#fff' : '#181818' }}
+            >
+              Skills
+            </h3>
+            <ul
+              className="list-disc pl-5 text-sm md:text-base mb-4"
+              style={{ color: isDarkMode ? '#fff' : '#181818' }}
+            >
               <li>Expertise with Python Data and Machine Learning libraries</li>
               <li>Moderate experience with LLMs and RAG pipelines</li>
               <li>Comfortable in handling large amount of data and running ML algorithms on them</li>

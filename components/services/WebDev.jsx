@@ -64,33 +64,51 @@ const WebDev = () => {
             that grow your digital presence.
           </p>
 
-          <Link href="/web">
-            <button className="flex items-center gap-4 group transition-colors duration-300 ease-in-out hover:bg-[#0E4F53] hover:text-white pr-4 py-2 rounded-md cursor-pointer hover:pl-4">
-              Learn More
-              <div className="bg-[#0E4F53] w-6 h-6 p-1 rounded-full flex items-center justify-center transition-transform duration-300 ease-in-out group-hover:translate-x-1">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  viewBox="0 0 16 16"
-                  fill="none"
-                  className="stroke-white transition-all duration-300 ease-in-out group-hover:translate-x-0.5"
+          <Link href="/web" passHref legacyBehavior>
+            <a
+              className="group/btn flex items-center justify-between w-fit border-2 rounded-lg px-4 py-2 cursor-pointer"
+              style={{
+                backgroundColor: isDarkMode ? '#191919' : '#FAF9FC',
+                borderColor: isDarkMode ? '#222' : '#0E4F53'
+              }}
+            >
+              <span
+                className="font-medium mr-3"
+                style={{ color: isDarkMode ? '#E5E7EB' : '#0E4F53' }}
+              >
+                Learn More
+              </span>
+              <span>
+                <span
+                  className="w-8 h-8 rounded flex items-center justify-center"
+                  style={{ backgroundColor: isDarkMode ? '#057C80' : '#0E4F53', display: 'inline-flex' }}
                 >
-                  <path
-                    d="M13.3334 7.99988H2.66675"
-                    stroke="white"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M10.0003 11.3334C10.0003 11.3334 13.3336 8.87842 13.3336 8.00002C13.3336 7.12162 10.0002 4.66669 10.0002 4.66669"
-                    stroke="white"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </div>
-            </button>
+                  <svg
+                    className="w-4 h-4 text-white"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    style={{ transition: 'transform 0.2s' }}
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 17L17 7M17 7H7M17 7V17" />
+                  </svg>
+                </span>
+              </span>
+              <style jsx>{`
+                .group\/btn:hover {
+                  border-color: #0E4F53 !important;
+                  transform: scale(1.05);
+                  transition: border-color 0.2s, transform 0.2s;
+                }
+                .group\/btn:hover .w-8 {
+                  background-color: #0E4F53 !important;
+                  transform: rotate(5deg);
+                }
+                .group\/btn:hover .w-4 {
+                  transform: translate(2px, -2px);
+                }
+              `}</style>
+            </a>
           </Link>
         </div>
 
@@ -117,7 +135,7 @@ const WebDev = () => {
               </svg>
             </div>
 
-            <p className="  text-xl">Frontend (React, Vue)</p>
+            <p className="  text-xl">Frontend</p>
           </div>
 
           <div className="flex items-center gap-2">
@@ -143,7 +161,7 @@ const WebDev = () => {
             </div>
 
             <p className="  text-xl">
-              Backend (Node.js, Laravel, PHP)
+              Backend 
             </p>
           </div>
 

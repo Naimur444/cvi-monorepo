@@ -1,15 +1,13 @@
 import HeroSection from "@/components/software/hero-section";
 import Diamond from "@/components/ui-ux/Diamond";
 import FAQAboutProcess from '../../components/software/faq-about-process';
-import Lifecycle from "@/components/ui-ux/Lifecycle";
 import LiveProgressTracking from '../../components/software/live-progress-tracking';
-import Srs from "@/components/ui-ux/Srs";
-import UiDesign from "@/components/ui-ux/UiDesign";
-import Wireframe from "@/components/ui-ux/Wireframe";
 import CollaborationSection from '../../components/software/collaboration';
 import ContactSection from '../../components/contact-section';import Header from "@/components/header";
 import Footer from "@/components/footer";
 import Design from "@/components/ui-ux/Design"
+import ScrollTriggerweb from '../../components/Scrolltriggerweb';
+
 
 import React from "react";
 
@@ -26,10 +24,7 @@ const page = () => {
       <Design />
       <CollaborationSection subtitle="Regular meetings, daily standups, and ongoing collaboration for the best outcomes for your custom UI/UX Design needs." />
       <Diamond />
-      <Lifecycle />
-      <Wireframe />
-      <UiDesign />
-      <Srs />
+      <ScrollTriggerweb/>
       <LiveProgressTracking />
       <FAQAboutProcess
         header="FAQ About Our Process"

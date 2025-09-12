@@ -6,14 +6,12 @@ import HeroSection from '../../components/software/hero-section';
 import ProcessSection from '../../components/software/process-section';
 import AgileProcessSection from '../../components/software/agile-process';
 import CollaborationSection from '../../components/software/collaboration';
-import Lifecycle from "../../components/web/Lifecycle";
-import Wireframe from "@/components/web/Wireframe";
-import UiDesign from "@/components/web/UiDesign";
-import Srs from "@/components/web/Srs";
-import Testing from "@/components/web/Testing";
 import LiveProgressTracking from '../../components/software/live-progress-tracking';
 import LiveReporting from '../../components/software/live-reporting';
 import FAQAboutProcess from '../../components/software/faq-about-process';
+import Scrolltrigger from '../../components/scrolltrigger'
+
+const testingText = "Development and Testing ensures the Quality and Functionality of Your Custom Software. Our development process follows industry best practices and standards, while our rigorous testing phase ensures that the final product is free of defects and meets the requirements set out in the design phase.";
 
 const Page = () => {
   return (
@@ -27,11 +25,7 @@ const Page = () => {
         <ProcessSection />
         <AgileProcessSection />
         <CollaborationSection />
-        <Lifecycle />
-        <Wireframe />
-        <UiDesign />
-        <Srs />
-        <Testing /> 
+        <Scrolltrigger testingText={testingText} />
         <LiveProgressTracking />
         <LiveReporting /> 
         <FAQAboutProcess

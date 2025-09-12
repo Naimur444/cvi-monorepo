@@ -413,7 +413,16 @@ export default function Header() {
                 {/* Mobile Products link */}
                 <motion.a
                   href="/products"
-                  className="relative  font-medium transition-colors duration-200 hover:text-gray-900 group"
+                  className="relative font-medium transition-colors duration-200 group"
+                  style={{
+                    color: isDarkMode ? '#BDBDBD' : '#181818'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.color = isDarkMode ? '#FFFFFF' : '#000000'
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.color = isDarkMode ? '#BDBDBD' : '#181818'
+                  }}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.1, duration: 0.2 }}
@@ -431,7 +440,16 @@ export default function Header() {
                 >
                   <button
                     onClick={() => setMobileServicesOpen(!mobileServicesOpen)}
-                    className="relative flex items-center justify-center space-x-2  font-medium transition-colors duration-200 hover:text-gray-900 group w-full"
+                    className="relative flex items-center justify-center space-x-2 font-medium transition-colors duration-200 group w-full"
+                    style={{
+                      color: isDarkMode ? '#BDBDBD' : '#181818'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.color = isDarkMode ? '#FFFFFF' : '#000000'
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.color = isDarkMode ? '#BDBDBD' : '#181818'
+                    }}
                   >
                     <span>Services</span>
                     <ChevronDown
@@ -454,7 +472,16 @@ export default function Header() {
                           <motion.a
                             key={service.name}
                             href={service.href}
-                            className="block text-sm  hover:text-gray-800 transition-colors duration-200"
+                            className="block text-sm transition-colors duration-200"
+                            style={{
+                              color: isDarkMode ? '#989898' : '#6B7280'
+                            }}
+                            onMouseEnter={(e) => {
+                              e.currentTarget.style.color = isDarkMode ? '#FFFFFF' : '#000000'
+                            }}
+                            onMouseLeave={(e) => {
+                              e.currentTarget.style.color = isDarkMode ? '#989898' : '#6B7280'
+                            }}
                             initial={{ opacity: 0, x: -10 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ delay: index * 0.05, duration: 0.2 }}
@@ -470,7 +497,16 @@ export default function Header() {
                 {/* Mobile Portfolio link */}
                 <motion.a
                   href="/portfolio"
-                  className="relative  font-medium transition-colors duration-200 hover:text-gray-900 group"
+                  className="relative font-medium transition-colors duration-200 group"
+                  style={{
+                    color: isDarkMode ? '#BDBDBD' : '#181818'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.color = isDarkMode ? '#FFFFFF' : '#000000'
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.color = isDarkMode ? '#BDBDBD' : '#181818'
+                  }}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.2, duration: 0.2 }}
@@ -488,7 +524,16 @@ export default function Header() {
                 >
                   <button
                     onClick={() => setMobileCompanyOpen(!mobileCompanyOpen)}
-                    className="relative flex items-center justify-center space-x-2  font-medium transition-colors duration-200 hover:text-gray-900 group w-full"
+                    className="relative flex items-center justify-center space-x-2 font-medium transition-colors duration-200 group w-full"
+                    style={{
+                      color: isDarkMode ? '#BDBDBD' : '#181818'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.color = isDarkMode ? '#FFFFFF' : '#000000'
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.color = isDarkMode ? '#BDBDBD' : '#181818'
+                    }}
                   >
                     <span>Company</span>
                     <ChevronDown
@@ -508,22 +553,58 @@ export default function Header() {
                         transition={{ duration: 0.2 }}
                       >
                         <motion.a
-                          href="/contact"
-                          className="block text-sm  hover:text-gray-800 transition-colors duration-200"
+                          href="/about"
+                          className="block text-sm transition-colors duration-200"
+                          style={{
+                            color: isDarkMode ? '#989898' : '#6B7280'
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.color = isDarkMode ? '#FFFFFF' : '#000000'
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.color = isDarkMode ? '#989898' : '#6B7280'
+                          }}
                           initial={{ opacity: 0, x: -10 }}
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ duration: 0.2 }}
                         >
-                          Contact Us
+                          About Us
                         </motion.a>
                         <motion.a
-                          href="/about"
-                          className="block text-sm  hover:text-gray-800 transition-colors duration-200"
+                          href="/career"
+                          className="block text-sm transition-colors duration-200"
+                          style={{
+                            color: isDarkMode ? '#989898' : '#6B7280'
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.color = isDarkMode ? '#FFFFFF' : '#000000'
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.color = isDarkMode ? '#989898' : '#6B7280'
+                          }}
                           initial={{ opacity: 0, x: -10 }}
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ delay: 0.05, duration: 0.2 }}
                         >
-                          About Us
+                          Career
+                        </motion.a>
+                        <motion.a
+                          href="/contact"
+                          className="block text-sm transition-colors duration-200"
+                          style={{
+                            color: isDarkMode ? '#989898' : '#6B7280'
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.color = isDarkMode ? '#FFFFFF' : '#000000'
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.color = isDarkMode ? '#989898' : '#6B7280'
+                          }}
+                          initial={{ opacity: 0, x: -10 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: 0.1, duration: 0.2 }}
+                        >
+                          Contact Us
                         </motion.a>
                       </motion.div>
                     )}

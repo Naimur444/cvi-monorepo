@@ -6,14 +6,11 @@ import HeroSection from '../../components/software/hero-section';
 import ProcessSection from '../../components/software/process-section';
 import AgileProcessSection from '../../components/software/agile-process';
 import CollaborationSection from '../../components/software/collaboration';
-import Lifecycle from "@/components/web/Lifecycle";
-import Wireframe from "@/components/web/Wireframe";
-import UiDesign from "@/components/web/UiDesign";
-import Srs from "@/components/web/Srs";
-import Testing from "@/components/app/testing-app";
 import LiveProgressTracking from '../../components/software/live-progress-tracking';
 import LiveReporting from '../../components/software/live-reporting';
 import FAQAboutProcess from '../../components/software/faq-about-process';
+import ScrollTriggerapp from '../../components/Scrolltriggerapp';
+
 
 const Page = () => {
   return (
@@ -27,11 +24,7 @@ const Page = () => {
         <ProcessSection />
         <AgileProcessSection subtitle="Flexible, fast and goal-oriented. CVI Agile Mobile App development approach delivers results." />
         <CollaborationSection subtitle="Regular meetings, daily standups, and ongoing collaboration for the best outcomes for your custom Mobile App development needs." />
-        <Lifecycle />
-        <Wireframe />
-        <UiDesign />
-        <Srs />
-        <Testing />
+        <ScrollTriggerapp/>
         <LiveProgressTracking />
         <LiveReporting />
         <FAQAboutProcess
@@ -48,7 +41,7 @@ const Page = () => {
             },
             {
               question: "What technologies do you use, and how is UI/UX design handled?",
-              answer: `We use modern tools and frameworks suited to your app’s requirements, such as Swift and Objective-C for iOS, Kotlin and Java for Android, and Flutter or React Native for cross-platform development. Our in-house design team develops intuitive, mobile-first UI/UX designs, focusing on seamless navigation, responsiveness, and engaging visuals. By integrating design and development from the outset, we deliver apps that are both functional and visually appealing.`
+              answer: `We use modern tools and frameworks suited to your app's requirements, such as Swift and Objective-C for iOS, Kotlin and Java for Android, and Flutter or React Native for cross-platform development. Our in-house design team develops intuitive, mobile-first UI/UX designs, focusing on seamless navigation, responsiveness, and engaging visuals. By integrating design and development from the outset, we deliver apps that are both functional and visually appealing.`
             },
             {
               question: "Do you provide ongoing support and maintenance after launch?",
@@ -62,5 +55,6 @@ const Page = () => {
     </>
   );
 };
+
 
 export default Page;

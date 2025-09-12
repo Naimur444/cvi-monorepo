@@ -38,7 +38,7 @@ const feedbacks = [
     quoteIcon: "/quote.svg",
     message:
       "Figma ipsum component variant main layer. Inspect stroke group union vector line main. Stroke pencil variant polygon text vertical blur effect share thumbnail. Outline figma flows bold shadow prototype star.",
-    videoLink: "https://www.youtube.com/embed/vYuoECsqZy8?si=6CsQ9y1w9vj2vot2",
+    videoLink: "https://youtube.com/shorts/ELgPO6yhHIA?si=Qrvz7gnaiFzuvPND",
   },
 ];
 

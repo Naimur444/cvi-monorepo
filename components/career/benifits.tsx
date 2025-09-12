@@ -17,7 +17,7 @@ const benefits = [
 export default function Benefits() {
 	const { isDarkMode } = useTheme();
 	const textColor = isDarkMode ? "#fff" : "#18181b";
-		const cardBg = isDarkMode ? "#23232a" : "#fff"; // cardBg is not used, but kept for future use
+	const cardBg = isDarkMode ? "#191919" : "#FAF9FC";
 	const accent = getAccentColor(isDarkMode);
 	const sectionRef = useRef(null);
 	const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
@@ -44,7 +44,7 @@ export default function Benefits() {
 						<motion.div
 							key={idx}
 							className="rounded-xl p-8 flex flex-col items-start gap-6 shadow-sm min-h-[180px] justify-center"
-							style={{ backgroundColor: isDarkMode ? "#191919" : "#FAF9FC" }}
+							style={{ backgroundColor: cardBg }}
 							initial={{ opacity: 0, y: 30 }}
 							animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
 							transition={{ duration: 0.6, delay: 0.3 + idx * 0.1, ease: "easeOut" }}

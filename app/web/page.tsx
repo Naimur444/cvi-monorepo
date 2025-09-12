@@ -9,11 +9,9 @@ import CollaborationSection from '../../components/software/collaboration';
 import LiveProgressTracking from '../../components/software/live-progress-tracking';
 import LiveReporting from '../../components/software/live-reporting';
 import FAQAboutProcess from '../../components/software/faq-about-process';
-import Lifecycle from "../../components/web/Lifecycle";
-import Wireframe from "@/components/web/Wireframe";
-import UiDesign from "@/components/web/UiDesign";
-import Srs from "@/components/web/Srs";
-import Testing from "@/components/web/Testing";
+import Scrolltrigger from '../../components/scrolltrigger';
+
+const testingText = "Development and Testing ensures the Quality and Functionality of Your Custom Website. Our development process follows industry best practices and standards, while our rigorous testing phase ensures that the final product is free of defects and meets the requirements set out in the design phase.";
 
 const Page = () => {
   return (
@@ -27,11 +25,7 @@ const Page = () => {
         <ProcessSection />
         <AgileProcessSection subtitle="Flexible, fast and goal-oriented. CVI Agile web development approach delivers results." />
         <CollaborationSection subtitle="Regular meetings, daily standups, and ongoing collaboration for the best outcomes for your custom web development needs." />
-        <Lifecycle />
-        <Wireframe />
-        <UiDesign />
-        <Srs />
-        <Testing text="Development and Testing ensures the Quality and Functionality of Your Custom Website. Our development process follows industry best practices and standards, while our rigorous testing phase ensures that the final product is free of defects and meets the requirements set out in the design phase." />
+        <Scrolltrigger testingText={testingText} />
         <LiveProgressTracking />
         <LiveReporting />
         <FAQAboutProcess
@@ -48,11 +42,11 @@ const Page = () => {
             },
             {
               question: "What technologies do you use, and how is UI/UX design handled?",
-              answer: `We are technology-agnostic and select the stack that best fits your project’s needs and budget. Our full-stack developers are proficient in a wide range of modern tools – for example, popular front-end frameworks (React, Angular, Vue, etc.) and robust back-end platforms (Node.js, .NET, PHP, Python, etc.) – focusing on proven, reliable technologies to deliver the project on time and on budget. At the same time, our in-house designers create responsive, mobile-first UI/UX prototypes and layouts from the outset. By integrating design and development early, we ensure the final website is both functionally robust and visually engaging.`
+              answer: `We are technology-agnostic and select the stack that best fits your project's needs and budget. Our full-stack developers are proficient in a wide range of modern tools – for example, popular front-end frameworks (React, Angular, Vue, etc.) and robust back-end platforms (Node.js, .NET, PHP, Python, etc.) – focusing on proven, reliable technologies to deliver the project on time and on budget. At the same time, our in-house designers create responsive, mobile-first UI/UX prototypes and layouts from the outset. By integrating design and development early, we ensure the final website is both functionally robust and visually engaging.`
             },
             {
               question: "What about hosting and ongoing maintenance after launch?",
-              answer: `After we build your site, we handle deployment and hosting on a secure, high-performance server. We also provide our good hosting  server– a good host ensures your site’s files are always accessible and load quickly for visitors. Once live, we offer ongoing maintenance services to keep your site up to date and secure. This includes applying software updates, fixing bugs, performing backups, and monitoring performance. As one industry guide notes, a website is like a new car – routine maintenance is necessary to protect your investment and keep it running smoothly.`
+              answer: `After we build your site, we handle deployment and hosting on a secure, high-performance server. We also provide our good hosting  server– a good host ensures your site's files are always accessible and load quickly for visitors. Once live, we offer ongoing maintenance services to keep your site up to date and secure. This includes applying software updates, fixing bugs, performing backups, and monitoring performance. As one industry guide notes, a website is like a new car – routine maintenance is necessary to protect your investment and keep it running smoothly.`
             }
           ]}
         />

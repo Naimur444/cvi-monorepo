@@ -8,22 +8,22 @@ import { getAccentColor } from '../../lib/theme-utils';
 const Wireframe = () => {
   const { isDarkMode } = useTheme();
   return (
-    <section className="w-full   py-12 md:py-24 lg:py-32">
+    <section className="w-full py-6 md:py-12 lg:py-24">
       <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 place-items-center gap-10 md:gap-20 relative">
+          <div className="grid grid-cols-1 md:grid-cols-2 place-items-center gap-8 md:gap-10 lg:gap-20 relative">
           <div className="absolute -top-12 right-0">
-            <p className="text-white rounded-full py-1 px-6" style={{ backgroundColor: getAccentColor(isDarkMode) }}>
+            <p className=" text-white rounded-full py-1 px-6" style={{ backgroundColor: getAccentColor(isDarkMode) }}>
               Step 2
             </p>
           </div>
 
-          <div className="absolute right-20 -top-8 hidden md:block">
+          <div className="absolute left-20 -top-8 hidden lg:block">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              width="1104"
-              height="322"
-              viewBox="0 0 1104 322"
+              width="1050"
+              height="323"
+              viewBox="0 0 1050 323"
               fill="none"
             >
               <path

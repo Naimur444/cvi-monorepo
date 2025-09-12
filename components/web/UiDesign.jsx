@@ -13,7 +13,7 @@ const UiDesign = () => {
             </p>
           </div>
 
-          <div className="absolute left-20 -top-8 hidden md:block">
+          <div className="absolute left-20 -top-8 hidden lg:block">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="1050"

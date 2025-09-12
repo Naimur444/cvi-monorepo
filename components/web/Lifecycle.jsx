@@ -8,25 +8,25 @@ import { getAccentColor } from '../../lib/theme-utils';
 const Lifecycle = () => {
   const { isDarkMode } = useTheme();
   return (
-    <section className="w-full   py-12 md:py-24 lg:py-32">
+    <section className="w-full py-6 md:py-12 lg:py-24">
       <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
-        <h2 className="text-2xl md:text-4xl  text-center font-semibold mb-4">
+        <h2 className="text-xl sm:text-2xl md:text-4xl text-center font-semibold mb-3 md:mb-4">
           Our Process life Cycle
         </h2>
-        <p className="  text-center mb-20 md:mb-32">
+        <p className="text-sm md:text-base text-center mb-16 md:mb-20 lg:mb-32 px-4">
           Creating a Tailored Experience: Our Five-Step Process to Building a
           Custom Software Solution.
         </p>
 
         <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 place-items-center gap-10 md:gap-20 relative">
+          <div className="grid grid-cols-1 md:grid-cols-2 place-items-center gap-8 md:gap-10 lg:gap-20 relative">
             <div className="absolute -top-12 left-0">
               <p className="text-white rounded-full py-1 px-6" style={{ backgroundColor: getAccentColor(isDarkMode) }}>
                 Step 1
               </p>
             </div>
 
-            <div className="absolute left-20 -top-8 hidden md:block">
+            <div className="absolute left-20 -top-8 hidden lg:block">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="1050"
@@ -40,40 +40,38 @@ const Lifecycle = () => {
                 />
               </svg>
             </div>
-            <div>
-              <h2 className="text-2xl md:text-3xl font-bold mb-6" style={{ color: getAccentColor(isDarkMode) }}>
+            <div className="order-3 md:order-1">
+              <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-4 md:mb-6" style={{ color: getAccentColor(isDarkMode) }}>
                 User Journey Map
               </h2>
-              <p className="  mb-6">
+              <p className="text-sm md:text-base mb-4 md:mb-6">
                 By mapping out the different touchpoints and experiences that
                 users have with your product, we gain a deep understanding of
                 their needs and pain points. This helps us design functional
                 requirements and user interfaces that are intuitive and
                 user-centered, resulting in a more seamless user experience.
               </p>
-              <div className="flex items-center gap-4 md:gap-8">
-                <div className="space-y-2">
-                  {" "}
-                  <Image src="/miro.png" alt="Miro" width={40} height={40} />
-                  <p className=" text-sm font-semibold text-center">
+              <div className="flex items-center gap-3 md:gap-4 lg:gap-8 order-2 md:order-3">
+                <div className="space-y-2 text-center">
+                  <Image src="/miro.png" alt="Miro" width={32} height={32} className="md:w-10 md:h-10 mx-auto" />
+                  <p className="text-xs md:text-sm font-semibold">
                     Miro
                   </p>
                 </div>
 
-                <div className="space-y-2">
-                  {" "}
-                  <Image src="/fig-jam.png" alt="Miro" width={80} height={60} />
-                  <p className=" text-sm font-semibold text-center">
+                <div className="space-y-2 text-center">
+                  <Image src="/fig-jam.png" alt="Fig Jam" width={64} height={48} className="md:w-20 md:h-15 mx-auto" />
+                  <p className="text-xs md:text-sm font-semibold">
                     Fig Jam
                   </p>
                 </div>
               </div>
             </div>
 
-            <div className="relative w-full h-96">
+            <div className="relative w-full h-48 sm:h-64 md:h-96 order-4 md:order-2">
               <Image
                 src="/image-2.png"
-                alt="Miro"
+                alt="User Journey Map Visualization"
                 fill
                 className="object-contain"
               />

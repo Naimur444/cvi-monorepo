@@ -38,7 +38,7 @@ const Testing = () => {
             </h2>
             <p className="  mb-6">
               Development and Testing ensures the Quality and Functionality of
-              Your Custom Software. Our development process follows industry
+              Your Mobile App. Our development process follows industry
               best practices and standards, while our rigorous testing phase
               ensures that the final product is free of defects and meets the
               requirements set out in the design phase.

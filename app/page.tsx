@@ -19,7 +19,6 @@ export default function Home() {
         <Advantages />
         <Feedback />
         <Contact />
-   
       <Footer />
     </>
   );

@@ -8,17 +8,13 @@ import { Textarea } from "@/components/ui/textarea"
 // Removed Select imports for custom dropdown
 import { useTheme } from "@/contexts/ThemeContext"
 import { getCardBackgroundColor, getThemeColor, getAccentColor } from "@/lib/theme-utils"
+import EmailModal from "./email-modal"
 
-/**
- * Contact section component with project inquiry form
- * Features two-column layout with company information and contact form
- * Includes project manager profile and comprehensive form validation
- */
 export default function ContactSection() {
-  // Theme context for dark/light mode
+
   const { isDarkMode } = useTheme()
 
-  // Custom dropdown state and options
+  const [showEmailModal, setShowEmailModal] = useState(false)
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const serviceOptions = [
     { value: 'web-development', label: 'Web Development' },
@@ -27,7 +23,7 @@ export default function ContactSection() {
     { value: 'consulting', label: 'Consulting' },
     { value: 'maintenance', label: 'Maintenance & Support' },
   ]
-  // Close dropdown on outside click
+
   React.useEffect(() => {
     if (!dropdownOpen) return
     const handle = (e: MouseEvent) => {
@@ -37,7 +33,7 @@ export default function ContactSection() {
     return () => document.removeEventListener('mousedown', handle)
   }, [dropdownOpen])
 
-  // Form state management for all input fields
+
   const [formData, setFormData] = useState({
     fullName: "",
     companyName: "",
@@ -47,18 +43,16 @@ export default function ContactSection() {
     projectDetails: "",
   })
 
-  // Intersection observer for scroll-triggered animations
+
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: "-100px" })
 
-  // Form submission handler - in production would integrate with backend API
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     console.log("Form submitted:", formData)
-    // TODO: Integrate with email service or CRM system
   }
 
-  // Generic input change handler for form state updates
   const handleInputChange = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }))
   }
@@ -68,7 +62,6 @@ export default function ContactSection() {
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center min-h-[624px]">
           
-          {/* Left column: Company information and project manager profile */}
           <motion.div 
             className="space-y-8"
             initial={{ opacity: 0, x: -50 }}
@@ -109,15 +102,15 @@ export default function ContactSection() {
               >
                 Simply fill out the form or email us at
               </p>
-              <motion.a
-                href="mailto:info@cloudvortexinnovation.com"
-                className="transition-colors duration-200 font-medium"
+              <motion.button
+                onClick={() => setShowEmailModal(true)}
+                className="transition-colors duration-200 font-medium border-none bg-transparent cursor-pointer"
                 style={{ color: getAccentColor(isDarkMode) }}
                 whileHover={{ scale: 1.05 }}
                 transition={{ duration: 0.2 }}
               >
                 info@cloudvortexinnovation.com
-              </motion.a>
+              </motion.button>
             </motion.div>
             
             {/* Project manager profile section for trust building */}
@@ -380,6 +373,13 @@ export default function ContactSection() {
           </motion.div>
         </div>
       </div>
+      
+      {/* Email Modal */}
+      <EmailModal 
+        email="info@cloudvortexinnovation.com"
+        isOpen={showEmailModal}
+        onClose={() => setShowEmailModal(false)}
+      />
     </section>
   )
 }

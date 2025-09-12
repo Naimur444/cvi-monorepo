@@ -1,4 +1,4 @@
-name: Deploy CVI Public to Contabo (Production)
+name: Deploy CVI Frontend to Contabo (Production)
 
 on:
   push:
@@ -18,111 +18,81 @@ jobs:
         username: ${{ secrets.CONTABO_SSH_USER }}
         password: ${{ secrets.CONTABO_SSH_PASS }}
         port: 22
-        debug: true
-        timeout: 120s
+        timeout: 300s
         command_timeout: 30m
         script: |
-          NODE_CMD="node"
-          NPM_CMD="npm"
+          set -e  # Exit on any error
           
-          # Check if Node.js is available
-          if ! $NODE_CMD -v > /dev/null 2>&1; then
-              echo "Error: Node.js is not available"
-              exit 1
+          # Define variables
+          DEPLOY_DIR="$HOME/www/cloudvortexinnovation.com"
+          BACKUP_DIR="$HOME/www/cloudvortexinnovation.com.backup.$(date +%s)"
+          
+          echo "Starting frontend deployment..."
+          
+          # Stop existing PM2 process first (ignore errors if not running)
+          echo "Stopping existing application..."
+          pm2 stop cvi-public 2>/dev/null || echo "cvi-public not running"
+          pm2 delete cvi-public 2>/dev/null || echo "cvi-public not found"
+          
+          # Move existing deployment to backup (avoids permission issues)
+          if [ -d "$DEPLOY_DIR" ]; then
+              echo "Backing up existing deployment..."
+              mv "$DEPLOY_DIR" "$BACKUP_DIR"
           fi
-
-          # Navigate directly to existing www directory
-          cd $HOME/www || exit 1
           
-          # Navigate to cloudvortexinnovation.com directory
-          cd cloudvortexinnovation.com || exit 1
+          # Create fresh deployment directory
+          mkdir -p "$DEPLOY_DIR"
+          cd "$DEPLOY_DIR"
           
-          # Show current directory and contents
-          echo "Current directory: $(pwd)"
-          echo "Current directory contents:"
-          ls -la
-
-          # Checking Node.js installation
-          echo "Checking Node.js installation..."
-          $NODE_CMD -v || exit 1
-          $NPM_CMD -v || exit 1
-
-          # Delete old files - remove everything except root-owned directories
-          echo "Cleaning up old files..."
-          
-          # Remove user-owned files and directories
-          find . -maxdepth 1 -user $(whoami) -exec rm -rf {} + 2>/dev/null || true
-          
-          # Remove remaining files we can access
-          rm -rf .git 2>/dev/null || true
-          for item in *; do
-            if [ -e "$item" ] && [ -w "$item" ]; then
-              rm -rf "$item" 2>/dev/null || true
-            fi
-          done
-          
-          # Remove hidden files we can access
-          for item in .[^.]*; do
-            if [ -e "$item" ] && [ -w "$item" ]; then
-              rm -rf "$item" 2>/dev/null || true
-            fi
-          done
-          
-          echo "Directory contents after cleanup:"
-          ls -la
-
-          # Clone the repository
-          echo "Cloning repository..."
+          # Clone frontend repository directly to deployment directory
+          echo "Cloning frontend repository..."
           git clone https://${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/${{ github.repository }}.git .
           git checkout prod
-
-          # Verify package.json presence
+          
+          # Verify package.json exists
           if [ ! -f "package.json" ]; then
-              echo "Error: package.json not found in the deployment directory."
+              echo "Error: package.json not found"
               exit 1
           fi
-
-          # Configure environment variables
-          if [ -f ".env.local" ]; then
-            cp .env.local .env.local.backup || true
-          else
-            echo "Creating production environment file..."
-            touch .env.local
-          fi
-
-          # Update .env.local for production
-          echo "NEXT_PUBLIC_API_URL=https://api.cloudvortexinnovation.com" > .env.local
-          echo "NEXT_PUBLIC_SITE_URL=https://cloudvortexinnovation.com" >> .env.local
-          echo "NODE_ENV=production" >> .env.local
-
-          # Install Node.js dependencies
-          echo "Installing Node.js dependencies..."
-          $NPM_CMD ci || exit 1
           
-          echo "Building Next.js application..."
-          $NPM_CMD run build || exit 1
-
+          echo "Repository cloned successfully. Contents:"
+          ls -la
+          
+          # Create production environment file for FRONTEND
+          echo "Setting up environment variables..."
+          cat > .env.local << EOF
+          NEXT_PUBLIC_API_URL=https://api.cloudvortexinnovation.com
+          NEXT_PUBLIC_SITE_URL=https://cloudvortexinnovation.com
+          NODE_ENV=production
+          EOF
+          
+          # Install dependencies and build
+          echo "Installing dependencies..."
+          npm ci
+          
+          echo "Building application..."
+          npm run build
+          
           # Set proper permissions
-          find . -type f -exec chmod 644 {} \;
-          find . -type d -exec chmod 755 {} \;
-          chmod -R 755 .next
-          chmod -R 755 public
-          chmod 644 .env.local
-
-          # Install PM2 globally if not present
+          find . -type f -exec chmod 644 {} \; 2>/dev/null || true
+          find . -type d -exec chmod 755 {} \; 2>/dev/null || true
+          chmod -R 755 .next 2>/dev/null || true
+          chmod -R 755 public 2>/dev/null || true
+          chmod 644 .env.local 2>/dev/null || true
+          
+          # Ensure PM2 is available
           if ! command -v pm2 &> /dev/null; then
               echo "Installing PM2..."
-              $NPM_CMD install -g pm2 || exit 1
+              npm install -g pm2
           fi
-
-          # Create PM2 ecosystem file
-          cat > ecosystem.config.js << EOF
+          
+          # Create PM2 ecosystem file for FRONTEND
+          cat > ecosystem.config.js << 'EOF'
           module.exports = {
             apps: [{
               name: 'cvi-public',
               script: 'npm',
               args: 'start',
-              cwd: '$HOME/www/cloudvortexinnovation.com',
               instances: 1,
               autorestart: true,
               watch: false,
@@ -134,17 +104,18 @@ jobs:
             }]
           };
           EOF
-
-          # Stop existing PM2 process if running
-          pm2 stop cvi-public || true
-          pm2 delete cvi-public || true
-
-          # Start the application with PM2
+          
+          # Start the application
+          echo "Starting frontend application..."
           pm2 start ecosystem.config.js
           pm2 save
-          pm2 startup || true
-
-          echo "Production deployment completed successfully!"
-          echo "Production site: https://cloudvortexinnovation.com"
-          echo "PM2 status:"
+          
+          # Clean up old backup after successful deployment (in background)
+          if [ -d "$BACKUP_DIR" ]; then
+              echo "Cleaning up backup..."
+              (rm -rf "$BACKUP_DIR" 2>/dev/null || true) &
+          fi
+          
+          echo "✅ Frontend deployment completed successfully!"
+          echo "Frontend site: https://cloudvortexinnovation.com"
           pm2 status

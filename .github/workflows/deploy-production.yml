@@ -19,9 +19,10 @@ jobs:
         password: ${{ secrets.CONTABO_SSH_PASS }}
         port: 22
         script: |
-          mkdir -p /home/cloudvortexi_usr/www/cloudvortexinnovation.com
-          mkdir -p /home/cloudvortexi_usr/www/cloudvortexinnovation.com/.next
-          mkdir -p /home/cloudvortexi_usr/www/cloudvortexinnovation.com/public
+          # Use home directory that user has permissions to
+          mkdir -p $HOME/www/cloudvortexinnovation.com
+          mkdir -p $HOME/www/cloudvortexinnovation.com/.next
+          mkdir -p $HOME/www/cloudvortexinnovation.com/public
 
     - name: Deploy via SSH
       uses: appleboy/ssh-action@v0.1.7
@@ -36,7 +37,7 @@ jobs:
         script: |
           NODE_CMD="node"
           NPM_CMD="npm"
-          PRODUCTION_PATH="/home/cloudvortexi_usr/www/cloudvortexinnovation.com"
+          PRODUCTION_PATH="$HOME/www/cloudvortexinnovation.com"
 
           # Verify user home directory
           echo "Current user: $(whoami)"

@@ -39,18 +39,8 @@ jobs:
           NPM_CMD="npm"
           PRODUCTION_PATH="$HOME/www/cloudvortexinnovation.com"
 
-          # Verify user home directory
-          echo "Current user: $(whoami)"
-          echo "Home directory: $HOME"
-          
           # Create production directory if it doesn't exist
           mkdir -p $PRODUCTION_PATH
-          mkdir -p $PRODUCTION_PATH/.next
-          mkdir -p $PRODUCTION_PATH/public
-          mkdir -p $PRODUCTION_PATH/components
-          mkdir -p $PRODUCTION_PATH/app
-          mkdir -p $PRODUCTION_PATH/lib
-          mkdir -p $PRODUCTION_PATH/contexts
 
           # Check if Node.js is available
           if ! $NODE_CMD -v > /dev/null 2>&1; then
@@ -58,7 +48,11 @@ jobs:
               exit 1
           fi
 
-          # Navigate to production directory
+          # Verify user home directory
+          echo "Current user: $(whoami)"
+          echo "Home directory: $HOME"
+          
+          # Navigate to production directory first
           cd $PRODUCTION_PATH || exit 1
           
           # Verify we're in the correct directory
@@ -71,17 +65,31 @@ jobs:
           $NODE_CMD -v || exit 1
           $NPM_CMD -v || exit 1
 
-          # Clean up any existing repository
-          rm -rf .git
+          # Comprehensive cleanup - handle root-owned files
+          echo "Starting cleanup process..."
           
-          # Remove all files and directories safely with permission handling
+          # Remove git repository first
+          rm -rf .git 2>/dev/null || true
+          
+          # Try to take ownership of files (if possible)
+          sudo chown -R $(whoami):$(whoami) . 2>/dev/null || true
+          
+          # Fix permissions
           chmod -R u+w . 2>/dev/null || true
-          find . -mindepth 1 -delete 2>/dev/null || {
-            # If find fails due to permissions, use more aggressive cleanup
-            rm -rf node_modules 2>/dev/null || true
-            rm -rf .next 2>/dev/null || true
+          
+          # Remove specific problematic directories first
+          sudo rm -rf node_modules 2>/dev/null || rm -rf node_modules 2>/dev/null || true
+          sudo rm -rf .next 2>/dev/null || rm -rf .next 2>/dev/null || true
+          
+          # Clean everything else
+          find . -mindepth 1 -maxdepth 1 -exec rm -rf {} + 2>/dev/null || {
+            # Fallback: remove remaining files
             rm -rf * .[^.]* 2>/dev/null || true
           }
+          
+          # Verify directory is clean
+          echo "Directory contents after cleanup:"
+          ls -la
           
           # Clone the private repository using Personal Access Token
           git clone https://${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/${{ github.repository }}.git .

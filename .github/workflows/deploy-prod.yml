@@ -1,4 +1,4 @@
-name: Deploy Admin Panel to Production
+name: Deploy Admin Panel to Production (Contabo)
 
 on:
   push:

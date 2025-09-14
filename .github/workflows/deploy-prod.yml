@@ -1,73 +1,102 @@
 name: Deploy Admin Panel to Production
-
 on:
   push:
     branches:
       - prod
 
+concurrency:
+  group: ${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  APP_NAME: "cvi-admin"
+  APP_DIR: "/var/www/cloudvortexi_usr/data/www/sscviadmin.cloudvortexinnovation.com"
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    
+    timeout-minutes: 10  # Prevent workflow from running too long
+
     steps:
-    - name: Checkout code
+    - name: Checkout Repository
       uses: actions/checkout@v4
       with:
+        fetch-depth: 1  # Shallow clone
         token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'  # Use latest LTS
+        cache: 'npm'
+
+    - name: Cache npm dependencies
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.npm
+          node_modules
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
+
+    - name: Install Dependencies
+      run: |
+        npm ci --prefer-offline --no-audit
+        npm pkg delete scripts.prepare  # Remove husky if present
+
+    - name: Build Application
+      run: |
+        npm run build
+        npm prune --production  # Remove devDependencies after build
 
     - name: Deploy to Contabo Server
       uses: appleboy/ssh-action@v1.0.3
+      env:
+        GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
       with:
         host: ${{ secrets.CONTABO_SSH_HOST }}
         username: ${{ secrets.CONTABO_SSH_USER }}
         password: ${{ secrets.CONTABO_SSH_PASS }}
+        timeout: 180s
+        command_timeout: 180s
         script: |
           set -e
           
-          echo "🚀 Starting deployment process..."
+          # Logging and error handling
+          exec > >(tee /tmp/deploy-log.txt) 2>&1
           
-          # Define variables
-          APP_NAME="cvi-admin"
-          APP_DIR="/var/www/cloudvortexi_usr/data/www/sscviadmin.cloudvortexinnovation.com"
-          REPO_URL="https://${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/${{ github.repository }}.git"
+          echo "🚀 Starting deployment for ${{ env.APP_NAME }}..."
           
-          # Stop and delete existing PM2 process
-          echo "⏹️  Stopping PM2 process..."
-          pm2 stop $APP_NAME || echo "PM2 process not running"
-          pm2 delete $APP_NAME || echo "PM2 process not found"
+          # Ensure deployment directory exists
+          mkdir -p ${{ env.APP_DIR }}
+          cd ${{ env.APP_DIR }}
           
-          # Remove existing codebase
-          echo "🗑️  Removing existing codebase..."
-          rm -rf $APP_DIR
+          # Graceful PM2 shutdown
+          pm2 delete ${{ env.APP_NAME }} || true
           
-          # Create directory and clone new codebase
-          echo "📥 Cloning new codebase..."
-          mkdir -p $APP_DIR
-          cd $APP_DIR
-          git clone -b prod $REPO_URL .
+          # Secure git clone with token
+          git init
+          git remote add origin https://${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/${{ github.repository }}.git
           
-          # Clear npm cache to avoid any caching issues
-          echo "🧹 Clearing npm cache..."
-          npm cache clean --force
+          # Fetch and reset to latest prod
+          git fetch origin prod
+          git reset --hard origin/prod
           
-          # Install dependencies
-          echo "📦 Installing dependencies..."
-          npm ci
+          # Clean install production dependencies
+          npm ci --production --prefer-offline
           
-          # Build the application
-          echo "🔨 Building application..."
+          # Build if necessary
           npm run build
           
-          # Start with PM2
-          echo "▶️  Starting application with PM2..."
-          PORT=3001 pm2 start npm --name "$APP_NAME" -- start
+          # Start with PM2, redirect logs
+          PORT=3001 pm2 start npm --name "${{ env.APP_NAME }}" -- start \
+            --log-date-format "YYYY-MM-DD HH:mm:ss" \
+            --error /var/log/${{ env.APP_NAME }}-err.log \
+            --output /var/log/${{ env.APP_NAME }}-out.log
           
-          # Save PM2 configuration
-          echo "💾 Saving PM2 configuration..."
+          # Save and show status
           pm2 save
-          
-          # Show PM2 status
-          echo "📊 PM2 Status:"
           pm2 status
           
           echo "✅ Deployment completed successfully!"

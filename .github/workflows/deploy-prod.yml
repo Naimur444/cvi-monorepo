@@ -44,13 +44,7 @@ jobs:
           echo "📥 Cloning new codebase..."
           mkdir -p $APP_DIR
           cd $APP_DIR
-          git clone -b prod $REPO_URL temp_repo
-          
-          # Move admin panel files to root directory
-          echo "📁 Moving files to root directory..."
-          mv temp_repo/cloud-vortex-innovation-admin/* .
-          mv temp_repo/cloud-vortex-innovation-admin/.* . 2>/dev/null || true
-          rm -rf temp_repo
+          git clone -b prod $REPO_URL .
           
           # Clear npm cache to avoid any caching issues
           echo "🧹 Clearing npm cache..."

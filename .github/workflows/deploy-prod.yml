@@ -60,7 +60,7 @@ jobs:
           
           # Start with PM2
           echo "▶️  Starting application with PM2..."
-          pm2 start npm --name "$APP_NAME" -- start
+          PORT=3001 pm2 start npm --name "$APP_NAME" -- start
           
           # Save PM2 configuration
           echo "💾 Saving PM2 configuration..."

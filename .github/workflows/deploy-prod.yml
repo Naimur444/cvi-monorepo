@@ -1,4 +1,3 @@
-
 name: Deploy Admin Panel to Production
 
 on:
@@ -16,7 +15,12 @@ jobs:
       with:
         token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
 
+    - name: Set start time
+      id: start
+      run: echo "start_time=$(date +%s)" >> $GITHUB_OUTPUT
+
     - name: Deploy to Contabo Server
+      id: deploy_step
       uses: appleboy/ssh-action@v1.0.3
       with:
         host: ${{ secrets.CONTABO_SSH_HOST }}
@@ -27,48 +31,109 @@ jobs:
           
           echo "🚀 Starting deployment process..."
           
-          # Define variables
           APP_NAME="cvi-admin"
           APP_DIR="/var/www/cloudvortexi_usr/data/www/sscviadmin.cloudvortexinnovation.com"
           REPO_URL="https://${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/${{ github.repository }}.git"
           
-          # Stop and delete existing PM2 process
           echo "⏹️  Stopping PM2 process..."
           pm2 stop $APP_NAME || echo "PM2 process not running"
           pm2 delete $APP_NAME || echo "PM2 process not found"
           
-          # Remove existing codebase
           echo "🗑️  Removing existing codebase..."
           rm -rf $APP_DIR
           
-          # Create directory and clone new codebase
           echo "📥 Cloning new codebase..."
           mkdir -p $APP_DIR
           cd $APP_DIR
           git clone -b prod $REPO_URL .
           
-          # Clear npm cache to avoid any caching issues
           echo "🧹 Clearing npm cache..."
           npm cache clean --force
           
-          # Install dependencies
           echo "📦 Installing dependencies..."
           npm ci
           
-          # Build the application
           echo "🔨 Building application..."
           npm run build
           
-          # Start with PM2
           echo "▶️  Starting application with PM2..."
           PORT=3001 pm2 start npm --name "$APP_NAME" -- start
           
-          # Save PM2 configuration
           echo "💾 Saving PM2 configuration..."
           pm2 save
           
-          # Show PM2 status
           echo "📊 PM2 Status:"
           pm2 status
           
           echo "✅ Deployment completed successfully!"
+
+    - name: Send Success Discord Notification
+      if: success()
+      run: |
+        end_time=$(date +%s)
+        start_time=${{ steps.start.outputs.start_time }}
+        duration=$((end_time - start_time))
+        minutes=$((duration / 60))
+        seconds=$((duration % 60))
+
+        commit_msg="$(git log -1 --pretty=%B)"
+        deployed_at="$(TZ=Asia/Dhaka date '+%Y-%m-%d %H:%M %Z')"
+
+        payload=$(jq -n \
+          --arg title "✅ Deployment Completed" \
+          --arg changes "$commit_msg" \
+          --arg duration "${minutes}m ${seconds}s" \
+          --arg deployed_at "$deployed_at" \
+          '{
+            embeds: [
+              {
+                title: $title,
+                color: 3066993,
+                fields: [
+                  {name: "🔄 Changes", value: $changes, inline: false},
+                  {name: "⏱️ Duration", value: $duration, inline: true},
+                  {name: "📅 Deployed At", value: $deployed_at, inline: true}
+                ]
+              }
+            ]
+          }')
+
+        curl -H "Content-Type: application/json" \
+             -d "$payload" \
+             ${{ secrets.DISCORD_WEBHOOK_URL }}
+
+    - name: Send Failure Discord Notification
+      if: failure()
+      run: |
+        end_time=$(date +%s)
+        start_time=${{ steps.start.outputs.start_time }}
+        duration=$((end_time - start_time))
+        minutes=$((duration / 60))
+        seconds=$((duration % 60))
+
+        error_msg="Deployment failed during execution."
+
+        deployed_at="$(TZ=Asia/Dhaka date '+%Y-%m-%d %H:%M %Z')"
+
+        payload=$(jq -n \
+          --arg title "❌ Deployment Failed" \
+          --arg changes "$error_msg" \
+          --arg duration "${minutes}m ${seconds}s" \
+          --arg deployed_at "$deployed_at" \
+          '{
+            embeds: [
+              {
+                title: $title,
+                color: 15158332,
+                fields: [
+                  {name: "⚠️ Error", value: $changes, inline: false},
+                  {name: "⏱️ Duration", value: $duration, inline: true},
+                  {name: "📅 Attempted At", value: $deployed_at, inline: true}
+                ]
+              }
+            ]
+          }')
+
+        curl -H "Content-Type: application/json" \
+             -d "$payload" \
+             ${{ secrets.DISCORD_WEBHOOK_URL }}

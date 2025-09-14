@@ -50,8 +50,8 @@ jobs:
           mkdir -p ${{ env.APP_DIR }}
           cd ${{ env.APP_DIR }}
           
-          # Remove existing git repository
-          rm -rf .git
+          # Clear existing contents
+          rm -rf *
           
           # Fresh git clone
           git clone -b prod https://${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/${{ github.repository }}.git .

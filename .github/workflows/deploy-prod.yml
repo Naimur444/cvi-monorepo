@@ -47,11 +47,10 @@ jobs:
           
           echo "🚀 Starting deployment for ${{ env.APP_NAME }}..."
           
+          # Remove entire directory and recreate
+          rm -rf ${{ env.APP_DIR }}
           mkdir -p ${{ env.APP_DIR }}
           cd ${{ env.APP_DIR }}
-          
-          # Clear existing contents
-          rm -rf *
           
           # Fresh git clone
           git clone -b prod https://${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/${{ github.repository }}.git .

@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import Layout from "@/app/components/Layout";
 import MenuItem from "@/app/components/re-usable/MenuItem";
 import React, { useState } from "react";
@@ -33,7 +33,8 @@ const AddCareerJobs = () => {
   const validate = () => {
     if (!form.title) return "Title is required";
     if (!form.details) return "Details are required";
-    if (form.vacancies && isNaN(Number(form.vacancies))) return "Vacancies must be a number";
+    if (form.vacancies && isNaN(Number(form.vacancies)))
+      return "Vacancies must be a number";
     return null;
   };
 
@@ -61,7 +62,9 @@ const AddCareerJobs = () => {
 
     try {
       setLoading(true);
-      const url = API_BASE ? `${API_BASE.replace(/\/$/, "")}/jobs` : "/api/jobs";
+      const url = API_BASE
+        ? `${API_BASE.replace(/\/$/, "")}/jobs`
+        : "/api/jobs";
       const res = await fetch(url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -90,7 +93,10 @@ const AddCareerJobs = () => {
       });
       return data;
     } catch (error) {
-      setMessage({ type: "error", text: error.message || "Failed to create job" });
+      setMessage({
+        type: "error",
+        text: error.message || "Failed to create job",
+      });
     } finally {
       setLoading(false);
     }
@@ -101,95 +107,97 @@ const AddCareerJobs = () => {
       <Layout>
         <MenuItem
           parent={"Career"}
-          page={"Header"}
-          addPage={"Add Header"}
-          href={"/career/header"}
+          page={"Jobs"}
+          addPage={"Add Jobs"}
+          href={"/career/jobs"}
         />
 
         <form onSubmit={handleSubmit} className="bg-white p-4 rounded-2xl mt-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="flex flex-col gap-4 space-y-4 mb-6">
               <div className="flex flex-col gap-2">
-                <label className="font-medium">Job Title</label>
+                <label className="text-[#181818]">Job Title</label>
                 <input
                   type="text"
                   name="title"
                   value={form.title}
                   onChange={handleChange}
-                  className="border border-[#DCDCDC] bg-[#FAF9FC] rounded-md p-2"
+                  className="border border-[#DCDCDC] bg-[#FAF9FC] rounded-md p-2 text-[#181818]"
                 />
               </div>
 
               <div className="flex flex-col gap-2">
-                <label className="font-medium">Salary</label>
+                <label className="text-[#181818]">Salary</label>
                 <input
                   type="text"
                   name="salary"
                   value={form.salary}
                   onChange={handleChange}
-                  className="border border-[#DCDCDC] bg-[#FAF9FC] rounded-md p-2"
+                  className="border border-[#DCDCDC] bg-[#FAF9FC] rounded-md p-2 text-[#181818]"
                 />
               </div>
 
               <div className="flex flex-col gap-2">
-                <label className="font-medium">Location</label>
+                <label className="text-[#181818]">Location</label>
                 <input
                   type="text"
                   name="location"
                   value={form.location}
                   onChange={handleChange}
-                  className="border border-[#DCDCDC] bg-[#FAF9FC] rounded-md p-2"
+                  className="border border-[#DCDCDC] bg-[#FAF9FC] rounded-md p-2 text-[#181818]"
                 />
               </div>
 
               <div className="flex flex-col gap-2">
-                <label className="font-medium">Job Type</label>
+                <label className="text-[#181818]">Job Type</label>
                 <input
                   type="text"
                   name="jobType"
                   value={form.jobType}
                   onChange={handleChange}
-                  className="border border-[#DCDCDC] bg-[#FAF9FC] rounded-md p-2"
+                  className="border border-[#DCDCDC] bg-[#FAF9FC] rounded-md p-2 text-[#181818]"
                 />
               </div>
 
               <div className="flex flex-col gap-2">
-                <label className="font-medium">Vacancies</label>
+                <label className="text-[#181818]">Vacancies</label>
                 <input
                   type="text"
                   name="vacancies"
                   value={form.vacancies}
                   onChange={handleChange}
-                  className="border border-[#DCDCDC] bg-[#FAF9FC] rounded-md p-2"
+                  className="border border-[#DCDCDC] bg-[#FAF9FC] rounded-md p-2 text-[#181818]"
                 />
               </div>
 
               <div className="flex flex-col gap-2">
-                <label className="font-medium">Experience</label>
+                <label className="text-[#181818]">Experience</label>
                 <input
                   type="text"
                   name="experience"
                   value={form.experience}
                   onChange={handleChange}
-                  className="border border-[#DCDCDC] bg-[#FAF9FC] rounded-md p-2"
+                  className="border border-[#DCDCDC] bg-[#FAF9FC] rounded-md p-2 text-[#181818]"
                 />
               </div>
 
               <div className="flex flex-col gap-2">
-                <label className="font-medium">Deadline</label>
+                <label className="text-[#181818]">Deadline</label>
                 <input
                   type="date"
                   name="deadline"
                   value={form.deadline}
                   onChange={handleChange}
-                  className="border border-[#DCDCDC] bg-[#FAF9FC] rounded-md p-2"
+                  className="border border-[#DCDCDC] bg-[#FAF9FC] rounded-md p-2 text-[#181818]"
                 />
               </div>
             </div>
 
             <div className="space-y-6">
               <div>
-                <p className="text-[#181818] mb-2">Social Media Thumbnail Image (URL)</p>
+                <p className="text-[#181818] mb-2">
+                  Social Media Thumbnail Image (URL)
+                </p>
                 <div className="border-2 border-dashed border-[#0E4F53] rounded-lg p-4 flex flex-col items-center justify-center space-y-6 w-full bg-[#FAF9FC]">
                   <div>
                     {/* graphic */}
@@ -217,7 +225,9 @@ const AddCareerJobs = () => {
                     </svg>
                   </div>
 
-                  <p className="text-[#181818] text-center">Provide an accessible image URL for social previews</p>
+                  <p className="text-[#181818] text-center">
+                    Provide an accessible image URL for social previews
+                  </p>
 
                   <input
                     type="text"
@@ -225,18 +235,18 @@ const AddCareerJobs = () => {
                     value={form.socialMediaImg}
                     onChange={handleChange}
                     placeholder="https://example.com/image.png"
-                    className="w-full border border-[#DCDCDC] bg-white rounded-md p-2"
+                    className="w-full border border-[#DCDCDC] text-gray-600 bg-white rounded-md p-2 text-[#181818]"
                   />
                 </div>
               </div>
 
               <div className="flex flex-col gap-2">
-                <label>Details</label>
+                <label className="text-[#181818]">Details</label>
                 <textarea
                   name="details"
                   value={form.details}
                   onChange={handleChange}
-                  className="border border-[#DCDCDC] bg-[#FAF9FC] rounded-md p-2"
+                  className="border border-[#DCDCDC] bg-[#FAF9FC] rounded-md p-2 text-[#181818]"
                   rows={17}
                 ></textarea>
               </div>
@@ -244,7 +254,11 @@ const AddCareerJobs = () => {
           </div>
 
           {message && (
-            <p className={`mt-4 text-center ${message.type === "error" ? "text-red-600" : "text-green-600"}`}>
+            <p
+              className={`mt-4 text-center ${
+                message.type === "error" ? "text-red-600" : "text-green-600"
+              }`}
+            >
               {message.text}
             </p>
           )}
@@ -252,19 +266,21 @@ const AddCareerJobs = () => {
           <div className="flex items-center justify-center gap-4 mt-6">
             <button
               type="button"
-              onClick={() => setForm({
-                title: "",
-                salary: "",
-                location: "",
-                jobType: "",
-                vacancies: "",
-                experience: "",
-                deadline: "",
-                status: "active",
-                socialMediaImg: "",
-                details: "",
-              })}
-              className="text-[#ED1400] border border-[#ED1400] px-4 py-2 rounded-md cursor-pointer"
+              onClick={() =>
+                setForm({
+                  title: "",
+                  salary: "",
+                  location: "",
+                  jobType: "",
+                  vacancies: "",
+                  experience: "",
+                  deadline: "",
+                  status: "active",
+                  socialMediaImg: "",
+                  details: "",
+                })
+              }
+              className="text-[#ED1400] border border-[#ED1400] px-4 py-2 rounded-md cursor-pointer hover:bg-[#ED1400] hover:text-white"
             >
               Cancel
             </button>

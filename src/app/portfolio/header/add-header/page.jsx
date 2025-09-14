@@ -19,11 +19,11 @@ const page = () => {
           <div>
             <div className="flex flex-col gap-4">
               <div className="flex flex-col gap-2">
-                <label className="font-medium">Title</label>
+                <label className="text-[#181818]">Title</label>
                 <input
                   type="text"
                   id="title"
-                  className="border border-[#DCDCDC] bg-[#FAF9FC] rounded-md p-2"
+                  className="border border-[#DCDCDC] bg-[#FAF9FC] rounded-md p-2 text-[#181818]"
                 />
               </div>
 

@@ -2,85 +2,123 @@
 import Layout from "@/app/components/Layout";
 import MenuItem from "@/app/components/re-usable/MenuItem";
 import DataTable from "@/components/DataTable";
-import { Switch } from "@/components/ui/switch";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import TableFilter from "@/components/FilterTable";
 
 const ClientFeedbackPage = () => {
-  const [clientFeedbacks, setClientFeedbacks] = useState([
-    {
-      id: 1,
-      name: "Mr Mansur Ali",
-      position: "CEO Impromek",
-      feedback:
-        "Figma ipsum component variant main layer. Inspect stroke group union vector line main. Stroke pencil variant polygon text vertical blur effect share thumbnail. Outline figma flows bold shadow prototype star.",
-      imageUrl: "/placeholder.jpg",
-      status: true,
-    },
-    {
-      id: 2,
-      name: "Ms Sabrina Noor",
-      position: "Marketing Head",
-      feedback:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.",
-      imageUrl: "/placeholder.jpg",
-      status: false,
-    },
-    {
-      id: 3,
-      name: "John Doe",
-      position: "Product Manager",
-      feedback:
-        "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.",
-      imageUrl: "/placeholder.jpg",
-      status: true,
-    },
-    {
-      id: 4,
-      name: "Sarah Johnson",
-      position: "CTO TechCorp",
-      feedback:
-        "Cloud Vortex Innovation has transformed our infrastructure completely. The scalability and reliability of their solutions have exceeded our expectations. Highly recommended for any enterprise looking to modernize their cloud strategy.",
-      imageUrl: "/placeholder.jpg",
-      status: true,
-    },
-    {
-      id: 5,
-      name: "Michael Chen",
-      position: "Operations Director",
-      feedback:
-        "The support team is exceptional. They provided 24/7 assistance during our migration and ensured zero downtime. The cost savings we've achieved are remarkable.",
-      imageUrl: "/placeholder.jpg",
-      status: false,
-    },
-  ]);
+  const [feedbacks, setFeedbacks] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [deletingId, setDeletingId] = useState(null);
+  const [confirmingId, setConfirmingId] = useState(null);
+  const [message, setMessage] = useState(null);
+  const [filters, setFilters] = useState({ status: "", name: "" });
 
-  // Handle status toggle
-  const handleStatusToggle = (feedbackId, newStatus) => {
-    setClientFeedbacks((prev) =>
-      prev.map((feedback) =>
-        feedback.id === feedbackId
-          ? { ...feedback, status: newStatus }
-          : feedback
-      )
-    );
+  const API_BASE =
+    process.env.NEXT_PUBLIC_API_URL ||
+    process.env.NEXT_PUBLIC_VITE_API_URL ||
+    process.env.NEXT_PUBLIC_REACT_APP_API_URL ||
+    (process.env.NODE_ENV === "development" ? "http://localhost:3000" : "");
+
+  const fetchFeedbacks = async (qs = {}) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const params = new URLSearchParams();
+      if (qs.status) params.append("status", qs.status);
+      if (qs.name) params.append("name", qs.name);
+      const url = API_BASE
+        ? `${API_BASE.replace(/\/$/, "")}/client-feedback${
+            params.toString() ? `?${params.toString()}` : ""
+          }`
+        : `/api/client-feedback${
+            params.toString() ? `?${params.toString()}` : ""
+          }`;
+      const res = await fetch(url);
+      if (!res.ok) throw new Error(`Failed to fetch feedbacks: ${res.status}`);
+      const data = await res.json();
+      setFeedbacks(Array.isArray(data) ? data : data?.data || []);
+    } catch (err) {
+      setError(err.message || "Failed to load client feedbacks");
+    } finally {
+      setLoading(false);
+    }
   };
 
-  // Handle delete
-  const handleDelete = (feedbackId) => {
-    if (
-      window.confirm(
-        "Are you sure you want to delete this client feedback? This action cannot be undone."
+  useEffect(() => {
+    fetchFeedbacks(filters);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handleStatusToggle = async (id) => {
+    // optimistic toggle
+    setFeedbacks((prev) =>
+      prev.map((f) =>
+        String(f.id) === String(id)
+          ? {
+              ...f,
+              status:
+                f.status === "active" || f.status === true
+                  ? "inactive"
+                  : "active",
+            }
+          : f
       )
-    ) {
-      setClientFeedbacks((prev) =>
-        prev.filter((feedback) => feedback.id !== feedbackId)
+    );
+    try {
+      const url = API_BASE
+        ? `${API_BASE.replace(/\/$/, "")}/client-feedback/${id}`
+        : `/api/client-feedback/${id}`;
+      await fetch(url, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({}),
+      });
+    } catch (e) {
+      // revert on failure
+      setFeedbacks((prev) =>
+        prev.map((f) =>
+          String(f.id) === String(id)
+            ? {
+                ...f,
+                status:
+                  f.status === "active" || f.status === true
+                    ? "inactive"
+                    : "active",
+              }
+            : f
+        )
       );
     }
   };
 
+  const handleDelete = async (id) => {
+    if (!id) return;
+    setMessage(null);
+    setDeletingId(id);
+    try {
+      const url = API_BASE
+        ? `${API_BASE.replace(/\/$/, "")}/client-feedback/${id}`
+        : `/api/client-feedback/${id}`;
+      const res = await fetch(url, { method: "DELETE" });
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(text || `Delete failed: ${res.status}`);
+      }
+      setFeedbacks((prev) => prev.filter((f) => String(f.id) !== String(id)));
+      toast.success("Client feedback deleted.");
+    } catch (err) {
+      toast.error(err.message || "Failed to delete.");
+    } finally {
+      setDeletingId(null);
+      setConfirmingId(null);
+    }
+  };
+
   const columns = [
-    { key: "id", header: "SI No." },
+    { key: "si", header: "SI No." },
     {
       key: "name",
       header: "Client Name",
@@ -117,11 +155,27 @@ const ClientFeedbackPage = () => {
       key: "status",
       header: "Status",
       render: (value, row) => (
-        <Switch
-          checked={value}
-          onCheckedChange={(val) => handleStatusToggle(row.id, val)}
-          className="data-[state=checked]:bg-[#0E4F53]"
-        />
+        <label className="inline-flex items-center cursor-pointer">
+          <input
+            type="checkbox"
+            className="sr-only peer"
+            checked={value === "active" || value === true}
+            onChange={() => handleStatusToggle(row.id)}
+          />
+          <div
+            className={`w-11 h-6 rounded-full transition-colors relative ${
+              value === "active" || value === true
+                ? "bg-[#0E4F53]"
+                : "bg-gray-300"
+            }`}
+          >
+            <div
+              className={`absolute top-1 left-1 w-4 h-4 bg-white rounded-full transition-transform ${
+                value === "active" || value === true ? "translate-x-5" : ""
+              }`}
+            ></div>
+          </div>
+        </label>
       ),
     },
     {
@@ -160,7 +214,7 @@ const ClientFeedbackPage = () => {
           <button
             className="p-1 hover:bg-red-50 rounded transition-colors"
             title="Delete Client Feedback"
-            onClick={() => handleDelete(row.id)}
+            onClick={() => setConfirmingId(row.id)}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -188,6 +242,38 @@ const ClientFeedbackPage = () => {
     },
   ];
 
+  // FilterTable props (clean variables)
+  const filterConfig = [
+    {
+      key: "name",
+      label: "Name",
+      type: "text",
+      placeholder: "Search by name",
+      className: "w-64 text-gray-500",
+    },
+    {
+      key: "status",
+      label: "Status",
+      type: "select",
+      className: "w-48 text-gray-500",
+      options: [
+        { label: "All", value: "all" },
+        { label: "Active", value: "active" },
+        { label: "Inactive", value: "inactive" },
+      ],
+    },
+  ];
+
+  const handleFilterApply = (next) => {
+    const normalized = {
+      ...filters,
+      ...next,
+      status: next.status === "all" ? "" : next.status,
+    };
+    setFilters(normalized);
+    fetchFeedbacks(normalized);
+  };
+
   return (
     <section>
       <Layout>
@@ -197,7 +283,7 @@ const ClientFeedbackPage = () => {
           href={"/content/client-feedback"}
         />
 
-        <div className="bg-white rounded-2xl mt-6 p-4">
+        <div className="bg-white rounded-2xl mt-6 p-6">
           <div className="flex items-center justify-between mb-6">
             <h3 className="text-[#181818] font-semibold text-xl">
               Client Feedback
@@ -208,10 +294,70 @@ const ClientFeedbackPage = () => {
               </button>
             </Link>
           </div>
+          <div className="mb-4">
+            <TableFilter
+              filtersConfig={filterConfig}
+              onFilter={handleFilterApply}
+            />
+          </div>
 
-          <DataTable columns={columns} data={clientFeedbacks} />
+          {loading && (
+            <div className="px-4 py-3 text-sm text-gray-600">Loading...</div>
+          )}
+          {error && (
+            <div className="px-4 py-3 text-sm text-red-600">{error}</div>
+          )}
+          {!loading && !error && (
+            <DataTable
+              columns={columns}
+              data={feedbacks.map((f, i) => ({
+                ...f,
+                si: i + 1,
+                name: f.name || f.clientName || "",
+                position: f.position || f.details || "",
+                imageUrl:
+                  f.imageUrl || f.image_url || f.img || "/placeholder.jpg",
+              }))}
+            />
+          )}
+          {!loading && !error && feedbacks.length === 0 && (
+            <div className="px-4 py-6 text-center text-sm text-gray-600">
+              No client feedback found.
+            </div>
+          )}
         </div>
       </Layout>
+      {Boolean(confirmingId) && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+          <div className="bg-white rounded-xl shadow-xl w-full max-w-sm">
+            <div className="px-5 py-4 border-b">
+              <h4 className="text-lg font-semibold text-[#181818]">
+                Confirm deletion
+              </h4>
+            </div>
+            <div className="px-5 py-4 text-sm text-gray-700">
+              Are you sure you want to delete this client feedback? This action
+              cannot be undone.
+            </div>
+            <div className="px-5 py-4 flex items-center justify-end gap-3 border-t">
+              <button
+                className="px-4 py-2 rounded-md border border-gray-300 text-gray-700 cursor-pointer"
+                onClick={() => setConfirmingId(null)}
+                disabled={deletingId === confirmingId}
+              >
+                Cancel
+              </button>
+              <button
+                className="px-4 py-2 rounded-md bg-[#ED1400] text-white cursor-pointer disabled:opacity-70"
+                onClick={() => handleDelete(confirmingId)}
+                disabled={deletingId === confirmingId}
+              >
+                {deletingId === confirmingId ? "Deleting..." : "Delete"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 };

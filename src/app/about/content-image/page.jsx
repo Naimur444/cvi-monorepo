@@ -7,7 +7,7 @@ const page = () => {
       <div className="mb-6">
         <MenuItem page={"About"} addPage={"Content Image"} href={"/about"} />
       </div>
-        <div className="bg-white p-4 rounded-2xl">
+      <div className="bg-white p-4 rounded-2xl">
           <h3 className="text-[#181818] font-bold text-xl mb-6">
             Content Image
           </h3>
@@ -123,7 +123,6 @@ const page = () => {
             </button>
           </div>
         </div>
-      </Layout>
     </section>
   );
 };

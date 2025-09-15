@@ -12,8 +12,7 @@ const page = () => {
           href={"/content/contact-form"}
         />
       </div>
-
-        <div className="bg-white p-4 rounded-2xl">
+      <div className="bg-white p-4 rounded-2xl">
           <h3 className="text-[#181818] font-bold text-xl mb-6">
             Add Question
           </h3>
@@ -129,7 +128,6 @@ const page = () => {
             </button>
           </div>
         </div>
-      </Layout>
     </section>
   );
 };

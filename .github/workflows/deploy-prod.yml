@@ -80,7 +80,7 @@ jobs:
         deployed_at="$(TZ=Asia/Dhaka date '+%Y-%m-%d %H:%M %Z')"
 
         payload=$(jq -n \
-          --arg title "✅ Deployment Completed" \
+          --arg title "✅ Deployment Completed (CVI-Admin)" \
           --arg changes "$commit_msg" \
           --arg duration "${minutes}m ${seconds}s" \
           --arg deployed_at "$deployed_at" \

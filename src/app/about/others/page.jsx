@@ -1,14 +1,12 @@
-import Layout from "@/app/components/Layout";
 import MenuItem from "@/app/components/re-usable/MenuItem";
 import React from "react";
 
 const page = () => {
   return (
     <section>
-      <Layout>
-        <div className="mb-6">
-          <MenuItem page={"About"} addPage={"Others"} href={"/about"} />
-        </div>
+      <div className="mb-6">
+        <MenuItem page={"About"} addPage={"Others"} href={"/about"} />
+      </div>
 
         <div className="bg-white p-4 rounded-2xl md:w-1/2">
           <h3 className="text-[#181818] font-bold text-xl mb-6">Add</h3>
@@ -64,7 +62,6 @@ const page = () => {
             </button>
           </div>
         </div>
-      </Layout>
     </section>
   );
 };

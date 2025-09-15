@@ -1,6 +1,5 @@
 "use client";
 
-import Layout from "@/app/components/Layout";
 import DataTable from "@/components/DataTable";
 import React, { useState } from "react";
 
@@ -147,17 +146,15 @@ const SubmitFormPage = () => {
 
   return (
     <section>
-      <Layout>
-        <div className="bg-white rounded-2xl mt-6 p-6">
-          <div className="flex items-center justify-between mb-6">
-            <h3 className="text-[#181818] font-semibold text-xl">
-              Submit Form
-            </h3>
-          </div>
-
-          <DataTable columns={columns} data={submittedForms} />
+      <div className="bg-white rounded-2xl mt-6 p-6">
+        <div className="flex items-center justify-between mb-6">
+          <h3 className="text-[#181818] font-semibold text-xl">
+            Submit Form
+          </h3>
         </div>
-      </Layout>
+
+        <DataTable columns={columns} data={submittedForms} />
+      </div>
     </section>
   );
 };

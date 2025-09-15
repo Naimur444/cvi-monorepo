@@ -1,5 +1,4 @@
 "use client";
-import Layout from "@/app/components/Layout";
 import MenuItem from "@/app/components/re-usable/MenuItem";
 import DataTable from "@/components/DataTable";
 import { Switch } from "@/components/ui/switch";
@@ -163,8 +162,7 @@ const AdvantagePage = () => {
 
   return (
     <section>
-      <Layout>
-        <MenuItem
+      <MenuItem
           parent={"Content"}
           page={"Advantages"}
           href={"/content/advantages"}
@@ -184,7 +182,6 @@ const AdvantagePage = () => {
 
           <DataTable columns={columns} data={advantages} />
         </div>
-      </Layout>
     </section>
   );
 };

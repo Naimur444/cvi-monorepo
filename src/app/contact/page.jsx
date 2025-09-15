@@ -1,5 +1,4 @@
 "use client";
-import Layout from "@/app/components/Layout";
 import MenuItem from "@/app/components/re-usable/MenuItem";
 import DataTable from "@/components/DataTable";
 import Link from "next/link";
@@ -155,8 +154,7 @@ const ContactPage = () => {
 
   return (
     <section>
-      <Layout>
-        <MenuItem page={"Contact"} href={"/contact"} />
+      <MenuItem page={"Contact"} href={"/contact"} />
 
         <div className="bg-white rounded-2xl mt-6 p-4">
           <div className="flex items-center justify-between mb-6">
@@ -170,7 +168,6 @@ const ContactPage = () => {
 
           <DataTable columns={columns} data={contacts} />
         </div>
-      </Layout>
     </section>
   );
 };

@@ -1,19 +1,17 @@
-import Layout from "@/app/components/Layout";
 import MenuItem from "@/app/components/re-usable/MenuItem";
 import React from "react";
 
 const AddServicesHeaderpage = () => {
   return (
     <section>
-      <Layout>
-        <div className="mb-6">
-          <MenuItem
-            parent={"Services"}
-            page={"Header"}
-            addPage={"Add Services Header"}
-            href={"/services/header"}
-          />
-        </div>
+      <div className="mb-6">
+        <MenuItem
+          parent={"Services"}
+          page={"Header"}
+          addPage={"Add Services Header"}
+          href={"/services/header"}
+        />
+      </div>
 
         <div className="bg-white p-4 rounded-2xl md:w-1/2">
           <div>
@@ -88,7 +86,6 @@ const AddServicesHeaderpage = () => {
             </button>
           </div>
         </div>
-      </Layout>
     </section>
   );
 };

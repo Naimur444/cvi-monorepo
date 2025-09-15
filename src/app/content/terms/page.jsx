@@ -1,5 +1,4 @@
 "use client";
-import Layout from "@/app/components/Layout";
 import MenuItem from "@/app/components/re-usable/MenuItem";
 import DataTable from "@/components/DataTable";
 import { Switch } from "@/components/ui/switch";
@@ -143,7 +142,6 @@ const TermsPage = () => {
 
   return (
     <section>
-      <Layout>
         <MenuItem parent={"Content"} page={"Terms"} href={"/content/terms"} />
 
         <div className="bg-white rounded-2xl mt-6 p-4">
@@ -158,7 +156,6 @@ const TermsPage = () => {
 
           <DataTable columns={columns} data={terms} />
         </div>
-      </Layout>
     </section>
   );
 };

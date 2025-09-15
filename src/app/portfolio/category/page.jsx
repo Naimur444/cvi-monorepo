@@ -1,5 +1,4 @@
 "use client";
-import Layout from "@/app/components/Layout";
 import MenuItem from "@/app/components/re-usable/MenuItem";
 import Link from "next/link";
 import React, { useState } from "react";
@@ -127,7 +126,6 @@ const CategoryPage = () => {
   ];
   return (
     <section>
-      <Layout>
         <MenuItem
           parent={"Portfolio"}
           page={"Category"}
@@ -145,7 +143,6 @@ const CategoryPage = () => {
           </div>
           <DataTable columns={columns} data={categories} />
         </div>
-      </Layout>
     </section>
   );
 };

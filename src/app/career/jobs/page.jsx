@@ -1,5 +1,4 @@
 "use client";
-import Layout from "@/app/components/Layout";
 import MenuItem from "@/app/components/re-usable/MenuItem";
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
@@ -17,7 +16,7 @@ const careerJobs = () => {
     process.env.NEXT_PUBLIC_API_URL ||
     process.env.NEXT_PUBLIC_VITE_API_URL ||
     process.env.NEXT_PUBLIC_REACT_APP_API_URL ||
-    (process.env.NODE_ENV === "development" ? "http://localhost:3000" : "");
+    (process.env.NODE_ENV === "development" ? "http://localhost:3002" : "");
 
   const fetchJobs = async (qs = {}) => {
     setLoading(true);
@@ -114,8 +113,7 @@ const careerJobs = () => {
   };
   return (
     <section>
-      <Layout>
-        <MenuItem parent={"Career"} page={"Jobs"} href={"/career/jobs"} />
+      <MenuItem parent={"Career"} page={"Jobs"} href={"/career/jobs"} />
 
         <div className="bg-white rounded-2xl mt-6 p-4">
           <div className="flex items-center justify-between mb-6">
@@ -298,7 +296,6 @@ const careerJobs = () => {
             </div>
           )}
         </div>
-      </Layout>
     </section>
   );
 };

@@ -1,14 +1,12 @@
-import Layout from "@/app/components/Layout";
 import MenuItem from "@/app/components/re-usable/MenuItem";
 import React from "react";
 
 const page = () => {
   return (
     <section>
-      <Layout>
-        <div className="mb-6">
-          <MenuItem page={"Settings"} />
-        </div>
+      <div className="mb-6">
+        <MenuItem page={"Settings"} />
+      </div>
 
         <div className="bg-white p-4 rounded-2xl grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
@@ -120,7 +118,6 @@ const page = () => {
             Save
           </button>
         </div>
-      </Layout>
     </section>
   );
 };

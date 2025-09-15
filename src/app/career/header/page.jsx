@@ -1,5 +1,4 @@
 "use client";
-import Layout from "@/app/components/Layout";
 import MenuItem from "@/app/components/re-usable/MenuItem";
 import Link from "next/link";
 import React, { useState } from "react";
@@ -153,8 +152,7 @@ const CareerHeader = () => {
   ];
   return (
     <section>
-      <Layout>
-        <MenuItem parent={"Career"} page={"Header"} href={"/career/header"} />
+      <MenuItem parent={"Career"} page={"Header"} href={"/career/header"} />
 
         <div className="bg-white rounded-2xl mt-6 p-4">
           <div className="flex items-center justify-between mb-6">
@@ -169,7 +167,6 @@ const CareerHeader = () => {
           </div>
           <DataTable columns={columns} data={headers} />
         </div>
-      </Layout>
     </section>
   );
 };

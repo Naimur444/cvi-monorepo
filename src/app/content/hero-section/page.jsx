@@ -1,5 +1,4 @@
 "use client";
-import Layout from "@/app/components/Layout";
 import MenuItem from "@/app/components/re-usable/MenuItem";
 import DataTable from "@/components/DataTable";
 import { Switch } from "@/components/ui/switch";
@@ -115,12 +114,11 @@ const HeroSectionPage = () => {
 
   return (
     <section>
-      <Layout>
-        <MenuItem
-          parent={"Content"}
-          page={"Hero Section"}
-          href={"/content/hero-section"}
-        />
+      <MenuItem
+        parent={"Content"}
+        page={"Hero Section"}
+        href={"/content/hero-section"}
+      />
 
         <div className="bg-white rounded-2xl mt-6 p-6">
           <div className="flex items-center justify-between mb-6">
@@ -136,7 +134,6 @@ const HeroSectionPage = () => {
 
           <DataTable columns={columns} data={data} />
         </div>
-      </Layout>
     </section>
   );
 };

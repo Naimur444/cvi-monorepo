@@ -1,4 +1,3 @@
-import Layout from "@/app/components/Layout";
 import MenuItem from "@/app/components/re-usable/MenuItem";
 import Link from "next/link";
 import React from "react";
@@ -6,8 +5,7 @@ import React from "react";
 const CareerApplied = () => {
   return (
     <section>
-      <Layout>
-        <MenuItem parent={"Career"} page={"Applied"} href={"/career/applied"} />
+      <MenuItem parent={"Career"} page={"Applied"} href={"/career/applied"} />
 
         <div className="bg-white rounded-2xl mt-6 p-4">
           <div className="flex items-center justify-between mb-6">
@@ -65,7 +63,6 @@ const CareerApplied = () => {
             </table>
           </div>
         </div>
-      </Layout>
     </section>
   );
 };

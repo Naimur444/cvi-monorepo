@@ -1,5 +1,4 @@
 "use client";
-import Layout from "@/app/components/Layout";
 import MenuItem from "@/app/components/re-usable/MenuItem";
 import Link from "next/link";
 import React from "react";
@@ -7,15 +6,14 @@ import React from "react";
 const AddSectionPage = () => {
   return (
     <div>
-      <Layout>
-        <div className="mb-6">
-          <MenuItem
-            parent={"Content"}
-            page={"Hero Section"}
-            addPage={"Add Section"}
-            href={"/content/hero-section"}
-          />
-        </div>
+      <div className="mb-6">
+        <MenuItem
+          parent={"Content"}
+          page={"Hero Section"}
+          addPage={"Add Section"}
+          href={"/content/hero-section"}
+        />
+      </div>
 
         <div className="bg-white rounded-2xl p-4">
           <h3 className="text-[#181818] font-semibold text-xl mb-6">
@@ -104,7 +102,6 @@ const AddSectionPage = () => {
             </button>
           </div>
         </div>
-      </Layout>
     </div>
   );
 };

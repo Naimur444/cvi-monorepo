@@ -28,7 +28,7 @@ const AddClientFeedbackPage = () => {
       process.env.NEXT_PUBLIC_API_URL ||
       process.env.NEXT_PUBLIC_VITE_API_URL ||
       process.env.NEXT_PUBLIC_REACT_APP_API_URL ||
-      (process.env.NODE_ENV === "development" ? "http://localhost:3000" : ""),
+      (process.env.NODE_ENV === "development" ? "http://localhost:3002" : ""),
     []
   );
 

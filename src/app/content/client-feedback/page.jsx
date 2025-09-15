@@ -1,5 +1,4 @@
 "use client";
-import Layout from "@/app/components/Layout";
 import MenuItem from "@/app/components/re-usable/MenuItem";
 import DataTable from "@/components/DataTable";
 import Link from "next/link";
@@ -20,7 +19,7 @@ const ClientFeedbackPage = () => {
     process.env.NEXT_PUBLIC_API_URL ||
     process.env.NEXT_PUBLIC_VITE_API_URL ||
     process.env.NEXT_PUBLIC_REACT_APP_API_URL ||
-    (process.env.NODE_ENV === "development" ? "http://localhost:3000" : "");
+    (process.env.NODE_ENV === "development" ? "http://localhost:3002" : "");
 
   const fetchFeedbacks = async (qs = {}) => {
     setLoading(true);
@@ -276,8 +275,7 @@ const ClientFeedbackPage = () => {
 
   return (
     <section>
-      <Layout>
-        <MenuItem
+      <MenuItem
           parent={"Content"}
           page={"Client Feedback"}
           href={"/content/client-feedback"}
@@ -326,7 +324,6 @@ const ClientFeedbackPage = () => {
             </div>
           )}
         </div>
-      </Layout>
       {Boolean(confirmingId) && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
           <div className="bg-white rounded-xl shadow-xl w-full max-w-sm">

@@ -1,20 +1,18 @@
 "use client";
-import Layout from "@/app/components/Layout";
 import MenuItem from "@/app/components/re-usable/MenuItem";
 import React from "react";
 
 const page = () => {
   return (
     <div>
-      <Layout>
-        <div>
-          {" "}
-          <MenuItem
-            parent={"Content"}
-            page={"Policy"}
-            addPage={"Add Policy"}
-            href={"/content/policy"}
-          />
+      <div>
+        {" "}
+        <MenuItem
+          parent={"Content"}
+          page={"Policy"}
+          addPage={"Add Policy"}
+          href={"/content/policy"}
+        />
           <div className="bg-white rounded-2xl p-4 mt-6">
             <h3 className="text-[#181818] font-semibold text-xl mb-4">
               Add Privacy Policy
@@ -36,8 +34,7 @@ const page = () => {
               </button>
             </div>
           </div>
-        </div>
-      </Layout>
+      </div>
     </div>
   );
 };

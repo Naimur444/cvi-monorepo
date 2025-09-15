@@ -1,5 +1,4 @@
 "use client";
-import Layout from "@/app/components/Layout";
 import MenuItem from "@/app/components/re-usable/MenuItem";
 import DataTable from "@/components/DataTable";
 import { Switch } from "@/components/ui/switch";
@@ -186,8 +185,7 @@ const ContactFormPage = () => {
 
   return (
     <section>
-      <Layout>
-        <MenuItem
+      <MenuItem
           parent={"Content"}
           page={"Contact Form"}
           href={"/content/contact-form"}
@@ -207,7 +205,6 @@ const ContactFormPage = () => {
 
           <DataTable columns={columns} data={contactForms} />
         </div>
-      </Layout>
     </section>
   );
 };

@@ -1,18 +1,66 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useAuth } from "../contexts/AuthContext";
+import toast from "react-hot-toast";
 
 export default function Home() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
+  const { login, isAuthenticated, isLoading, error, clearError } = useAuth();
 
-  const handleSubmit = (e) => {
+  // Redirect if already authenticated
+  useEffect(() => {
+    if (isAuthenticated && !isLoading) {
+      router.push("/dashboard/report");
+    }
+  }, [isAuthenticated, isLoading, router]);
+
+  // Clear error when component mounts or email/password changes
+  useEffect(() => {
+    if (error) {
+      clearError();
+    }
+  }, [email, password]);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Login with:", { email, password });
-    router.push("/dashboard/report");
+    
+    if (isSubmitting) return;
+    
+    setIsSubmitting(true);
+    clearError();
+
+    try {
+      const result = await login({ email, password });
+      
+      if (result.success) {
+        toast.success("Login successful! Redirecting...");
+        router.push("/dashboard/report");
+      } else {
+        toast.error(result.error || "Login failed");
+      }
+    } catch (err) {
+      toast.error("An unexpected error occurred");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
+
+  // Show loading while checking authentication
+  if (isLoading) {
+    return (
+      <section className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-100 via-white to-gray-200">
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-[#0E4F53]"></div>
+          <p className="mt-4 text-gray-600">Loading...</p>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-100 via-white to-gray-200">
@@ -23,7 +71,14 @@ export default function Home() {
           <p className="text-gray-500 mt-2">Please login to your account</p>
         </div>
 
-        {/* Login Form */}
+          {/* Error Message */}
+          {error && (
+            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-xl text-red-700 text-sm">
+              {error}
+            </div>
+          )}
+
+          {/* Login Form */}
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
             <label
@@ -75,9 +130,17 @@ export default function Home() {
           {/* Login Button */}
           <button
             type="submit"
-            className="w-full py-3 px-4 bg-[#0E4F53] text-white rounded-xl font-semibold shadow-md hover:bg-teal-700 transition cursor-pointer"
+            disabled={isSubmitting || !email || !password}
+            className="w-full py-3 px-4 bg-[#0E4F53] text-white rounded-xl font-semibold shadow-md hover:bg-teal-700 transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           >
-            Sign In
+            {isSubmitting ? (
+              <>
+                <div className="inline-block animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                Signing In...
+              </>
+            ) : (
+              "Sign In"
+            )}
           </button>
         </form>
 

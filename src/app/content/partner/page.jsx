@@ -1,5 +1,4 @@
 "use client";
-import Layout from "@/app/components/Layout";
 import MenuItem from "@/app/components/re-usable/MenuItem";
 import DataTable from "@/components/DataTable";
 import { Switch } from "@/components/ui/switch";
@@ -244,7 +243,6 @@ const PartnerPage = () => {
 
   return (
     <section>
-      <Layout>
         <MenuItem
           parent={"Content"}
           page={"Partner"}
@@ -337,7 +335,6 @@ const PartnerPage = () => {
             </div>
           </div>
         </div>
-      </Layout>
     </section>
   );
 };

@@ -1,5 +1,4 @@
 "use client";
-import Layout from "@/app/components/Layout";
 import MenuItem from "@/app/components/re-usable/MenuItem";
 import DataTable from "@/components/DataTable";
 import { Switch } from "@/components/ui/switch";
@@ -143,7 +142,6 @@ const PolicyPage = () => {
 
   return (
     <section>
-      <Layout>
         <MenuItem
           parent={"Content"}
           page={"Privacy Policy"}
@@ -164,7 +162,6 @@ const PolicyPage = () => {
 
           <DataTable columns={columns} data={policies} />
         </div>
-      </Layout>
     </section>
   );
 };

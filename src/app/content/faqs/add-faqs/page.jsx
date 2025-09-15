@@ -1,5 +1,4 @@
 "use client";
-import Layout from "@/app/components/Layout";
 import MenuItem from "@/app/components/re-usable/MenuItem";
 import React, { useState } from "react";
 
@@ -21,15 +20,14 @@ const Page = () => {
 
   return (
     <section>
-      <Layout>
-        <div className="mb-6">
-          <MenuItem
-            parent={"Content"}
-            page={"FAQ's"}
-            addPage={"Add Question"}
-            href={"/content/faqs"}
-          />
-        </div>
+      <div className="mb-6">
+        <MenuItem
+          parent={"Content"}
+          page={"FAQ's"}
+          addPage={"Add Question"}
+          href={"/content/faqs"}
+        />
+      </div>
 
         <div className="bg-white p-4 rounded-2xl">
           <h3 className="text-[#181818] font-bold text-xl mb-6">

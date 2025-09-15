@@ -1,5 +1,4 @@
 "use client";
-import Layout from "@/app/components/Layout";
 import MenuItem from "@/app/components/re-usable/MenuItem";
 import Link from "next/link";
 import React, { useState } from "react";
@@ -158,43 +157,38 @@ const ServicesHeader = () => {
   ];
   return (
     <section>
-      <Layout>
-        <div className="flex items-center justify-between">
-          <MenuItem
-            parent={"Services"}
-            page={"Header"}
-            href={"/services/header"}
-          />
+      <div className="flex items-center justify-between">
+        <MenuItem
+          parent={"Services"}
+          page={"Header"}
+          href={"/services/header"}
+        />
+        <select
+          className="border border-[#DCDCDC] bg-[#FAF9FC] p-2 rounded-md"
+          value={selectedService}
+          onChange={(e) => setSelectedService(e.target.value)}
+        >
+          <option value="">Select Service</option>
+          <option value="web">Web Development</option>
+          <option value="software">Software Development</option>
+          <option value="app">App Development</option>
+          <option value="uiux">UI/UX Design</option>
+        </select>
+      </div>
 
-          <select
-            id="service"
-            name="service"
-            className="rounded-xl border border-gray-300 bg-white px-4 py-3 text-gray-700 shadow-sm outline-none transition-all duration-200 focus:border-[#0E4F53] focus:ring-2 focus:ring-[#0E4F53]"
-            value={selectedService}
-            onChange={(e) => setSelectedService(e.target.value)}
-          >
-            <option value="">Select Service</option>
-            <option value="web">Web Development</option>
-            <option value="software">Software Development</option>
-            <option value="app">App Development</option>
-            <option value="uiux">UI/UX Design</option>
-          </select>
+      <div className="bg-white rounded-2xl mt-6 p-4">
+        <div className="flex items-center justify-between mb-6">
+          <h3 className="text-[#181818] font-semibold text-xl">
+            Services Header
+          </h3>
+          <Link href={"/services/header/add-services-header"}>
+            <button className="flex items-center gap-1 justify-center py-2 px-4 bg-[#0E4F53] text-white rounded-lg cursor-pointer transition-all duration-300 ease-out hover:bg-[#0E4F53]/90 hover:scale-105 hover:shadow-lg hover:shadow-[#0E4F53]/25 active:scale-95 active:bg-[#0E4F53]/80 focus:outline-none focus:ring-2 focus:ring-[#0E4F53] focus:ring-offset-2">
+              + Add
+            </button>
+          </Link>
         </div>
-
-        <div className="bg-white rounded-2xl mt-6 p-4">
-          <div className="flex items-center justify-between mb-6">
-            <h3 className="text-[#181818] font-semibold text-xl">
-              Services Header
-            </h3>
-            <Link href={"/services/header/add-services-header"}>
-              <button className="flex items-center gap-1 justify-center py-2 px-4 bg-[#0E4F53] text-white rounded-lg cursor-pointer transition-all duration-300 ease-out hover:bg-[#0E4F53]/90 hover:scale-105 hover:shadow-lg hover:shadow-[#0E4F53]/25 active:scale-95 active:bg-[#0E4F53]/80 focus:outline-none focus:ring-2 focus:ring-[#0E4F53] focus:ring-offset-2">
-                + Add
-              </button>
-            </Link>
-          </div>
-          <DataTable columns={columns} data={headers} />
-        </div>
-      </Layout>
+        <DataTable columns={columns} data={headers} />
+      </div>
     </section>
   );
 };

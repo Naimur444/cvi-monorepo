@@ -1,8 +1,12 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
+import { useAuth } from "../../contexts/AuthContext";
 
 const Header = () => {
+  const { user } = useAuth();
   return (
     <header className="bg-white px-6 py-3 rounded-2xl flex items-center justify-between transition-all duration-700 ease-[cubic-bezier(0.4,0,0.2,1)] shadow-sm">
       <Link href={"/dashboard/report"}>
@@ -116,10 +120,10 @@ const Header = () => {
 
           <div className="hidden md:block">
             <h3 className="text-[var(--text-primary)] text-xl font-semibold transition-colors duration-300">
-              Adil Rahman
+              {user ? `${user.firstName} ${user.lastName}` : "Admin User"}
             </h3>
             <p className="text-[var(--text-subtitle)] transition-colors duration-300">
-              Admin
+              {user?.role || "Admin"}
             </p>
           </div>
         </div>

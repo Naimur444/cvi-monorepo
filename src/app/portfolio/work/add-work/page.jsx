@@ -1,19 +1,17 @@
-import Layout from "@/app/components/Layout";
 import MenuItem from "@/app/components/re-usable/MenuItem";
 import React from "react";
 
 const page = () => {
   return (
     <section>
-      <Layout>
-        <div className="mb-6">
-          <MenuItem
-            parent={"Portfolio"}
-            page={"Work"}
-            addPage={"Add Work"}
-            href={"/portfolio/work"}
-          />
-        </div>
+      <div className="mb-6">
+        <MenuItem
+          parent={"Portfolio"}
+          page={"Work"}
+          addPage={"Add Work"}
+          href={"/portfolio/work"}
+        />
+      </div>
 
         <div className="bg-white rounded-2xl p-4">
           <h3 className="text-[#181818] font-bold text-lg mb-6">Add Works</h3>
@@ -115,7 +113,6 @@ const page = () => {
             </button>
           </div>
         </div>
-      </Layout>
     </section>
   );
 };

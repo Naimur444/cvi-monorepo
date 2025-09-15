@@ -1,4 +1,3 @@
-import Layout from "@/app/components/Layout";
 import MenuItem from "@/app/components/re-usable/MenuItem";
 import Link from "next/link";
 import React from "react";
@@ -6,14 +5,13 @@ import React from "react";
 const LeadershipTeamPage = () => {
   return (
     <section>
-      <Layout>
-        <div className="mb-6">
-          <MenuItem
-            page={"About"}
-            addPage={"Leadership Team"}
-            href={"/about"}
-          />
-        </div>
+      <div className="mb-6">
+        <MenuItem
+          page={"About"}
+          addPage={"Leadership Team"}
+          href={"/about"}
+        />
+      </div>
 
         <div className="bg-white p-4 rounded-2xl">
           <h3 className="text-[#181818] font-bold text-xl mb-6">Add</h3>

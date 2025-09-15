@@ -1,14 +1,38 @@
 "use client";
+"use client";
+
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState, useCallback } from "react";
+import { useAuth } from "../../contexts/AuthContext";
+import toast from "react-hot-toast";
 
 export default function Sidebar() {
   const pathname = usePathname();
   const router = useRouter();
+  const { logout } = useAuth();
   const [manuallyExpanded, setManuallyExpanded] = useState(new Set());
   const [isNavigating, setIsNavigating] = useState(false);
   const [currentPath, setCurrentPath] = useState(pathname);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+
+  // Handle logout
+  const handleLogout = async () => {
+    if (isLoggingOut) return;
+    
+    setIsLoggingOut(true);
+    
+    try {
+      await logout();
+      toast.success("Logged out successfully");
+      router.push("/");
+    } catch (error) {
+      toast.error("Logout failed");
+      console.error("Logout error:", error);
+    } finally {
+      setIsLoggingOut(false);
+    }
+  };
 
   // Define all menu items in one place
   const menuItems = [
@@ -537,36 +561,40 @@ export default function Sidebar() {
           </button>
 
           <button
-            className="btn-enhanced flex items-center gap-2.5 px-3 py-2.5 w-full text-white bg-gradient-to-t from-[#0E4F53] to-[#009EA1] rounded-lg text-sm cursor-pointer transition-all duration-500 ease-out hover:shadow-xl hover:scale-[1.02] hover:from-[#0E4F53] hover:via-[#009EA1] hover:to-[#0E4F53]"
-            onClick={() => {
-              // Handle logout logic here
-              console.log("Logout clicked");
-            }}
+            className="btn-enhanced flex items-center gap-2.5 px-3 py-2.5 w-full text-white bg-gradient-to-t from-[#0E4F53] to-[#009EA1] rounded-lg text-sm cursor-pointer transition-all duration-500 ease-out hover:shadow-xl hover:scale-[1.02] hover:from-[#0E4F53] hover:via-[#009EA1] hover:to-[#0E4F53] disabled:opacity-50 disabled:cursor-not-allowed"
+            onClick={handleLogout}
+            disabled={isLoggingOut}
           >
             <div className="transition-transform duration-300 hover:scale-110">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-              >
-                <path
-                  d="M11 3L10.3374 3.23384C7.75867 4.144 6.46928 4.59908 5.73464 5.63742C5 6.67576 5 8.0431 5 10.7778V13.2222C5 15.9569 5 17.3242 5.73464 18.3626C6.46928 19.4009 7.75867 19.856 10.3374 20.7662L11 21"
-                  stroke="white"
-                  stroke-width="1.5"
-                  stroke-linecap="round"
-                />
-                <path
-                  d="M21 12H11M21 12C21 11.2998 19.0057 9.99153 18.5 9.5M21 12C21 12.7002 19.0057 14.0085 18.5 14.5"
-                  stroke="white"
-                  stroke-width="1.5"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-              </svg>
+              {isLoggingOut ? (
+                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+              ) : (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                >
+                  <path
+                    d="M11 3L10.3374 3.23384C7.75867 4.144 6.46928 4.59908 5.73464 5.63742C5 6.67576 5 8.0431 5 10.7778V13.2222C5 15.9569 5 17.3242 5.73464 18.3626C6.46928 19.4009 7.75867 19.856 10.3374 20.7662L11 21"
+                    stroke="white"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                  />
+                  <path
+                    d="M21 12H11M21 12C21 11.2998 19.0057 9.99153 18.5 9.5M21 12C21 12.7002 19.0057 14.0085 18.5 14.5"
+                    stroke="white"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              )}
             </div>
-            <span className="font-medium text-sm">Logout</span>
+            <span className="font-medium text-sm">
+              {isLoggingOut ? "Logging out..." : "Logout"}
+            </span>
           </button>
         </div>
       </div>

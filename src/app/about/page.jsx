@@ -1,6 +1,5 @@
 "use client";
 import React, { useState } from "react";
-import Layout from "../components/Layout";
 import MenuItem from "../components/re-usable/MenuItem";
 import DataTable from "@/components/DataTable";
 import Link from "next/link";
@@ -97,10 +96,9 @@ const AboutPage = () => {
   };
   return (
     <section>
-      <Layout>
-        <div className="mb-6">
-          <MenuItem page={"About"} href={"/about"} />
-        </div>
+      <div className="mb-6">
+        <MenuItem page={"About"} href={"/about"} />
+      </div>
 
         <div className="bg-white p-4 rounded-2xl mb-6">
           <div className="flex items-center justify-between mb-6 border-b border-[#DCDCDC] pb-4">
@@ -452,7 +450,6 @@ const AboutPage = () => {
             data={others}
           />
         </div>
-      </Layout>
     </section>
   );
 };

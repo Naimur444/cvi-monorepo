@@ -25,11 +25,15 @@ import { AdvantageModule } from './advantage/advantage.module';
 import { ClientFeedbackModule } from './clientFeedback/clientFeedback.module';
 import { TermsModule } from './terms/terms.module';
 import { PolicyModule } from './policy/policy.module';
+import { CareerModule } from './career/career.module';
+import { JobApplication } from './career/entities/job-application.entity';
+import { AuthModule } from './auth/auth.module';
+import { AdminUser } from './auth/entities/admin-user.entity';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      isGlobal: true
+      isGlobal: true,
     }),
     TypeOrmModule.forRoot({
       type: 'mysql',
@@ -37,13 +41,21 @@ import { PolicyModule } from './policy/policy.module';
       port: parseInt(process.env.DB_PORT || '3306'),
       username: process.env.DB_USER,
       password: process.env.DB_PASS,
-      database: process.env.DB_NAME, 
-      entities: [Job, AboutUs, Candidate, Ladership, Faqs, ContactUs, ContactFrom, UserContact],
+      database: process.env.DB_NAME,
+      entities: [
+        Job,
+        AboutUs,
+        Candidate,
+        Ladership,
+        Faqs,
+        ContactUs,
+        ContactFrom,
+        UserContact,
+        JobApplication,
+        AdminUser,
+      ],
       autoLoadEntities: true,
-      synchronize: false,
-       
-
-
+      synchronize: true,
     }),
 
     JobModule,
@@ -59,9 +71,11 @@ import { PolicyModule } from './policy/policy.module';
     AdvantageModule,
     ClientFeedbackModule,
     TermsModule,
-    PolicyModule
+    PolicyModule,
+    CareerModule,
+    AuthModule,
   ],
-  controllers: [AppController], 
+  controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}

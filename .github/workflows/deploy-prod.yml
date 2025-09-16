@@ -1,0 +1,142 @@
+name: Deploy Backend API to Production (Contabo)
+
+on:
+  push:
+    branches:
+      - prod
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+
+    - name: Set start time
+      id: start
+      run: echo "start_time=$(date +%s)" >> $GITHUB_OUTPUT
+
+    - name: Deploy to Contabo Server
+      id: deploy_step
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.CONTABO_SSH_HOST }}
+        username: ${{ secrets.CONTABO_SSH_USER }}
+        password: ${{ secrets.CONTABO_SSH_PASS }}
+        script: |
+          set -e
+          
+          echo "🚀 Starting backend API deployment process..."
+          
+          APP_NAME="cvi-backend"
+          APP_DIR="/var/www/cloudvortexi_usr/data/www/api.cloudvortexinnovation.com"
+          REPO_URL="https://${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/${{ github.repository }}.git"
+          
+          echo "⏹️  Stopping PM2 process..."
+          pm2 stop $APP_NAME || echo "PM2 process not running"
+          pm2 delete $APP_NAME || echo "PM2 process not found"
+          
+          echo "🗑️  Removing existing codebase..."
+          rm -rf $APP_DIR
+          
+          echo "📥 Cloning new codebase..."
+          mkdir -p $APP_DIR
+          cd $APP_DIR
+          git clone -b prod $REPO_URL .
+          
+          echo "🧹 Clearing npm cache..."
+          npm cache clean --force
+          
+          echo "📦 Installing dependencies..."
+          npm ci
+          
+          echo "🔨 Building application..."
+          npm run build
+          
+          echo "▶️  Starting application with PM2..."
+          PORT=3002 pm2 start npm --name "$APP_NAME" -- run start:prod
+          
+          echo "💾 Saving PM2 configuration..."
+          pm2 save
+          
+          echo "📊 PM2 Status:"
+          pm2 status
+          
+          echo "✅ Backend API deployment completed successfully!"
+
+    - name: Send Success Discord Notification
+      if: success()
+      run: |
+        end_time=$(date +%s)
+        start_time=${{ steps.start.outputs.start_time }}
+        duration=$((end_time - start_time))
+        minutes=$((duration / 60))
+        seconds=$((duration % 60))
+
+        commit_msg="$(git log -1 --pretty=%B)"
+        deployed_at="$(TZ=Asia/Dhaka date '+%Y-%m-%d %H:%M %Z')"
+
+        payload=$(jq -n \
+          --arg title "✅ Backend API Deployment Completed" \
+          --arg changes "$commit_msg" \
+          --arg duration "${minutes}m ${seconds}s" \
+          --arg deployed_at "$deployed_at" \
+          '{
+            embeds: [
+              {
+                title: $title,
+                color: 3066993,
+                fields: [
+                  {name: "🔄 Changes", value: $changes, inline: false},
+                  {name: "⏱️ Duration", value: $duration, inline: true},
+                  {name: "📅 Deployed At", value: $deployed_at, inline: true},
+                  {name: "🌐 API URL", value: "https://api.cloudvortexinnovation.com", inline: true},
+                  {name: "🔌 Port", value: "3002", inline: true}
+                ]
+              }
+            ]
+          }')
+
+        curl -H "Content-Type: application/json" \
+             -d "$payload" \
+             ${{ secrets.DISCORD_WEBHOOK_URL }}
+
+    - name: Send Failure Discord Notification
+      if: failure()
+      run: |
+        end_time=$(date +%s)
+        start_time=${{ steps.start.outputs.start_time }}
+        duration=$((end_time - start_time))
+        minutes=$((duration / 60))
+        seconds=$((duration % 60))
+
+        error_msg="Backend API deployment failed during execution."
+
+        deployed_at="$(TZ=Asia/Dhaka date '+%Y-%m-%d %H:%M %Z')"
+
+        payload=$(jq -n \
+          --arg title "❌ Backend API Deployment Failed" \
+          --arg changes "$error_msg" \
+          --arg duration "${minutes}m ${seconds}s" \
+          --arg deployed_at "$deployed_at" \
+          '{
+            embeds: [
+              {
+                title: $title,
+                color: 15158332,
+                fields: [
+                  {name: "⚠️ Error", value: $changes, inline: false},
+                  {name: "⏱️ Duration", value: $duration, inline: true},
+                  {name: "📅 Attempted At", value: $deployed_at, inline: true},
+                  {name: "🌐 API URL", value: "https://api.cloudvortexinnovation.com", inline: true}
+                ]
+              }
+            ]
+          }')
+
+        curl -H "Content-Type: application/json" \
+             -d "$payload" \
+             ${{ secrets.DISCORD_WEBHOOK_URL }}

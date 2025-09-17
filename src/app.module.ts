@@ -55,7 +55,17 @@ import { AdminUser } from './auth/entities/admin-user.entity';
         AdminUser,
       ],
       autoLoadEntities: true,
-      synchronize: true,
+      synchronize: process.env.DB_SYNCHRONIZE === 'true',
+      timezone: process.env.DB_TIMEZONE || 'Z',
+      extra: {
+        connectionLimit: 10,
+        acquireTimeout: 60000,
+        timeout: 60000,
+      },
+      // Fix MySQL timestamp issues
+      supportBigNumbers: true,
+      bigNumberStrings: false,
+      dateStrings: false,
     }),
 
     JobModule,

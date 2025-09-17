@@ -56,8 +56,34 @@ jobs:
           echo "🔨 Building application..."
           npm run build
           
+          echo "📝 Creating production .env file..."
+          cat > .env << EOF
+PORT=3002
+
+#DB
+DB_HOST='${{ secrets.DB_HOST }}'
+DB_PORT=${{ secrets.DB_PORT }}
+DB_USER='${{ secrets.DB_USER }}'
+DB_PASS='${{ secrets.DB_PASS }}'
+DB_NAME='${{ secrets.DB_NAME }}'
+DB_TYPE='mysql'
+
+#JWT
+JWT_SECRET='${{ secrets.JWT_SECRET }}'
+
+#MySQL Configuration
+DB_SYNCHRONIZE=true
+DB_TIMEZONE=Z
+EOF
+          
+          echo "🔧 Setting MySQL timezone and compatibility..."
+          mysql -u${{ secrets.DB_USER }} -p${{ secrets.DB_PASS }} -h${{ secrets.DB_HOST }} ${{ secrets.DB_NAME }} -e "SET SESSION sql_mode = 'ALLOW_INVALID_DATES'; SET SESSION time_zone = '+00:00';" || echo "MySQL session configuration skipped"
+          
+          echo "🏥 Ensuring database exists..."
+          mysql -u${{ secrets.DB_USER }} -p${{ secrets.DB_PASS }} -h${{ secrets.DB_HOST }} -e "CREATE DATABASE IF NOT EXISTS ${{ secrets.DB_NAME }};" || echo "Database creation skipped"
+          
           echo "▶️  Starting application with PM2..."
-          PORT=3002 pm2 start npm --name "$APP_NAME" -- run start:prod
+          pm2 start ecosystem.config.js
           
           echo "💾 Saving PM2 configuration..."
           pm2 save

@@ -53,6 +53,11 @@ jobs:
           echo "📦 Installing dependencies..."
           npm ci
           
+          echo "📝 Creating production .env.local file..."
+          cat > .env.local << EOF
+NEXT_PUBLIC_API_URL=http://api.cloudvortexinnovation.com
+EOF
+          
           echo "🔨 Building application..."
           npm run build
           

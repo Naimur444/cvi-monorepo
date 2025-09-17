@@ -14,6 +14,7 @@ jobs:
       uses: actions/checkout@v4
       with:
         token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+        fetch-depth: 0  # Fetch full history for git log
 
     - name: Set start time
       id: start
@@ -35,34 +36,69 @@ jobs:
           APP_DIR="/var/www/cloudvortexi_usr/data/www/sscviadmin.cloudvortexinnovation.com"
           REPO_URL="https://${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/${{ github.repository }}.git"
           
-          echo "⏹️  Stopping PM2 process..."
-          pm2 stop $APP_NAME || echo "PM2 process not running"
-          pm2 delete $APP_NAME || echo "PM2 process not found"
-          
-          echo "🗑️  Removing existing codebase..."
-          rm -rf $APP_DIR
+          # Check if directory exists before operations
+          if [ -d "$APP_DIR" ]; then
+            cd "$APP_DIR"
+            echo "⏹️  Stopping PM2 process..."
+            pm2 stop $APP_NAME 2>/dev/null || echo "PM2 process not running"
+            pm2 delete $APP_NAME 2>/dev/null || echo "PM2 process not found"
+            
+            echo "🗑️  Removing existing codebase..."
+            cd /
+            rm -rf "$APP_DIR"
+          else
+            echo "📁 Directory doesn't exist, creating new deployment..."
+          fi
           
           echo "📥 Cloning new codebase..."
-          mkdir -p $APP_DIR
-          cd $APP_DIR
-          git clone -b prod $REPO_URL .
+          mkdir -p "$APP_DIR"
+          cd "$APP_DIR"
+          git clone -b prod "$REPO_URL" .
+          
+          # Verify Node.js and npm are available
+          echo "🔍 Checking Node.js version..."
+          node --version
+          npm --version
           
           echo "🧹 Clearing npm cache..."
           npm cache clean --force
           
           echo "📦 Installing dependencies..."
-          npm ci
+          # Use npm install instead of npm ci if package-lock.json might not exist
+          if [ -f "package-lock.json" ]; then
+            npm ci
+          else
+            npm install
+          fi
           
           echo "📝 Creating production .env.local file..."
-          cat > .env.local << EOF
-NEXT_PUBLIC_API_URL=http://api.cloudvortexinnovation.com
-EOF
+          cat > .env.local << 'EOF'
+          NEXT_PUBLIC_API_URL=http://api.cloudvortexinnovation.com
+          EOF
           
           echo "🔨 Building application..."
           npm run build
           
+          # Check if build was successful
+          if [ ! -d ".next" ]; then
+            echo "❌ Build failed - .next directory not found"
+            exit 1
+          fi
+          
           echo "▶️  Starting application with PM2..."
+          # Use absolute path and proper pm2 ecosystem file if needed
+          cd "$APP_DIR"
           PORT=3001 pm2 start npm --name "$APP_NAME" -- start
+          
+          # Wait a moment for the process to start
+          sleep 5
+          
+          # Verify the process started successfully
+          if ! pm2 list | grep -q "$APP_NAME.*online"; then
+            echo "❌ Failed to start PM2 process"
+            pm2 logs "$APP_NAME" --lines 20
+            exit 1
+          fi
           
           echo "💾 Saving PM2 configuration..."
           pm2 save
@@ -70,7 +106,30 @@ EOF
           echo "📊 PM2 Status:"
           pm2 status
           
+          echo "🌐 Testing application..."
+          # Give the app time to fully start
+          sleep 10
+          
+          # Test if the application is responding (optional)
+          if command -v curl >/dev/null; then
+            if curl -f -s http://localhost:3001 >/dev/null; then
+              echo "✅ Application is responding on port 3001"
+            else
+              echo "⚠️  Application may not be responding properly"
+              pm2 logs "$APP_NAME" --lines 10
+            fi
+          fi
+          
           echo "✅ Deployment completed successfully!"
+
+    - name: Get commit info
+      id: commit_info
+      if: always()
+      run: |
+        commit_msg="$(git log -1 --pretty=format:'%s' 2>/dev/null || echo 'No commit message available')"
+        echo "commit_msg<<EOF" >> $GITHUB_OUTPUT
+        echo "$commit_msg" >> $GITHUB_OUTPUT
+        echo "EOF" >> $GITHUB_OUTPUT
 
     - name: Send Success Discord Notification
       if: success()
@@ -81,7 +140,7 @@ EOF
         minutes=$((duration / 60))
         seconds=$((duration % 60))
 
-        commit_msg="$(git log -1 --pretty=%B)"
+        commit_msg="${{ steps.commit_info.outputs.commit_msg }}"
         deployed_at="$(TZ=Asia/Dhaka date '+%Y-%m-%d %H:%M %Z')"
 
         payload=$(jq -n \
@@ -89,6 +148,8 @@ EOF
           --arg changes "$commit_msg" \
           --arg duration "${minutes}m ${seconds}s" \
           --arg deployed_at "$deployed_at" \
+          --arg branch "${{ github.ref_name }}" \
+          --arg commit "${{ github.sha }}" \
           '{
             embeds: [
               {
@@ -96,8 +157,10 @@ EOF
                 color: 3066993,
                 fields: [
                   {name: "🔄 Changes", value: $changes, inline: false},
+                  {name: "🌿 Branch", value: $branch, inline: true},
                   {name: "⏱️ Duration", value: $duration, inline: true},
-                  {name: "📅 Deployed At", value: $deployed_at, inline: true}
+                  {name: "📅 Deployed At", value: $deployed_at, inline: true},
+                  {name: "💡 Commit", value: $commit[0:7], inline: true}
                 ]
               }
             ]
@@ -105,7 +168,7 @@ EOF
 
         curl -H "Content-Type: application/json" \
              -d "$payload" \
-             ${{ secrets.DISCORD_WEBHOOK_URL }}
+             "${{ secrets.DISCORD_WEBHOOK_URL }}"
 
     - name: Send Failure Discord Notification
       if: failure()
@@ -116,24 +179,29 @@ EOF
         minutes=$((duration / 60))
         seconds=$((duration % 60))
 
-        error_msg="Deployment failed during execution."
-
+        commit_msg="${{ steps.commit_info.outputs.commit_msg }}"
         deployed_at="$(TZ=Asia/Dhaka date '+%Y-%m-%d %H:%M %Z')"
 
         payload=$(jq -n \
-          --arg title "❌ Deployment Failed" \
-          --arg changes "$error_msg" \
+          --arg title "❌ Deployment Failed (CVI-Admin)" \
+          --arg changes "$commit_msg" \
+          --arg error "Deployment failed during execution. Check GitHub Actions logs for details." \
           --arg duration "${minutes}m ${seconds}s" \
           --arg deployed_at "$deployed_at" \
+          --arg branch "${{ github.ref_name }}" \
+          --arg commit "${{ github.sha }}" \
           '{
             embeds: [
               {
                 title: $title,
                 color: 15158332,
                 fields: [
-                  {name: "⚠️ Error", value: $changes, inline: false},
+                  {name: "🔄 Changes", value: $changes, inline: false},
+                  {name: "⚠️ Error", value: $error, inline: false},
+                  {name: "🌿 Branch", value: $branch, inline: true},
                   {name: "⏱️ Duration", value: $duration, inline: true},
-                  {name: "📅 Attempted At", value: $deployed_at, inline: true}
+                  {name: "📅 Attempted At", value: $deployed_at, inline: true},
+                  {name: "💡 Commit", value: $commit[0:7], inline: true}
                 ]
               }
             ]
@@ -141,4 +209,4 @@ EOF
 
         curl -H "Content-Type: application/json" \
              -d "$payload" \
-             ${{ secrets.DISCORD_WEBHOOK_URL }}
+             "${{ secrets.DISCORD_WEBHOOK_URL }}"

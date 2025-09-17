@@ -61,15 +61,15 @@ jobs:
 PORT=3002
 
 #DB
-DB_HOST='${{ secrets.DB_HOST }}'
+DB_HOST=${{ secrets.DB_HOST }}
 DB_PORT=${{ secrets.DB_PORT }}
-DB_USER='${{ secrets.DB_USER }}'
-DB_PASS='${{ secrets.DB_PASS }}'
-DB_NAME='${{ secrets.DB_NAME }}'
-DB_TYPE='mysql'
+DB_USER=${{ secrets.DB_USER }}
+DB_PASS=${{ secrets.DB_PASS }}
+DB_NAME=${{ secrets.DB_NAME }}
+DB_TYPE=mysql
 
 #JWT
-JWT_SECRET='${{ secrets.JWT_SECRET }}'
+JWT_SECRET=${{ secrets.JWT_SECRET }}
 
 #MySQL Configuration
 DB_SYNCHRONIZE=true

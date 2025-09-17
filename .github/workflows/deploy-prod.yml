@@ -72,12 +72,8 @@ jobs:
           npm cache clean --force
           
           echo "📦 Installing dependencies..."
-          # Use npm install instead of npm ci if package-lock.json might not exist
-          if [ -f "package-lock.json" ]; then
-            npm ci
-          else
-            npm install
-          fi
+          # Always use npm install for production deployments to handle package.json changes
+          npm install
           
           echo "📝 Creating production .env.local file..."
           cat > .env.local << 'EOF'

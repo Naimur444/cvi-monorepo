@@ -22,7 +22,7 @@ echo "🧹 Clearing all caches..."
 npm cache clean --force
 npx next cache clean 2>/dev/null || echo "Next.js cache clean not available"
 
-echo "🔧 Installing missing dependencies..."
+echo "🔧 Installing/updating dependencies..."
 npm install
 
 echo "📝 Ensuring production environment..."

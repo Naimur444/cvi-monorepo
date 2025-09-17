@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://api.cloudvortexinnovation.com';
 
 // Create axios instance
 const api = axios.create({

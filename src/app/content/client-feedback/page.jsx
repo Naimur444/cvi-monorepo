@@ -5,6 +5,7 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import TableFilter from "@/components/FilterTable";
+import api from '@/utils/api';
 
 const ClientFeedbackPage = () => {
   const [feedbacks, setFeedbacks] = useState([]);
@@ -15,12 +16,6 @@ const ClientFeedbackPage = () => {
   const [message, setMessage] = useState(null);
   const [filters, setFilters] = useState({ status: "", name: "" });
 
-  const API_BASE =
-    process.env.NEXT_PUBLIC_API_URL ||
-    process.env.NEXT_PUBLIC_VITE_API_URL ||
-    process.env.NEXT_PUBLIC_REACT_APP_API_URL ||
-    (process.env.NODE_ENV === "development" ? "http://localhost:3002" : "");
-
   const fetchFeedbacks = async (qs = {}) => {
     setLoading(true);
     setError(null);
@@ -28,19 +23,14 @@ const ClientFeedbackPage = () => {
       const params = new URLSearchParams();
       if (qs.status) params.append("status", qs.status);
       if (qs.name) params.append("name", qs.name);
-      const url = API_BASE
-        ? `${API_BASE.replace(/\/$/, "")}/client-feedback${
-            params.toString() ? `?${params.toString()}` : ""
-          }`
-        : `/api/client-feedback${
-            params.toString() ? `?${params.toString()}` : ""
-          }`;
-      const res = await fetch(url);
-      if (!res.ok) throw new Error(`Failed to fetch feedbacks: ${res.status}`);
-      const data = await res.json();
+      const url = `/client-feedback${
+        params.toString() ? `?${params.toString()}` : ""
+      }`;
+      const response = await api.get(url);
+      const data = response.data;
       setFeedbacks(Array.isArray(data) ? data : data?.data || []);
     } catch (err) {
-      setError(err.message || "Failed to load client feedbacks");
+      setError(err.response?.data?.message || err.message || "Failed to load client feedbacks");
     } finally {
       setLoading(false);
     }
@@ -67,14 +57,7 @@ const ClientFeedbackPage = () => {
       )
     );
     try {
-      const url = API_BASE
-        ? `${API_BASE.replace(/\/$/, "")}/client-feedback/${id}`
-        : `/api/client-feedback/${id}`;
-      await fetch(url, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({}),
-      });
+      await api.patch(`/client-feedback/${id}`, {});
     } catch (e) {
       // revert on failure
       setFeedbacks((prev) =>
@@ -98,18 +81,11 @@ const ClientFeedbackPage = () => {
     setMessage(null);
     setDeletingId(id);
     try {
-      const url = API_BASE
-        ? `${API_BASE.replace(/\/$/, "")}/client-feedback/${id}`
-        : `/api/client-feedback/${id}`;
-      const res = await fetch(url, { method: "DELETE" });
-      if (!res.ok) {
-        const text = await res.text();
-        throw new Error(text || `Delete failed: ${res.status}`);
-      }
+      await api.delete(`/client-feedback/${id}`);
       setFeedbacks((prev) => prev.filter((f) => String(f.id) !== String(id)));
       toast.success("Client feedback deleted.");
     } catch (err) {
-      toast.error(err.message || "Failed to delete.");
+      toast.error(err.response?.data?.message || err.message || "Failed to delete.");
     } finally {
       setDeletingId(null);
       setConfirmingId(null);

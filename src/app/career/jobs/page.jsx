@@ -3,6 +3,7 @@ import MenuItem from "@/app/components/re-usable/MenuItem";
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
 import DataTable from "@/components/DataTable";
+import api from '@/utils/api';
 
 const careerJobs = () => {
   const [jobs, setJobs] = useState([]);
@@ -12,12 +13,6 @@ const careerJobs = () => {
   const [message, setMessage] = useState(null);
   const [filters, setFilters] = useState({ status: "", title: "" });
 
-  const API_BASE =
-    process.env.NEXT_PUBLIC_API_URL ||
-    process.env.NEXT_PUBLIC_VITE_API_URL ||
-    process.env.NEXT_PUBLIC_REACT_APP_API_URL ||
-    (process.env.NODE_ENV === "development" ? "http://localhost:3002" : "");
-
   const fetchJobs = async (qs = {}) => {
     setLoading(true);
     setError(null);
@@ -25,18 +20,13 @@ const careerJobs = () => {
       const params = new URLSearchParams();
       if (qs.status) params.append("status", qs.status);
       if (qs.title) params.append("title", qs.title);
-      const url = API_BASE
-        ? `${API_BASE.replace(/\/$/, "")}/jobs${
-            params.toString() ? `?${params.toString()}` : ""
-          }`
-        : `/api/jobs${params.toString() ? `?${params.toString()}` : ""}`;
-
-      const res = await fetch(url);
-      if (!res.ok) throw new Error(`Failed to fetch jobs: ${res.status}`);
-      const data = await res.json();
+      const url = `/jobs${params.toString() ? `?${params.toString()}` : ""}`;
+      
+      const response = await api.get(url);
+      const data = response.data;
       setJobs(Array.isArray(data) ? data : data?.data || []);
     } catch (err) {
-      setError(err.message || "Failed to load jobs");
+      setError(err.response?.data?.message || err.message || "Failed to load jobs");
     } finally {
       setLoading(false);
     }
@@ -61,20 +51,13 @@ const careerJobs = () => {
     setMessage(null);
     setDeletingId(id);
     try {
-      const url = API_BASE
-        ? `${API_BASE.replace(/\/$/, "")}/jobs/${id}`
-        : `/api/jobs/${id}`;
-      const res = await fetch(url, { method: "DELETE" });
-      if (!res.ok) {
-        const text = await res.text();
-        throw new Error(text || `Delete failed: ${res.status}`);
-      }
+      await api.delete(`/jobs/${id}`);
       setJobs((prev) => prev.filter((j) => String(j.id) !== String(id)));
       setMessage({ type: "success", text: "Job deleted." });
     } catch (err) {
       setMessage({
         type: "error",
-        text: err.message || "Failed to delete job",
+        text: err.response?.data?.message || err.message || "Failed to delete job",
       });
     } finally {
       setDeletingId(null);
@@ -92,14 +75,7 @@ const careerJobs = () => {
       )
     );
     try {
-      const url = API_BASE
-        ? `${API_BASE.replace(/\/$/, "")}/jobs/${id}`
-        : `/api/jobs/${id}`;
-      await fetch(url, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({}),
-      });
+      await api.patch(`/jobs/${id}`, {});
     } catch (e) {
       // on failure revert
       setJobs((prev) =>

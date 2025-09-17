@@ -2,6 +2,7 @@
 import Layout from "@/app/components/Layout";
 import MenuItem from "@/app/components/re-usable/MenuItem";
 import React, { useState } from "react";
+import api from '@/utils/api';
 
 const AddCareerJobs = () => {
   const [form, setForm] = useState({
@@ -18,12 +19,6 @@ const AddCareerJobs = () => {
   });
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState(null);
-
-  const API_BASE =
-    process.env.NEXT_PUBLIC_API_URL ||
-    process.env.NEXT_PUBLIC_VITE_API_URL ||
-    process.env.NEXT_PUBLIC_REACT_APP_API_URL ||
-    (process.env.NODE_ENV === "development" ? "http://localhost:3002" : "");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -62,21 +57,8 @@ const AddCareerJobs = () => {
 
     try {
       setLoading(true);
-      const url = API_BASE
-        ? `${API_BASE.replace(/\/$/, "")}/jobs`
-        : "/api/jobs";
-      const res = await fetch(url, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-
-      if (!res.ok) {
-        const text = await res.text();
-        throw new Error(text || `Request failed with status ${res.status}`);
-      }
-
-      const data = await res.json();
+      const response = await api.post('/jobs', payload);
+      const data = response.data;
       setMessage({ type: "success", text: "Job created successfully." });
       // Optionally clear form
       setForm({
@@ -95,7 +77,7 @@ const AddCareerJobs = () => {
     } catch (error) {
       setMessage({
         type: "error",
-        text: error.message || "Failed to create job",
+        text: error.response?.data?.message || error.message || "Failed to create job",
       });
     } finally {
       setLoading(false);

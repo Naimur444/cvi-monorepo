@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import React, { useState, useEffect, useMemo } from "react";
 import toast from "react-hot-toast";
+import api from '@/utils/api';
 
 const EditClientFeedbackPage = () => {
   const params = useParams();
@@ -20,27 +21,14 @@ const EditClientFeedbackPage = () => {
   const [isFetching, setIsFetching] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
 
-  const API_BASE = useMemo(
-    () =>
-      process.env.NEXT_PUBLIC_API_URL ||
-      process.env.NEXT_PUBLIC_VITE_API_URL ||
-      process.env.NEXT_PUBLIC_REACT_APP_API_URL ||
-      (process.env.NODE_ENV === "development" ? "http://localhost:3002" : ""),
-    []
-  );
-
   // Load existing data
   useEffect(() => {
     const load = async () => {
       if (!params?.id) return;
       setIsFetching(true);
       try {
-        const url = API_BASE
-          ? `${API_BASE.replace(/\/$/, "")}/client-feedback/${params.id}`
-          : `/api/client-feedback/${params.id}`;
-        const res = await fetch(url);
-        if (!res.ok) throw new Error(`Failed to load (${res.status})`);
-        const data = await res.json();
+        const response = await api.get(`/client-feedback/${params.id}`);
+        const data = response.data;
         const item = Array.isArray(data) ? data[0] : data?.data || data;
         setFormData({
           name: item?.name || item?.clientName || "",
@@ -54,13 +42,13 @@ const EditClientFeedbackPage = () => {
           status: item?.status === "active" || item?.status === true,
         });
       } catch (e) {
-        toast.error(e.message || "Failed to fetch item");
+        toast.error(e.response?.data?.message || e.message || "Failed to fetch item");
       } finally {
         setIsFetching(false);
       }
     };
     load();
-  }, [API_BASE, params?.id]);
+  }, [params?.id]);
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;

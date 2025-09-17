@@ -2,7 +2,7 @@
 // Open browser console and run this test
 
 async function testLogin() {
-  const API_URL = 'http://localhost:3002';
+  const API_URL = 'http://api.cloudvortexinnovation.com';
   
   console.log('🧪 Testing login functionality...');
   

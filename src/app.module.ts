@@ -29,6 +29,8 @@ import { CareerModule } from './career/career.module';
 import { JobApplication } from './career/entities/job-application.entity';
 import { AuthModule } from './auth/auth.module';
 import { AdminUser } from './auth/entities/admin-user.entity';
+import { PortfolioModule } from './portfolio/portfolio.module';
+import { Portfolio } from './portfolio/portfolio.entity';
 
 @Module({
   imports: [
@@ -53,6 +55,7 @@ import { AdminUser } from './auth/entities/admin-user.entity';
         UserContact,
         JobApplication,
         AdminUser,
+        Portfolio,
       ],
       autoLoadEntities: true,
       synchronize: process.env.DB_SYNCHRONIZE === 'true',
@@ -82,6 +85,7 @@ import { AdminUser } from './auth/entities/admin-user.entity';
     PolicyModule,
     CareerModule,
     AuthModule,
+    PortfolioModule,
   ],
   controllers: [AppController],
   providers: [AppService],

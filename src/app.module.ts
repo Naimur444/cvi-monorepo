@@ -59,8 +59,6 @@ import { AdminUser } from './auth/entities/admin-user.entity';
       timezone: process.env.DB_TIMEZONE || 'Z',
       extra: {
         connectionLimit: 10,
-        acquireTimeout: 60000,
-        timeout: 60000,
       },
       // Fix MySQL timestamp issues
       supportBigNumbers: true,

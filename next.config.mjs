@@ -4,9 +4,6 @@ const nextConfig = {
   compress: true,
   poweredByHeader: false,
   
-  // Disable telemetry in production
-  telemetry: false,
-  
   // Generate unique build id for proper cache busting
   generateBuildId: async () => {
     // Use timestamp + random string for unique build IDs to prevent chunk mismatches
@@ -15,7 +12,7 @@ const nextConfig = {
   
   // Ensure proper asset optimization
   experimental: {
-    optimizeCss: true,
+    optimizeCss: false, // Disable to avoid critters dependency issue
   },
 };
 

@@ -24,7 +24,7 @@ export default function Home() {
     if (error) {
       clearError();
     }
-  }, [email, password]);
+  }, [email, password, error, clearError]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

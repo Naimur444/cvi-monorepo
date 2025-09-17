@@ -22,6 +22,9 @@ echo "🧹 Clearing all caches..."
 npm cache clean --force
 npx next cache clean 2>/dev/null || echo "Next.js cache clean not available"
 
+echo "🔧 Installing missing dependencies..."
+npm install
+
 echo "📝 Ensuring production environment..."
 cat > .env.local << 'EOF'
 NEXT_PUBLIC_API_URL=http://api.cloudvortexinnovation.com

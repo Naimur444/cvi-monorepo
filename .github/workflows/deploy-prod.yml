@@ -45,7 +45,15 @@ jobs:
             
             echo "🗑️  Removing existing codebase..."
             cd /
+            # Wait a moment to ensure PM2 process is fully stopped
+            sleep 3
             rm -rf "$APP_DIR"
+            
+            echo "🧹 Ensuring clean slate..."
+            # Double check the directory is gone and create fresh
+            if [ -d "$APP_DIR" ]; then
+              rm -rf "$APP_DIR"
+            fi
           else
             echo "📁 Directory doesn't exist, creating new deployment..."
           fi
@@ -76,8 +84,14 @@ jobs:
           NEXT_PUBLIC_API_URL=http://api.cloudvortexinnovation.com
           EOF
           
-          echo "🔨 Building application..."
+          echo "🗑️  Removing any existing .next directory..."
+          rm -rf .next
+          
+          echo "🔨 Building application with clean cache..."
           npm run build
+          
+          echo "🧹 Clearing Next.js cache after build..."
+          npx next cache clean || echo "Cache clean command not available, skipping..."
           
           # Check if build was successful
           if [ ! -d ".next" ]; then
@@ -85,9 +99,23 @@ jobs:
             exit 1
           fi
           
+          echo "✅ Build completed successfully, verifying build artifacts..."
+          # Check for essential build files
+          if [ ! -f ".next/BUILD_ID" ]; then
+            echo "❌ Build incomplete - BUILD_ID not found"
+            exit 1
+          fi
+          
+          echo "🔍 Build verification passed"
+          
           echo "▶️  Starting application with PM2..."
           # Use absolute path and proper pm2 ecosystem file if needed
           cd "$APP_DIR"
+          
+          # Ensure port is available by killing any process using it
+          lsof -ti:3001 | xargs kill -9 2>/dev/null || echo "Port 3001 is free"
+          
+          # Start with clean environment
           PORT=3001 pm2 start npm --name "$APP_NAME" -- start
           
           # Wait a moment for the process to start

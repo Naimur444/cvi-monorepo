@@ -130,7 +130,7 @@ export default function Home() {
           {/* Login Button */}
           <button
             type="submit"
-            disabled={isSubmitting || !email || !password}
+            disabled={isSubmitting || !email.trim() || !password.trim()}
             className="w-full py-3 px-4 bg-[#0E4F53] text-white rounded-xl font-semibold shadow-md hover:bg-teal-700 transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           >
             {isSubmitting ? (

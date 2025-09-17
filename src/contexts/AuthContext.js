@@ -97,17 +97,37 @@ export const AuthProvider = ({ children }) => {
         const accessToken = tokenManager.getAccessToken();
         const user = userManager.getUser();
 
-        if (accessToken && user && !tokenManager.isTokenExpired(accessToken)) {
-          // Verify token is still valid by fetching profile
-          try {
-            const profile = await authAPI.getProfile();
-            dispatch({
-              type: AUTH_ACTIONS.SET_USER,
-              payload: { user: profile },
-            });
-            userManager.setUser(profile);
-          } catch (error) {
-            // Token is invalid, clear everything
+        if (accessToken && user) {
+          // Only verify token if it's not expired
+          if (!tokenManager.isTokenExpired(accessToken)) {
+            try {
+              // Add timeout to prevent hanging
+              const timeoutPromise = new Promise((_, reject) => 
+                setTimeout(() => reject(new Error('Profile fetch timeout')), 5000)
+              );
+              
+              const profile = await Promise.race([
+                authAPI.getProfile(),
+                timeoutPromise
+              ]);
+              
+              dispatch({
+                type: AUTH_ACTIONS.SET_USER,
+                payload: { user: profile },
+              });
+              userManager.setUser(profile);
+            } catch (error) {
+              console.warn('Token verification failed:', error.message);
+              // Token is invalid, clear everything
+              tokenManager.clearTokens();
+              userManager.clearUser();
+              dispatch({
+                type: AUTH_ACTIONS.SET_USER,
+                payload: { user: null },
+              });
+            }
+          } else {
+            // Token is expired, clear everything
             tokenManager.clearTokens();
             userManager.clearUser();
             dispatch({
@@ -126,6 +146,9 @@ export const AuthProvider = ({ children }) => {
         }
       } catch (error) {
         console.error('Auth initialization failed:', error);
+        // Clear everything on any error
+        tokenManager.clearTokens();
+        userManager.clearUser();
         dispatch({
           type: AUTH_ACTIONS.SET_USER,
           payload: { user: null },

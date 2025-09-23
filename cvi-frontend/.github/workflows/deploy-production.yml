@@ -1,0 +1,121 @@
+name: Deploy CVI Frontend to Contabo (Production)
+
+on:
+  push:
+    branches:
+      - prod
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Deploy via SSH
+      uses: appleboy/ssh-action@v0.1.7
+      with:
+        host: ${{ secrets.CONTABO_SSH_HOST }}
+        username: ${{ secrets.CONTABO_SSH_USER }}
+        password: ${{ secrets.CONTABO_SSH_PASS }}
+        port: 22
+        timeout: 300s
+        command_timeout: 30m
+        script: |
+          set -e  # Exit on any error
+          
+          # Define variables
+          DEPLOY_DIR="$HOME/www/cloudvortexinnovation.com"
+          BACKUP_DIR="$HOME/www/cloudvortexinnovation.com.backup.$(date +%s)"
+          
+          echo "Starting frontend deployment..."
+          
+          # Stop existing PM2 process first (ignore errors if not running)
+          echo "Stopping existing application..."
+          pm2 stop cvi-public 2>/dev/null || echo "cvi-public not running"
+          pm2 delete cvi-public 2>/dev/null || echo "cvi-public not found"
+          
+          # Move existing deployment to backup (avoids permission issues)
+          if [ -d "$DEPLOY_DIR" ]; then
+              echo "Backing up existing deployment..."
+              mv "$DEPLOY_DIR" "$BACKUP_DIR"
+          fi
+          
+          # Create fresh deployment directory
+          mkdir -p "$DEPLOY_DIR"
+          cd "$DEPLOY_DIR"
+          
+          # Clone frontend repository directly to deployment directory
+          echo "Cloning frontend repository..."
+          git clone https://${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/${{ github.repository }}.git .
+          git checkout prod
+          
+          # Verify package.json exists
+          if [ ! -f "package.json" ]; then
+              echo "Error: package.json not found"
+              exit 1
+          fi
+          
+          echo "Repository cloned successfully. Contents:"
+          ls -la
+          
+          # Create production environment file for FRONTEND
+          echo "Setting up environment variables..."
+          cat > .env.local << EOF
+          NEXT_PUBLIC_API_URL=https://api.cloudvortexinnovation.com
+          NEXT_PUBLIC_SITE_URL=https://cloudvortexinnovation.com
+          NODE_ENV=production
+          EOF
+          
+          # Install dependencies and build
+          echo "Installing dependencies..."
+          npm ci
+          
+          echo "Building application..."
+          npm run build
+          
+          # Set proper permissions
+          find . -type f -exec chmod 644 {} \; 2>/dev/null || true
+          find . -type d -exec chmod 755 {} \; 2>/dev/null || true
+          chmod -R 755 .next 2>/dev/null || true
+          chmod -R 755 public 2>/dev/null || true
+          chmod 644 .env.local 2>/dev/null || true
+          
+          # Ensure PM2 is available
+          if ! command -v pm2 &> /dev/null; then
+              echo "Installing PM2..."
+              npm install -g pm2
+          fi
+          
+          # Create PM2 ecosystem file for FRONTEND
+          cat > ecosystem.config.js << 'EOF'
+          module.exports = {
+            apps: [{
+              name: 'cvi-public',
+              script: 'npm',
+              args: 'start',
+              instances: 1,
+              autorestart: true,
+              watch: false,
+              max_memory_restart: '1G',
+              env: {
+                NODE_ENV: 'production',
+                PORT: 3000
+              }
+            }]
+          };
+          EOF
+          
+          # Start the application
+          echo "Starting frontend application..."
+          pm2 start ecosystem.config.js
+          pm2 save
+          
+          # Clean up old backup after successful deployment (in background)
+          if [ -d "$BACKUP_DIR" ]; then
+              echo "Cleaning up backup..."
+              (rm -rf "$BACKUP_DIR" 2>/dev/null || true) &
+          fi
+          
+          echo "✅ Frontend deployment completed successfully!"
+          echo "Frontend site: https://cloudvortexinnovation.com"
+          pm2 status

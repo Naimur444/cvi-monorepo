@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  frontend:
+    build: .
+    image: cvi-services
+    container_name: cvi-frontend
+    ports:
+      - "3000:3000"
+    env_file: .env
+    command: ["npm", "start", "--", "-p", "3000"]
+    working_dir: /app/cvi-frontend
+
+  admin:
+    image: cvi-services
+    container_name: cvi-admin
+    ports:
+      - "3001:3001"
+    env_file: .env
+    command: ["npm", "start", "--", "-p", "3001"]
+    working_dir: /app/cvi-admin
+    depends_on:
+      - frontend
+
+  backend:
+    image: cvi-services
+    container_name: cvi-backend
+    ports:
+      - "3002:3002"
+    env_file: .env
+    command: ["node", "dist/main.js"]
+    working_dir: /app/cvi-backend
+    depends_on:
+      - admin

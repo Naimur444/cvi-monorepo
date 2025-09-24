@@ -1,0 +1,275 @@
+name: Deploy CVI with Docker (Contabo)
+
+on:
+  push:
+    branches:
+      - prod
+    paths:
+      - 'cvi-frontend/**'
+      - 'cvi-admin/**'
+      - 'cvi-backend/**'
+      - '.github/workflows/deploy-docker.yml'
+      - 'docker-compose.yml'
+      - 'deploy.sh'
+      - '.env.example'
+  workflow_dispatch:
+    inputs:
+      services:
+        description: 'Services to deploy (comma-separated: frontend,admin,backend,all,auto)'
+        required: true
+        default: 'auto'
+        type: string
+
+jobs:
+  detect-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      frontend: ${{ steps.filter.outputs.frontend }}
+      admin: ${{ steps.filter.outputs.admin }}
+      backend: ${{ steps.filter.outputs.backend }}
+      services: ${{ steps.services.outputs.services }}
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Detect changed services
+      id: filter
+      run: |
+        # Get changed files since last commit on main/prod
+        if [ "${{ github.event_name }}" == "push" ]; then
+          CHANGED_FILES=$(git diff --name-only HEAD~1)
+        else
+          CHANGED_FILES="all"
+        fi
+
+        echo "Changed files:"
+        echo "$CHANGED_FILES"
+
+        # Check which services have changes
+        FRONTEND_CHANGED=false
+        ADMIN_CHANGED=false
+        BACKEND_CHANGED=false
+
+        if echo "$CHANGED_FILES" | grep -q "^cvi-frontend/\|^docker-compose.yml\|^deploy.sh\|^\.env"; then
+          FRONTEND_CHANGED=true
+        fi
+
+        if echo "$CHANGED_FILES" | grep -q "^cvi-admin/\|^docker-compose.yml\|^deploy.sh\|^\.env"; then
+          ADMIN_CHANGED=true
+        fi
+
+        if echo "$CHANGED_FILES" | grep -q "^cvi-backend/\|^docker-compose.yml\|^deploy.sh\|^\.env"; then
+          BACKEND_CHANGED=true
+        fi
+
+        echo "frontend=$FRONTEND_CHANGED" >> $GITHUB_OUTPUT
+        echo "admin=$ADMIN_CHANGED" >> $GITHUB_OUTPUT
+        echo "backend=$BACKEND_CHANGED" >> $GITHUB_OUTPUT
+
+        # Determine services to deploy
+        if [ "${{ github.event.inputs.services }}" == "auto" ] || [ "${{ github.event.inputs.services }}" == "" ]; then
+          SERVICES=""
+          if [ "$FRONTEND_CHANGED" == "true" ]; then SERVICES="$SERVICES frontend"; fi
+          if [ "$ADMIN_CHANGED" == "true" ]; then SERVICES="$SERVICES admin"; fi
+          if [ "$BACKEND_CHANGED" == "true" ]; then SERVICES="$SERVICES backend"; fi
+          SERVICES=$(echo $SERVICES | xargs)  # Trim whitespace
+
+          if [ -z "$SERVICES" ]; then
+            echo "No service changes detected, deploying all services"
+            SERVICES="all"
+          fi
+        else
+          SERVICES="${{ github.event.inputs.services }}"
+        fi
+
+        echo "services=$SERVICES" >> $GITHUB_OUTPUT
+        echo "Services to deploy: $SERVICES"
+
+  deploy:
+    needs: detect-changes
+    runs-on: ubuntu-latest
+    if: needs.detect-changes.outputs.services != ''
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+        fetch-depth: 0
+
+    - name: Set start time
+      id: start
+      run: echo "start_time=$(date +%s)" >> $GITHUB_OUTPUT
+
+    - name: Deploy to Contabo Server
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.CONTABO_SSH_HOST }}
+        username: ${{ secrets.CONTABO_SSH_USER }}
+        password: ${{ secrets.CONTABO_SSH_PASS }}
+        script: |
+          set -e
+
+          echo "🚀 Starting Docker deployment process..."
+
+          APP_DIR="$HOME/cvi-docker"
+          REPO_URL="https://${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/${{ github.repository }}.git"
+
+          # Ensure deployment directory exists and has correct permissions
+          echo "📁 Ensuring deployment directory exists..."
+          mkdir -p "$APP_DIR"
+
+          # Clone or update repository
+          if [ ! -d "$APP_DIR/.git" ]; then
+            echo "📥 Initial clone of repository..."
+            git clone -b prod "$REPO_URL" "$APP_DIR"
+            cd "$APP_DIR"
+          else
+            cd "$APP_DIR"
+            echo "🔄 Updating existing repository..."
+            git fetch origin prod
+            git reset --hard origin/prod
+            git clean -fd  # Remove any untracked files
+          fi
+
+          # Ensure deploy.sh is executable
+          chmod +x deploy.sh
+
+          # Create .env file from secrets
+          echo "📝 Setting up environment variables..."
+          cat > .env << EOF
+          # Database Configuration
+          DB_HOST=${{ secrets.DB_HOST }}
+          DB_PORT=${{ secrets.DB_PORT }}
+          DB_USER=${{ secrets.DB_USER }}
+          DB_PASS=${{ secrets.DB_PASS }}
+          DB_NAME=${{ secrets.DB_NAME }}
+
+          # JWT Configuration
+          JWT_SECRET=${{ secrets.JWT_SECRET }}
+
+          # Frontend Environment Variables
+          NEXT_PUBLIC_API_URL=https://api.cloudvortexinnovation.com
+          NEXT_PUBLIC_SITE_URL=https://cloudvortexinnovation.com
+
+          # Backend Port
+          PORT=3002
+          EOF
+
+          # Get services to deploy from workflow
+          SERVICES="${{ needs.detect-changes.outputs.services }}"
+          echo "🎯 Deploying services: $SERVICES"
+
+          # Stop existing containers
+          echo "⏹️  Stopping existing containers..."
+          docker-compose --profile "*" down || true
+
+          # Deploy specified services
+          if [ "$SERVICES" == "all" ]; then
+            echo "🚀 Deploying all services..."
+            ./deploy.sh all
+          else
+            echo "🚀 Deploying services: $SERVICES"
+            ./deploy.sh $SERVICES
+          fi
+
+          # Verify deployment
+          echo "✅ Deployment completed successfully!"
+          echo "📊 Service Status:"
+          docker-compose --profile "*" ps
+
+    - name: Get commit info
+      id: commit_info
+      if: always()
+      run: |
+        commit_msg="$(git log -1 --pretty=format:'%s' 2>/dev/null || echo 'No commit message available')"
+        echo "commit_msg<<EOF" >> $GITHUB_OUTPUT
+        echo "$commit_msg" >> $GITHUB_OUTPUT
+        echo "EOF" >> $GITHUB_OUTPUT
+
+    - name: Send Success Discord Notification
+      if: success()
+      run: |
+        end_time=$(date +%s)
+        start_time=${{ steps.start.outputs.start_time }}
+        duration=$((end_time - start_time))
+        minutes=$((duration / 60))
+        seconds=$((duration % 60))
+
+        commit_msg="${{ steps.commit_info.outputs.commit_msg }}"
+        deployed_at="$(TZ=Asia/Dhaka date '+%Y-%m-%d %H:%M %Z')"
+        services_deployed="${{ needs.detect-changes.outputs.services }}"
+
+        payload=$(jq -n \
+          --arg title "✅ Docker Deployment Completed (CVI)" \
+          --arg services "Services: $services_deployed" \
+          --arg changes "$commit_msg" \
+          --arg duration "${minutes}m ${seconds}s" \
+          --arg deployed_at "$deployed_at" \
+          --arg branch "${{ github.ref_name }}" \
+          --arg commit "${{ github.sha }}" \
+          '{
+            embeds: [
+              {
+                title: $title,
+                color: 3066993,
+                fields: [
+                  {name: "🔧 Services Deployed", value: $services, inline: false},
+                  {name: "🔄 Changes", value: $changes, inline: false},
+                  {name: "🌿 Branch", value: $branch, inline: true},
+                  {name: "⏱️ Duration", value: $duration, inline: true},
+                  {name: "📅 Deployed At", value: $deployed_at, inline: true},
+                  {name: "💡 Commit", value: $commit[0:7], inline: true}
+                ]
+              }
+            ]
+          }')
+
+        curl -H "Content-Type: application/json" \
+             -d "$payload" \
+             "${{ secrets.DISCORD_WEBHOOK_URL }}"
+
+    - name: Send Failure Discord Notification
+      if: failure()
+      run: |
+        end_time=$(date +%s)
+        start_time=${{ steps.start.outputs.start_time }}
+        duration=$((end_time - start_time))
+        minutes=$((duration / 60))
+        seconds=$((duration % 60))
+
+        commit_msg="${{ steps.commit_info.outputs.commit_msg }}"
+        deployed_at="$(TZ=Asia/Dhaka date '+%Y-%m-%d %H:%M %Z')"
+        services_attempted="${{ needs.detect-changes.outputs.services }}"
+
+        payload=$(jq -n \
+          --arg title "❌ Docker Deployment Failed (CVI)" \
+          --arg services "Attempted: $services_attempted" \
+          --arg error "Deployment failed during execution. Check GitHub Actions logs for details." \
+          --arg duration "${minutes}m ${seconds}s" \
+          --arg deployed_at "$deployed_at" \
+          --arg branch "${{ github.ref_name }}" \
+          --arg commit "${{ github.sha }}" \
+          '{
+            embeds: [
+              {
+                title: $title,
+                color: 15158332,
+                fields: [
+                  {name: "🔧 Services Attempted", value: $services, inline: false},
+                  {name: "⚠️ Error", value: $error, inline: false},
+                  {name: "🌿 Branch", value: $branch, inline: true},
+                  {name: "⏱️ Duration", value: $duration, inline: true},
+                  {name: "📅 Attempted At", value: $deployed_at, inline: true},
+                  {name: "💡 Commit", value: $commit[0:7], inline: true}
+                ]
+              }
+            ]
+          }')
+
+        curl -H "Content-Type: application/json" \
+             -d "$payload" \
+             "${{ secrets.DISCORD_WEBHOOK_URL }}"

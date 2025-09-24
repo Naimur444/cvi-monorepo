@@ -3,28 +3,70 @@ import MenuItem from "@/app/components/re-usable/MenuItem";
 import DataTable from "@/components/DataTable";
 import { Switch } from "@/components/ui/switch";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import api from "@/utils/api";
 
 const HeroSectionPage = () => {
-  const [status, setStatus] = useState(true);
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const data = [
-    {
-      id: 1,
-      title: "Empowering Business With Cloud Vortex Innovation",
-      subTitle: "in — Digital Era",
-      image: "/placeholder.jpg",
-      status: status,
-    },
-  ];
+  // Fetch hero sections from API
+  useEffect(() => {
+    const fetchHeroes = async () => {
+      try {
+        const response = await api.get('/hero');
+        setData(response.data);
+      } catch (error) {
+        console.error("Error fetching hero sections:", error);
+        alert("Error loading hero sections. Please try again.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchHeroes();
+  }, []);
+
+  // Handle status toggle
+  const handleStatusToggle = async (id, currentStatus) => {
+    try {
+      const newStatus = currentStatus === "active" ? "closed" : "active";
+      await api.patch(`/hero/${id}`, { status: newStatus });
+
+      // Update local state
+      setData(prevData =>
+        prevData.map(item =>
+          item.id === id ? { ...item, status: newStatus } : item
+        )
+      );
+    } catch (error) {
+      console.error("Error updating hero status:", error);
+      alert("Error updating status. Please try again.");
+    }
+  };
+
+  // Handle delete
+  const handleDelete = async (id) => {
+    if (window.confirm("Are you sure you want to delete this hero section?")) {
+      try {
+        await api.delete(`/hero/${id}`);
+        // Remove from local state
+        setData(prevData => prevData.filter(item => item.id !== id));
+        alert("Hero section deleted successfully!");
+      } catch (error) {
+        console.error("Error deleting hero section:", error);
+        alert("Error deleting hero section. Please try again.");
+      }
+    }
+  };
 
   const columns = [
     { key: "id", header: "SI No." },
     { key: "title", header: "Title" },
     { key: "subTitle", header: "Sub-title" },
     {
-      key: "image",
-      header: "Image/Video",
+      key: "img",
+      header: "Image",
       render: (value) => (
         <img
           src={value}
@@ -38,11 +80,8 @@ const HeroSectionPage = () => {
       header: "Status",
       render: (value, row) => (
         <Switch
-          checked={value}
-          onCheckedChange={(val) => {
-            console.log("Toggling status for row:", row.id);
-            setStatus(val);
-          }}
+          checked={value === "active"}
+          onCheckedChange={() => handleStatusToggle(row.id, value)}
           className="data-[state=checked]:bg-[#0E4F53]"
         />
       ),
@@ -82,9 +121,7 @@ const HeroSectionPage = () => {
           </Link>
           <button
             className="p-1 hover:bg-red-50 rounded"
-            onClick={() =>
-              confirm("Delete this row?") && console.log("Deleting:", row.id)
-            }
+            onClick={() => handleDelete(row.id)}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -132,7 +169,7 @@ const HeroSectionPage = () => {
             </Link>
           </div>
 
-          <DataTable columns={columns} data={data} />
+          <DataTable columns={columns} data={data} loading={loading} />
         </div>
     </section>
   );

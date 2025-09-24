@@ -2,7 +2,7 @@
 import { BadRequestException, Injectable, NotFoundException, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Hero } from './hero.entity';
+import { Hero, HeroStatus } from './hero.entity';
 import { CreateHeroDto } from './dto/hero.request-dto';
 import { UpdateHeroDto } from './dto/hero.update-dto';
 import { HeroResponseDto } from './dto/hero.response-dto';
@@ -16,6 +16,14 @@ export class HeroService {
 
     async create(createHeroDto: CreateHeroDto): Promise<HeroResponseDto> {
         try {
+            // If the new hero is set to active, deactivate all other heroes
+            if (createHeroDto.status === HeroStatus.ACTIVE) {
+                await this.heroRepository.update(
+                    { status: HeroStatus.ACTIVE },
+                    { status: HeroStatus.CLOSED }
+                );
+            }
+
             const hero = this.heroRepository.create(createHeroDto);
             return await this.heroRepository.save(hero);
         } catch (e) {
@@ -51,6 +59,14 @@ export class HeroService {
 
     async update(id: number, updateHeroDto: UpdateHeroDto): Promise<HeroResponseDto> {
         try {
+            // If the hero is being set to active, deactivate all other heroes
+            if (updateHeroDto.status === HeroStatus.ACTIVE) {
+                await this.heroRepository.update(
+                    { status: HeroStatus.ACTIVE },
+                    { status: HeroStatus.CLOSED }
+                );
+            }
+
             const hero = await this.heroRepository.preload({
                 id: id,
                 ...updateHeroDto,

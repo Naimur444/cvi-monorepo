@@ -3,45 +3,77 @@ import MenuItem from "@/app/components/re-usable/MenuItem";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import React, { useState, useEffect } from "react";
+import api from "@/utils/api";
 
 const EditSectionPage = () => {
   const params = useParams();
   const router = useRouter();
   const [formData, setFormData] = useState({
     title: "",
-    subtitle: "",
-    image: null,
-    status: true,
+    subTitle: "",
+    img: "",
+    status: "active",
   });
   const [isLoading, setIsLoading] = useState(false);
 
-  // Mock data - in real app, fetch from API based on ID
+  // Fetch hero data from API based on ID
   useEffect(() => {
-    // Simulate fetching data based on ID
-    const mockData = {
-      title: "Empowering Business With Cloud Vortex Innovation",
-      subtitle: "in — Digital Era",
-      image: "/placeholder.jpg",
-      status: true,
+    const fetchHero = async () => {
+      try {
+        const response = await api.get(`/hero/${params.id}`);
+        const heroData = response.data;
+        setFormData({
+          title: heroData.title,
+          subTitle: heroData.subTitle,
+          img: heroData.img,
+          status: heroData.status,
+        });
+      } catch (error) {
+        console.error("Error fetching hero data:", error);
+        alert("Error loading hero data. Please try again.");
+      }
     };
-    setFormData(mockData);
+
+    if (params.id) {
+      fetchHero();
+    }
   }, [params.id]);
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: type === "checkbox" ? checked : value,
+      [name]: type === "checkbox" ? (checked ? "active" : "closed") : value,
     }));
   };
 
-  const handleFileChange = (e) => {
+  const handleFileChange = async (e) => {
     const file = e.target.files[0];
     if (file) {
-      setFormData((prev) => ({
-        ...prev,
-        image: file,
-      }));
+      // Only allow image files
+      if (!file.type.startsWith('image/')) {
+        alert('Please select an image file only.');
+        return;
+      }
+
+      try {
+        const formData = new FormData();
+        formData.append('file', file);
+
+        const response = await api.post('/upload/image', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+
+        setFormData((prev) => ({
+          ...prev,
+          img: response.data.url || response.data.fileUrl,
+        }));
+      } catch (error) {
+        console.error('Error uploading image:', error);
+        alert('Error uploading image. Please try again.');
+      }
     }
   };
 
@@ -50,16 +82,9 @@ const EditSectionPage = () => {
     setIsLoading(true);
 
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await api.patch(`/hero/${params.id}`, formData);
 
-      // In real app, make API call to update the hero section
-      console.log("Updating hero section:", formData);
-
-      // Show success message (you can add toast notification here)
       alert("Hero section updated successfully!");
-
-      // Navigate back to hero section page
       router.push("/content/hero-section");
     } catch (error) {
       console.error("Error updating hero section:", error);
@@ -78,11 +103,7 @@ const EditSectionPage = () => {
       setIsLoading(true);
 
       try {
-        // Simulate API call
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-
-        // In real app, make API call to delete the hero section
-        console.log("Deleting hero section with ID:", params.id);
+        await api.delete(`/hero/${params.id}`);
 
         alert("Hero section deleted successfully!");
         router.push("/content/hero-section");
@@ -159,8 +180,8 @@ const EditSectionPage = () => {
                 <label className="text-[#181818] mb-2">Sub Title</label>
                 <input
                   type="text"
-                  name="subtitle"
-                  value={formData.subtitle}
+                  name="subTitle"
+                  value={formData.subTitle}
                   onChange={handleInputChange}
                   className="bg-[#FAF9FC] text-gray-700 rounded-lg border border-[#DCDCDC] py-2 px-3 focus:outline-none focus:ring-2 focus:ring-[#0E4F53] focus:border-transparent"
                   required
@@ -173,35 +194,35 @@ const EditSectionPage = () => {
                   <input
                     type="checkbox"
                     name="status"
-                    checked={formData.status}
+                    checked={formData.status === "active"}
                     onChange={handleInputChange}
                     className="sr-only peer"
                   />
                   <div
                     className={`w-11 h-6 rounded-full transition-colors relative ${
-                      formData.status ? "bg-[#0E4F53]" : "bg-gray-300"
+                      formData.status === "active" ? "bg-[#0E4F53]" : "bg-gray-300"
                     }`}
                   >
                     <div
                       className={`absolute top-1 left-1 w-4 h-4 bg-white rounded-full transition-transform ${
-                        formData.status ? "translate-x-5" : ""
+                        formData.status === "active" ? "translate-x-5" : ""
                       }`}
                     ></div>
                   </div>
                   <span className="ml-3 text-sm text-gray-600">
-                    {formData.status ? "Active" : "Inactive"}
+                    {formData.status === "active" ? "Active" : "Inactive"}
                   </span>
                 </label>
               </div>
             </div>
 
             <div>
-              <p className="text-[#181818] mb-2">Image/Video</p>
+              <p className="text-[#181818] mb-2">Image</p>
               <div className="border-2 border-dashed border-[#0E4F53] rounded-lg p-4 flex flex-col items-center justify-center space-y-6">
-                {formData.image && typeof formData.image === "string" && (
+                {formData.img && (
                   <div className="mb-4">
                     <img
-                      src={formData.image}
+                      src={formData.img}
                       alt="Current"
                       className="w-32 h-32 object-cover rounded"
                     />
@@ -237,14 +258,14 @@ const EditSectionPage = () => {
                 </div>
 
                 <p className="text-[#181818] text-center">
-                  Choose or drag & drop an image or video
+                  Choose or drag & drop an image
                 </p>
 
                 <input
                   type="file"
                   id="file-upload"
                   className="hidden"
-                  accept="image/*,video/*"
+                  accept="image/*"
                   onChange={handleFileChange}
                 />
 

@@ -1,38 +1,75 @@
 "use client";
-import Layout from "@/app/components/Layout";
 import MenuItem from "@/app/components/re-usable/MenuItem";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
+import api from "@/utils/api";
 
 const AddPartnerPage = () => {
-  // State holds an array of partners; each partner can hold selected files
-  const [partners, setPartners] = useState([
-    {
-      files: [],
-    },
-  ]);
+  const router = useRouter();
+  const [formData, setFormData] = useState({
+    img: "",
+    status: "active",
+  });
+  const [isLoading, setIsLoading] = useState(false);
 
-  // Add a new empty partner block
-  const addPartner = () => {
-    setPartners((prev) => [...prev, { files: [] }]);
+  const handleInputChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? (checked ? "active" : "closed") : value,
+    }));
   };
 
-  // Remove partner block by index
-  const removePartner = (indexToRemove) => {
-    setPartners((prev) => prev.filter((_, i) => i !== indexToRemove));
+  const handleFileChange = async (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      // Only allow image files
+      if (!file.type.startsWith('image/')) {
+        alert('Please select an image file only.');
+        return;
+      }
+
+      try {
+        const formDataObj = new FormData();
+        formDataObj.append('file', file);
+
+        const response = await api.post('/upload/image', formDataObj, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+
+        setFormData((prev) => ({
+          ...prev,
+          img: response.data.url || response.data.fileUrl,
+        }));
+      } catch (error) {
+        console.error('Error uploading image:', error);
+        alert('Error uploading image. Please try again.');
+      }
+    }
   };
 
-  // Handle file changes for specific partner block
-  const handleFileChange = (index, e) => {
-    const selectedFiles = Array.from(e.target.files);
-    setPartners((prev) => {
-      const updated = [...prev];
-      updated[index].files = selectedFiles;
-      return updated;
-    });
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+
+    try {
+      await api.post('/partner', formData);
+
+      alert("Partner added successfully!");
+      router.push("/content/partner");
+    } catch (error) {
+      console.error("Error creating partner:", error);
+      alert("Error creating partner. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
-    <Layout>
+    <>
       <div className="mb-6">
         <MenuItem
           parent={"Content"}
@@ -42,27 +79,31 @@ const AddPartnerPage = () => {
         />
       </div>
 
-      <div className="flex flex-col gap-8">
-        {partners.map((partner, index) => (
-          <div key={index} className="bg-white rounded-2xl p-4 md:w-1/2">
-            <div className="flex justify-between items-center mb-6">
-              <h3 className="text-[#181818] font-semibold text-xl">
-                Add Partner {index + 1}
-              </h3>
-              {partners.length > 1 && (
-                <button
-                  onClick={() => removePartner(index)}
-                  className="text-red-600 font-semibold hover:underline"
-                  aria-label={`Remove Partner ${index + 1}`}
-                >
-                  Remove
-                </button>
-              )}
-            </div>
+      <div className="bg-white rounded-2xl p-4 max-w-2xl">
+        <div className="flex items-center justify-between mb-6">
+          <h3 className="text-[#181818] font-semibold text-xl">
+            Add Partner
+          </h3>
+        </div>
 
-            <div className="mb-4">
-              <p className="text-[#181818] mb-2">Image/Video</p>
-              <div className="border-2 border-dashed border-[#0E4F53] rounded-lg p-4 flex flex-col items-center justify-center space-y-6 mb-6">
+        <form onSubmit={handleSubmit}>
+          <div className="grid grid-cols-1 gap-6 mb-6">
+            <div>
+              <p className="text-[#181818] mb-2">Logo Image</p>
+              <div className="border-2 border-dashed border-[#0E4F53] rounded-lg p-4 flex flex-col items-center justify-center space-y-6">
+                {formData.img && (
+                  <div className="mb-4">
+                    <img
+                      src={formData.img}
+                      alt="Partner Logo Preview"
+                      className="w-32 h-32 object-cover rounded"
+                    />
+                    <p className="text-sm text-gray-600 mt-2 text-center">
+                      Logo Preview
+                    </p>
+                  </div>
+                )}
+
                 <div>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -89,58 +130,74 @@ const AddPartnerPage = () => {
                 </div>
 
                 <p className="text-[#181818] text-center">
-                  Choose or drag & drop an image or video
+                  Choose or drag & drop an image
                 </p>
 
                 <input
                   type="file"
-                  id={`file-upload-${index}`}
+                  id="file-upload"
                   className="hidden"
-                  accept="image/*,video/*"
-                  multiple
-                  onChange={(e) => handleFileChange(index, e)}
+                  accept="image/*"
+                  onChange={handleFileChange}
                 />
 
                 <label
-                  htmlFor={`file-upload-${index}`}
+                  htmlFor="file-upload"
                   className="cursor-pointer text-[#0E4F53] px-6 py-2 rounded-md hover:bg-[#0b3b41] hover:text-white transition border border-[#DCDCDC]"
                 >
-                  Upload Files
+                  Upload Logo
                 </label>
-
-                {/* Show selected files names */}
-                {partner.files.length > 0 && (
-                  <div className="mt-2 text-sm text-gray-700">
-                    Selected files:
-                    <ul className="list-disc list-inside">
-                      {partner.files.map((file, i) => (
-                        <li key={i}>{file.name}</li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-              </div>
-
-              <p
-                className="text-[#0E4F53] font-medium mb-6 cursor-pointer w-fit"
-                onClick={addPartner}
-              >
-                + Add Another Partner
-              </p>
-
-              <div className="flex items-center justify-center gap-4">
-                <button className="text-[#ED1400] border border-[#ED1400] px-4 py-2 rounded-md cursor-pointer">
-                  Cancel
-                </button>
-                <button className="bg-[#0E4F53] text-white px-4 py-2 rounded-md cursor-pointer">
-                  Save
-                </button>
               </div>
             </div>
+
+            <div>
+              <label className="text-[#181818] mb-2 block">Status</label>
+              <label className="inline-flex items-center cursor-pointer">
+                <input
+                  type="checkbox"
+                  name="status"
+                  checked={formData.status === "active"}
+                  onChange={handleInputChange}
+                  className="sr-only peer"
+                />
+                <div
+                  className={`w-11 h-6 rounded-full transition-colors relative ${
+                    formData.status === "active" ? "bg-[#0E4F53]" : "bg-gray-300"
+                  }`}
+                >
+                  <div
+                    className={`absolute top-1 left-1 w-4 h-4 bg-white rounded-full transition-transform ${
+                      formData.status === "active" ? "translate-x-5" : ""
+                    }`}
+                  ></div>
+                </div>
+                <span className="ml-3 text-sm text-gray-600">
+                  {formData.status === "active" ? "Active" : "Inactive"}
+                </span>
+              </label>
+            </div>
           </div>
-        ))}
+
+          <div className="flex items-center justify-center gap-4">
+            <Link href={"/content/partner"}>
+              <button
+                type="button"
+                className="text-[#ED1400] border border-[#ED1400] px-4 py-2 rounded-md cursor-pointer hover:bg-[#ED1400] hover:text-white transition-colors"
+              >
+                Cancel
+              </button>
+            </Link>
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="bg-[#0E4F53] text-white px-4 py-2 rounded-md cursor-pointer hover:bg-[#0E4F53]/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            >
+              {isLoading ? "Saving..." : "Add Partner"}
+            </button>
+          </div>
+        </form>
       </div>
-    </Layout>
+    </>
   );
 };
 

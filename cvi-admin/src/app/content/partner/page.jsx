@@ -3,88 +3,70 @@ import MenuItem from "@/app/components/re-usable/MenuItem";
 import DataTable from "@/components/DataTable";
 import { Switch } from "@/components/ui/switch";
 import Link from "next/link";
-import React, { useState, useMemo } from "react";
+import React, { useState, useEffect } from "react";
+import api from "@/utils/api";
 
 const PartnerPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
-  const [partners, setPartners] = useState([
-    {
-      id: 1,
-      logo: "/placeholder.jpg",
-      status: true,
-    },
-    {
-      id: 2,
-      logo: "/placeholder.jpg",
-      status: false,
-    },
-    {
-      id: 3,
-      logo: "/placeholder.jpg",
-      status: true,
-    },
-    {
-      id: 4,
-      logo: "/placeholder.jpg",
-      status: true,
-    },
-    {
-      id: 5,
-      logo: "/placeholder.jpg",
-      status: false,
-    },
-    {
-      id: 6,
-      logo: "/placeholder.jpg",
-      status: true,
-    },
-    {
-      id: 7,
-      logo: "/placeholder.jpg",
-      status: true,
-    },
-    {
-      id: 8,
-      logo: "/placeholder.jpg",
-      status: false,
-    },
-    {
-      id: 9,
-      logo: "/placeholder.jpg",
-      status: true,
-    },
-    {
-      id: 10,
-      logo: "/placeholder.jpg",
-      status: true,
-    },
-    {
-      id: 11,
-      logo: "/placeholder.jpg",
-      status: false,
-    },
-    {
-      id: 12,
-      logo: "/placeholder.jpg",
-      status: true,
-    },
-    {
-      id: 13,
-      logo: "/placeholder.jpg",
-      status: true,
-    },
-    {
-      id: 14,
-      logo: "/placeholder.jpg",
-      status: false,
-    },
-    {
-      id: 15,
-      logo: "/placeholder.jpg",
-      status: true,
-    },
-  ]);
+  const [partners, setPartners] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch partners from API
+  useEffect(() => {
+    const fetchPartners = async () => {
+      try {
+        const response = await api.get('/partner');
+        setPartners(response.data);
+      } catch (error) {
+        console.error("Error fetching partners:", error);
+        alert("Error loading partners. Please try again.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPartners();
+  }, []);
+
+  // Handle status toggle
+  const handleStatusToggle = async (id, currentStatus) => {
+    try {
+      const newStatus = currentStatus === "active" ? "closed" : "active";
+      await api.patch(`/partner/${id}`, { status: newStatus });
+
+      // Update local state
+      setPartners(prevPartners =>
+        prevPartners.map(partner =>
+          partner.id === id ? { ...partner, status: newStatus } : partner
+        )
+      );
+    } catch (error) {
+      console.error("Error updating partner status:", error);
+      alert("Error updating status. Please try again.");
+    }
+  };
+
+  // Handle delete
+  const handleDelete = async (partnerId) => {
+    if (window.confirm("Are you sure you want to delete this partner? This action cannot be undone.")) {
+      try {
+        await api.delete(`/partner/${partnerId}`);
+        // Remove from local state
+        setPartners(prevPartners => prevPartners.filter(partner => partner.id !== partnerId));
+        // Adjust pagination if needed
+        const totalItems = partners.length - 1;
+        const totalPages = Math.ceil(totalItems / itemsPerPage);
+        if (currentPage > totalPages && totalPages > 0) {
+          setCurrentPage(totalPages);
+        }
+        alert("Partner deleted successfully!");
+      } catch (error) {
+        console.error("Error deleting partner:", error);
+        alert("Error deleting partner. Please try again.");
+      }
+    }
+  };
 
   // Calculate pagination
   const totalItems = partners.length;
@@ -92,30 +74,6 @@ const PartnerPage = () => {
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentData = partners.slice(startIndex, endIndex);
-
-  // Handle status toggle
-  const handleStatusToggle = (partnerId, newStatus) => {
-    setPartners((prev) =>
-      prev.map((partner) =>
-        partner.id === partnerId ? { ...partner, status: newStatus } : partner
-      )
-    );
-  };
-
-  // Handle delete
-  const handleDelete = (partnerId) => {
-    if (
-      window.confirm(
-        "Are you sure you want to delete this partner? This action cannot be undone."
-      )
-    ) {
-      setPartners((prev) => prev.filter((partner) => partner.id !== partnerId));
-      // If current page becomes empty, go to previous page
-      if (currentData.length === 1 && currentPage > 1) {
-        setCurrentPage(currentPage - 1);
-      }
-    }
-  };
 
   // Generate page numbers for pagination
   const getPageNumbers = () => {
@@ -156,7 +114,7 @@ const PartnerPage = () => {
   const columns = [
     { key: "id", header: "SI No." },
     {
-      key: "logo",
+      key: "img",
       header: "Logo",
       render: (value) => (
         <img
@@ -171,8 +129,8 @@ const PartnerPage = () => {
       header: "Status",
       render: (value, row) => (
         <Switch
-          checked={value}
-          onCheckedChange={(val) => handleStatusToggle(row.id, val)}
+          checked={value === "active"}
+          onCheckedChange={() => handleStatusToggle(row.id, value)}
           className="data-[state=checked]:bg-[#0E4F53]"
         />
       ),
@@ -259,7 +217,7 @@ const PartnerPage = () => {
             </Link>
           </div>
 
-          <DataTable columns={columns} data={currentData} />
+          <DataTable columns={columns} data={currentData} loading={loading} />
 
           {/* Pagination */}
           <div className="flex justify-between items-center mt-4 px-4">

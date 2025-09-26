@@ -31,26 +31,26 @@ const ViewPage = () => {
                 <path
                   d="M10.6663 1.33301V3.99967M5.33301 1.33301V3.99967"
                   stroke="#3D3D3D"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 />
                 <path
                   d="M8.66667 2.66699H7.33333C4.81917 2.66699 3.5621 2.66699 2.78105 3.44804C2 4.22909 2 5.48617 2 8.00033V9.33366C2 11.8478 2 13.1049 2.78105 13.8859C3.5621 14.667 4.81917 14.667 7.33333 14.667H8.66667C11.1808 14.667 12.4379 14.667 13.2189 13.8859C14 13.1049 14 11.8478 14 9.33366V8.00033C14 5.48617 14 4.22909 13.2189 3.44804C12.4379 2.66699 11.1808 2.66699 8.66667 2.66699Z"
                   stroke="#3D3D3D"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 />
                 <path
                   d="M2 6.66699H14"
                   stroke="#3D3D3D"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 />
                 <path
                   d="M7.33301 9.33301H10.6663M5.33301 9.33301H5.33899M8.66634 11.9997H5.33301M10.6663 11.9997H10.6603"
                   stroke="#3D3D3D"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 />
               </svg>
 
@@ -112,16 +112,16 @@ const ViewPage = () => {
                         <path
                           d="M3 17C3 17.93 3 18.395 3.10223 18.7765C3.37963 19.8117 4.18827 20.6204 5.22355 20.8978C5.60505 21 6.07003 21 7 21H17C17.93 21 18.395 21 18.7765 20.8978C19.8117 20.6204 20.6204 19.8117 20.8978 18.7765C21 18.395 21 17.93 21 17"
                           stroke="#0E4F53"
-                          stroke-width="1.5"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
                         />
                         <path
                           d="M16.5 11.5C16.5 11.5 13.1858 16 11.9999 16C10.8141 16 7.5 11.5 7.5 11.5M11.9999 15V3"
                           stroke="#0E4F53"
-                          stroke-width="1.5"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
                         />
                       </svg>
                     </div>

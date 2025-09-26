@@ -34,6 +34,8 @@ import { AdminUser } from './auth/entities/admin-user.entity';
 import { PortfolioModule } from './portfolio/portfolio.module';
 import { Portfolio } from './portfolio/portfolio.entity';
 import { UploadModule } from './upload/upload.module';
+import { SettingsModule } from './settings/settings.module';
+import { Settings } from './settings/entities/settings.entity';
 
 @Module({
   imports: [
@@ -63,9 +65,10 @@ import { UploadModule } from './upload/upload.module';
         JobApplication,
         AdminUser,
         Portfolio,
+        Settings,
       ],
       autoLoadEntities: true,
-      synchronize: process.env.DB_SYNCHRONIZE === 'true',
+      synchronize: process.env.DB_SYNCHRONIZE === 'true' || process.env.NODE_ENV !== 'production',
       timezone: process.env.DB_TIMEZONE || 'Z',
       extra: {
         connectionLimit: 10,
@@ -94,6 +97,7 @@ import { UploadModule } from './upload/upload.module';
     AuthModule,
     PortfolioModule,
     UploadModule,
+    SettingsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

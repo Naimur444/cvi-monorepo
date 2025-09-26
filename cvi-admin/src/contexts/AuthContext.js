@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
-import { authAPI, tokenManager, userManager } from '../utils/auth';
+import { authAPI, tokenManager } from '../utils/auth';
 
 // Auth context
 const AuthContext = createContext();
@@ -87,7 +87,6 @@ const authReducer = (state, action) => {
 // Auth provider component
 export const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
-
   // Initialize auth state on mount
   useEffect(() => {
     const initializeAuth = async () => {
@@ -95,41 +94,20 @@ export const AuthProvider = ({ children }) => {
       
       try {
         const accessToken = tokenManager.getAccessToken();
-        const user = userManager.getUser();
+        const user = tokenManager.getUser();
 
         if (accessToken && user) {
           // Only verify token if it's not expired
           if (!tokenManager.isTokenExpired(accessToken)) {
-            try {
-              // Add timeout to prevent hanging
-              const timeoutPromise = new Promise((_, reject) => 
-                setTimeout(() => reject(new Error('Profile fetch timeout')), 5000)
-              );
-              
-              const profile = await Promise.race([
-                authAPI.getProfile(),
-                timeoutPromise
-              ]);
-              
-              dispatch({
-                type: AUTH_ACTIONS.SET_USER,
-                payload: { user: profile },
-              });
-              userManager.setUser(profile);
-            } catch (error) {
-              console.warn('Token verification failed:', error.message);
-              // Token is invalid, clear everything
-              tokenManager.clearTokens();
-              userManager.clearUser();
-              dispatch({
-                type: AUTH_ACTIONS.SET_USER,
-                payload: { user: null },
-              });
-            }
+            // If we have valid token and user data, use cached data without API call
+            dispatch({
+              type: AUTH_ACTIONS.SET_USER,
+              payload: { user },
+            });
           } else {
             // Token is expired, clear everything
             tokenManager.clearTokens();
-            userManager.clearUser();
+            tokenManager.clearUser();
             dispatch({
               type: AUTH_ACTIONS.SET_USER,
               payload: { user: null },
@@ -138,7 +116,7 @@ export const AuthProvider = ({ children }) => {
         } else {
           // No valid token, clear everything
           tokenManager.clearTokens();
-          userManager.clearUser();
+          tokenManager.clearUser();
           dispatch({
             type: AUTH_ACTIONS.SET_USER,
             payload: { user: null },
@@ -148,7 +126,7 @@ export const AuthProvider = ({ children }) => {
         console.error('Auth initialization failed:', error);
         // Clear everything on any error
         tokenManager.clearTokens();
-        userManager.clearUser();
+        tokenManager.clearUser();
         dispatch({
           type: AUTH_ACTIONS.SET_USER,
           payload: { user: null },
@@ -171,7 +149,7 @@ export const AuthProvider = ({ children }) => {
 
       // Store tokens and user
       tokenManager.setTokens(accessToken, refreshToken);
-      userManager.setUser(user);
+      tokenManager.setUser(user);
 
       dispatch({
         type: AUTH_ACTIONS.LOGIN_SUCCESS,
@@ -202,7 +180,7 @@ export const AuthProvider = ({ children }) => {
     } finally {
       // Always clear local storage and state
       tokenManager.clearTokens();
-      userManager.clearUser();
+      tokenManager.clearUser();
       dispatch({ type: AUTH_ACTIONS.LOGOUT });
     }
   };
@@ -220,7 +198,7 @@ export const AuthProvider = ({ children }) => {
         type: AUTH_ACTIONS.SET_USER,
         payload: { user: profile },
       });
-      userManager.setUser(profile);
+      tokenManager.setUser(profile);
       return profile;
     } catch (error) {
       console.error('Failed to update user:', error);

@@ -107,6 +107,7 @@ body {
   background-color: var(--background);
   /* color: #f4f3f7; */ /* Removed - was making text invisible */
   transition: background-color 0.4s ease, color 0.4s ease;
+  overflow-x: hidden; /* Prevent horizontal scrolling from loading bar */
 }
 
 /* Smooth transitions for all elements */
@@ -161,4 +162,18 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* Navigation loading bar animation */
+@keyframes loading-bar {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.loading-bar {
+  animation: loading-bar 1.5s ease-in-out infinite;
 }

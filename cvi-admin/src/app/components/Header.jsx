@@ -4,11 +4,20 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import { useAuth } from "../../contexts/AuthContext";
+import { useNavigation } from "../../contexts/NavigationContext";
 
 const Header = () => {
   const { user } = useAuth();
+  const { isNavigating } = useNavigation();
+
   return (
-    <header className="bg-white px-6 py-3 rounded-2xl flex items-center justify-between transition-all duration-700 ease-[cubic-bezier(0.4,0,0.2,1)] shadow-sm">
+    <header className="bg-white px-6 py-3 rounded-2xl flex items-center justify-between transition-all duration-700 ease-[cubic-bezier(0.4,0,0.2,1)] shadow-sm relative">
+      {/* Navigation loading indicator */}
+      {isNavigating && (
+        <div className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#009EA1] via-[#0E4F53] to-[#009EA1] animate-pulse z-50">
+          <div className="h-full bg-gradient-to-r from-[#009EA1] to-[#0E4F53] loading-bar"></div>
+        </div>
+      )}
       <Link href={"/dashboard/report"}>
         <div className="flex items-center gap-2">
           <div>
@@ -19,7 +28,7 @@ const Header = () => {
               viewBox="0 0 40 32"
               fill="none"
             >
-              <g clip-path="url(#clip0_1437_2126)">
+              <g clipPath="url(#clip0_1437_2126)">
                 <path
                   d="M0.192396 18.8701C1.30437 18.8682 2.40961 19.0437 3.46694 19.3899C5.08492 19.9522 6.55813 20.8698 7.77965 22.0759C9.00117 23.282 9.94037 24.7465 10.5291 26.3631C10.8079 27.2505 11.0223 28.1571 11.1704 29.0757C11.3047 29.8664 11.3904 30.6646 11.427 31.4659H16.9499C17.136 30.1078 17.136 28.7304 16.9499 27.3723C16.2369 22.1936 12.985 18.9081 11.8872 17.8306C7.29982 13.3424 1.66745 12.7733 0 12.6709L0.192396 18.8701Z"
                   fill="#0E4F53"
@@ -59,16 +68,16 @@ const Header = () => {
             <path
               d="M17 17L21 21"
               stroke="#0E4F53"
-              stroke-width="1.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             />
             <path
               d="M19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19C15.4183 19 19 15.4183 19 11Z"
               stroke="#0E4F53"
-              stroke-width="1.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             />
           </svg>
         </div>
@@ -84,27 +93,27 @@ const Header = () => {
             <path
               d="M12.5 3H11.5C7.02166 3 4.78249 3 3.39124 4.39124C2 5.78249 2 8.02166 2 12.5C2 16.9783 2 19.2175 3.39124 20.6088C4.78249 22 7.02166 22 11.5 22C15.9783 22 18.2175 22 19.6088 20.6088C21 19.2175 21 16.9783 21 12.5V11.5"
               stroke="#0E4F53"
-              stroke-width="1.5"
-              stroke-linecap="round"
+              strokeWidth="1.5"
+              strokeLinecap="round"
             />
             <path
               d="M22 5.5C22 7.433 20.433 9 18.5 9C16.572 9 15 7.433 15 5.5C15 3.567 16.567 2 18.5 2C20.433 2 22 3.567 22 5.5Z"
               stroke="#ED1400"
-              stroke-width="1.5"
+              strokeWidth="1.5"
             />
             <path
               d="M7 11H11"
               stroke="#0E4F53"
-              stroke-width="1.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             />
             <path
               d="M7 16H15"
               stroke="#0E4F53"
-              stroke-width="1.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             />
           </svg>
         </div>

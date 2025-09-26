@@ -38,8 +38,8 @@ export default function Home() {
       const result = await login({ email, password });
       
       if (result.success) {
-        toast.success("Login successful! Redirecting...");
-        router.push("/dashboard/report");
+        toast.success("Login successful!");
+        // Remove the immediate redirect - let the useEffect handle it when auth state updates
       } else {
         toast.error(result.error || "Login failed");
       }

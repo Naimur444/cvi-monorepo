@@ -1,19 +1,17 @@
 "use client";
-"use client";
 
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useEffect, useState, useCallback } from "react";
 import { useAuth } from "../../contexts/AuthContext";
+import { useNavigation } from "../../contexts/NavigationContext";
 import toast from "react-hot-toast";
 
 export default function Sidebar() {
   const pathname = usePathname();
-  const router = useRouter();
   const { logout } = useAuth();
+  const { navigate } = useNavigation();
   const [manuallyExpanded, setManuallyExpanded] = useState(new Set());
-  const [isNavigating, setIsNavigating] = useState(false);
-  const [currentPath, setCurrentPath] = useState(pathname);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   // Handle logout
@@ -25,7 +23,7 @@ export default function Sidebar() {
     try {
       await logout();
       toast.success("Logged out successfully");
-      router.push("/");
+      navigate("/");
     } catch (error) {
       toast.error("Logout failed");
       console.error("Logout error:", error);
@@ -337,25 +335,6 @@ export default function Sidebar() {
     [pathname]
   );
 
-  // Initialize expanded menus based on current pathname only on first load
-  useEffect(() => {
-    const newExpandedMenus = new Set();
-
-    menuItems.forEach((item) => {
-      if (item.submenu) {
-        const hasActiveSubmenu = item.submenu.some((sub) => isActive(sub.path));
-        if (hasActiveSubmenu) {
-          newExpandedMenus.add(item.key);
-        }
-      }
-    });
-
-    // Only set the initial state if manuallyExpanded is empty (first load)
-    if (manuallyExpanded.size === 0) {
-      setManuallyExpanded(newExpandedMenus);
-    }
-  }, [pathname, isActive, manuallyExpanded.size]);
-
   const toggleMenu = useCallback((menuKey) => {
     setManuallyExpanded((prev) => {
       const newSet = new Set(prev);
@@ -382,40 +361,21 @@ export default function Sidebar() {
     [manuallyExpanded, menuItems, isActive]
   );
 
-  // Handle smooth navigation with transitions
+  // Optimized navigation handler with click prevention
   const handleNavigation = useCallback(
-    async (href) => {
-      if (href === currentPath) return;
+    (href, event) => {
+      // Prevent default and stop propagation
+      event?.preventDefault();
+      event?.stopPropagation();
 
-      setIsNavigating(true);
-      setCurrentPath(href);
-
-      // Add a small delay for smooth transition effect
-      await new Promise((resolve) => setTimeout(resolve, 150));
-
-      router.push(href);
-
-      // Reset navigation state after a brief moment
-      setTimeout(() => {
-        setIsNavigating(false);
-      }, 300);
+      // Use the navigation hook
+      navigate(href);
     },
-    [currentPath, router]
+    [navigate]
   );
-
-  // Update current path when pathname changes
-  useEffect(() => {
-    setCurrentPath(pathname);
-  }, [pathname]);
 
   return (
     <aside className="bg-white py-4 px-3 rounded-2xl w-full flex items-center justify-center relative shadow-lg hover:shadow-xl transition-all duration-500 ease-out">
-      {/* Enhanced loading indicator */}
-      {isNavigating && (
-        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#009EA1] via-[#0E4F53] to-[#009EA1] animate-pulse overflow-hidden">
-          <div className="h-full bg-gradient-to-r from-[#009EA1] to-[#0E4F53] loading-bar"></div>
-        </div>
-      )}
 
       <div className="w-full">
         <nav className="flex flex-col gap-2.5 w-full">
@@ -427,7 +387,7 @@ export default function Sidebar() {
                     onClick={() => toggleMenu(item.key)}
                     aria-expanded={isMenuExpanded(item.key)}
                     aria-controls={`${item.key}-submenu`}
-                    className={`flex items-center justify-between w-full px-3 py-2.5 text-left cursor-pointer rounded-lg ${
+                    className={`flex items-center justify-between w-full px-3 py-2.5 text-left cursor-pointer rounded-lg transition-all duration-200 ease-out ${
                       isMenuExpanded(item.key) ||
                       item.submenu.some((sub) => isActive(sub.path))
                         ? "bg-gradient-to-r from-[#FAF9FC] to-[#F0F0F0] text-[#0E4F53] rounded-lg border-l-4 border-[#0E4F53] shadow-md"
@@ -445,10 +405,8 @@ export default function Sidebar() {
                       width="16"
                       height="16"
                       fill="none"
-                      className={`transition-all duration-500 ease-out ${
-                        isMenuExpanded(item.key)
-                          ? "rotate-180 scale-110"
-                          : "rotate-0 scale-100"
+                      className={`transition-transform duration-200 ${
+                        isMenuExpanded(item.key) ? "rotate-180" : "rotate-0"
                       }`}
                     >
                       <path
@@ -471,8 +429,8 @@ export default function Sidebar() {
                       {item.submenu.map((sub, subIndex) => (
                         <li key={sub.path}>
                           <button
-                            onClick={() => handleNavigation(sub.path)}
-                            className={`btn-enhanced flex items-center gap-2.5 px-3 py-2 rounded-lg transition-all duration-300 ease-out w-full text-left hover:shadow-md ${
+                            onClick={(e) => handleNavigation(sub.path, e)}
+                            className={`flex items-center gap-2.5 px-3 py-2 rounded-lg transition-all duration-150 ease-out w-full text-left hover:shadow-md ${
                               isActive(sub.path)
                                 ? "bg-gradient-to-r from-[#FAF9FC] to-[#F0F0F0] text-[#0E4F53] rounded-lg shadow-sm"
                                 : "text-[#3D3D3D] hover:bg-gradient-to-r hover:from-[#FAF9FC] hover:to-[#F0F0F0] hover:text-[#0E4F53] hover:shadow-sm"
@@ -488,11 +446,6 @@ export default function Sidebar() {
                             <span className="font-medium text-sm">
                               {sub.label}
                             </span>
-                            {isNavigating && currentPath === sub.path && (
-                              <div className="ml-auto">
-                                <div className="spinner-enhanced"></div>
-                              </div>
-                            )}
                           </button>
                         </li>
                       ))}
@@ -501,8 +454,8 @@ export default function Sidebar() {
                 </>
               ) : (
                 <button
-                  onClick={() => handleNavigation(item.path)}
-                  className={`btn-enhanced flex items-center gap-2.5 px-3 py-2.5 rounded-lg transition-all duration-300 ease-out w-full text-left hover:shadow-md ${
+                  onClick={(e) => handleNavigation(item.path, e)}
+                  className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg transition-all duration-150 ease-out w-full text-left hover:shadow-md ${
                     isActive(item.path)
                       ? "bg-gradient-to-r from-[#FAF9FC] to-[#F0F0F0] text-[#0E4F53] rounded-lg border-l-4 border-[#0E4F53] shadow-md"
                       : "text-[#0E4F53] hover:bg-gradient-to-r hover:from-[#FAF9FC] hover:to-[#F0F0F0] hover:rounded-lg hover:shadow-md"
@@ -512,11 +465,6 @@ export default function Sidebar() {
                     {item.icon}
                   </div>
                   <span className="font-medium text-sm">{item.label}</span>
-                  {isNavigating && currentPath === item.path && (
-                    <div className="ml-auto">
-                      <div className="spinner-enhanced"></div>
-                    </div>
-                  )}
                 </button>
               )}
             </div>
@@ -525,8 +473,8 @@ export default function Sidebar() {
 
         <div className="mt-8 px-3 py-2 space-y-3">
           <button
-            onClick={() => handleNavigation("/settings")}
-            className="btn-enhanced flex items-center gap-2.5 transition-all duration-300 ease-out hover:shadow-md w-full text-left px-3 py-2.5 rounded-lg hover:bg-gradient-to-r hover:from-[#FAF9FC] hover:to-[#F0F0F0]"
+            onClick={(e) => handleNavigation("/settings", e)}
+            className="flex items-center gap-2.5 transition-all duration-150 ease-out hover:shadow-md w-full text-left px-3 py-2.5 rounded-lg hover:bg-gradient-to-r hover:from-[#FAF9FC] hover:to-[#F0F0F0]"
           >
             <div className="transition-transform duration-300 hover:scale-110">
               <svg
@@ -553,11 +501,6 @@ export default function Sidebar() {
             <span className="font-medium text-sm text-[#404040] hover:text-[#0E4F53] transition-colors duration-300">
               Settings
             </span>
-            {isNavigating && currentPath === "/settings" && (
-              <div className="ml-auto">
-                <div className="spinner-enhanced"></div>
-              </div>
-            )}
           </button>
 
           <button

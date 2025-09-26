@@ -33,48 +33,49 @@ export const authAPI = {
   },
 };
 
-// Token management
+// Token management - optimized with cache clearing
 export const tokenManager = {
   setTokens: (accessToken, refreshToken) => {
     localStorage.setItem('accessToken', accessToken);
     localStorage.setItem('refreshToken', refreshToken);
+    // Clear profile cache when tokens change
+    localStorage.removeItem('profileCacheTime');
   },
-
+  
   getAccessToken: () => {
     return localStorage.getItem('accessToken');
   },
-
+  
   getRefreshToken: () => {
     return localStorage.getItem('refreshToken');
   },
-
+  
   clearTokens: () => {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
     localStorage.removeItem('user');
+    localStorage.removeItem('profileCacheTime');
   },
-
+  
   isTokenExpired: (token) => {
     if (!token) return true;
-    
+
     try {
       const payload = JSON.parse(atob(token.split('.')[1]));
-      return Date.now() >= payload.exp * 1000;
+      // Add 30 second buffer before expiration
+      return Date.now() >= (payload.exp * 1000 - 30000);
     } catch {
       return true;
     }
-  },
-};
-
-// User management
-export const userManager = {
-  setUser: (user) => {
-    localStorage.setItem('user', JSON.stringify(user));
   },
 
   getUser: () => {
     const user = localStorage.getItem('user');
     return user ? JSON.parse(user) : null;
+  },
+
+  setUser: (user) => {
+    localStorage.setItem('user', JSON.stringify(user));
   },
 
   clearUser: () => {
